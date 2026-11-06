@@ -63,6 +63,45 @@ evals), `web/src/main.tsx` (Sentry + transporte mock) y `alertas` × `error-trac
 `requiredSecrets.ts`, `server.ts` y su test (se conservaron los dos: `reportTurnError` + contadores de alertas; los
 dos avisos de configuración).
 
+## Deploy del 2026-10-31 / 11-02 (producción nueva, a mano desde `prod/readiness`)
+
+Seguido de `DEPLOY-HOY.md`. **Sin secretos acá:** todos viven en el `.env` del servidor (`chmod 600`) y en Bitwarden
+(nota "Selyon CRM — producción").
+
+| Qué | Valor |
+|---|---|
+| URL | `https://crm.selyon.app` (panel en `/panel`, superadmin en `/panel/admin`, webhook en `/webhook/whatsapp`) |
+| Servidor | DigitalOcean, `45.55.143.0`, 1 GB RAM + 2 GB swap, Ubuntu 24.04, zona `America/Costa_Rica`, `ufw` 22/80/443 |
+| Usuario y carpeta | `selyon` (sudo, llave SSH), código en `~/selyon-crm` en `prod/readiness` (hoy `d06f4de`, con el PR #17) |
+| Proceso | PM2 `selyon-crm` (`ecosystem.config.cjs`, `ROLE=all`), `pm2 startup` como `selyon`, `pm2-logrotate@3.0.0` |
+| Stack | Node 24.22.2 (NodeSource), PM2 7.0.4, Caddy 2.11.7 (`/etc/caddy/Caddyfile` → `localhost:3000`), `postgresql-client-17` (PGDG) |
+| DNS | `selyon.app` está en Cloudflare (lo administra Sebastián): A `crm` → IP, y los 4 registros de Resend bajo `crm`, todo "DNS only" |
+| Base | Supabase NUEVO `selyon-crm-prod`, East US (N. Virginia), Free, Data API apagada. Conexión por el **pooler en modo sesión** (`aws-0-us-east-1.pooler.supabase.com:5432`): la directa es solo IPv6. App con `app_runtime` (RLS, `rolbypassrls = false`), migraciones y backup con `postgres` |
+| Correo | Resend, dominio `crm.selyon.app` verificado, remitente `no-reply@crm.selyon.app` |
+| OpenAI | Proyecto `selyon-prod`, tope **estricto** US$20/mes con aviso al 50 %, `gpt-4o-mini` |
+| WhatsApp | App de Meta propia "Selyon CRM" (publicada) en el portfolio "Selyon", número de **prueba** de Meta, webhook verificado y suscrito a `messages`, token permanente de un usuario del sistema; canal dado de alta a mano para el primer negocio |
+| Operación | Alertas por Telegram (probadas), backup diario 3 am por cron (`backups/`, `chmod 700`) |
+
+**Funciona:** smoke 5/5, `/health?detail=1` con base OK, HTTPS + HSTS + CSP, login de superadmin con TOTP, alta del
+primer negocio (uñas y pestañas) e invitación por correo entregada.
+
+**Falta / pendientes humanos:**
+- Prueba de punta a punta con el número de prueba (la clienta escribe → responde el bot → aparece en la bandeja): sin confirmar.
+- Verificación del negocio en Meta (como persona física; el usuario estaba llenando el formulario el 2026-11-05) → proveedor de tecnología → `META_ES_CONFIG_ID` para el
+  Embedded Signup. Con coexistencia (que la clienta siga con la app WhatsApp Business) hace falta además código nuevo:
+  hoy el Embedded Signup es sin coexistencia.
+- Restore probado (`verifyRestore.ts` contra un Supabase aparte) y copia de los backups fuera del servidor.
+- Sentry, `CHECK_SECRETS_DENYLIST`, deploy key y variables del workflow (§26.4) antes de cualquier push a `main`.
+- Completar los `[PENDIENTE]` de privacidad y términos (Meta ya apunta a esas URLs).
+- CI de GitHub en rojo por dos causas ajenas a los PRs: el typecheck raíz incluye archivos de `web/` antes de instalar
+  sus dependencias, y `ubuntu-latest` pasó a 26.04, donde Playwright 1.60 no instala Chromium (fijar `ubuntu-24.04`).
+
+**Ojo al operar:** `npm run typecheck` en el servidor se queda sin memoria (1 GB); correrlo en CI o en la Mac. Un
+`pm2 reload` con un solo proceso corta ~15 s (arranque de tsx), y el smoke corrido enseguida da 502: esperar y repetir.
+
+**Deploy de un cambio (hasta que el CI apunte acá):** como `selyon` en `~/selyon-crm`: `git pull origin prod/readiness`,
+`npm ci`, `npm run web:build`, `pm2 reload selyon-crm --update-env`, esperar ~15 s y `bash scripts/ci/smoke.sh https://crm.selyon.app`.
+
 ## Decisiones ya tomadas para los que siguen en cola
 
 - **Decisiones de los que ya corrieron o corren:** textuales en cada reporte; resumen: secretos → script propio, repo sigue público; dependencias → excepción `zod@4.6.6`, Dependabot solo alertas; auth → sin servidor de prod aún, superadmins por persona más adelante, logout cierra todas; smoke → login falso OK, sin usuario de smoke real; rotar-llaves → desactivar usuario del piloto, no reescribir historial, sin gestor aún, rotar OpenAI y Meta ya; evals → sí gastar tokens pero aún sin key (harness listo, se salta sin key), 90 % general / 100 % críticos, rubros uñas y dental; privacidad → sin datos legales (marcadores `[PENDIENTE]`), sin abogado por ahora, sacar el número de WhatsApp, tabla propia de aceptación e invitados también aceptan; error-tracking → Sentry free, un proyecto, `@sentry/react`, sin DSN solo advierte; alertas → Telegram, sin canal solo advierte, umbrales propuestos por el agente; límites → topes conservadores ajustables por plan, audio máx. 2 min.
