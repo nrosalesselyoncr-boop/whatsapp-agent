@@ -571,3 +571,41 @@ form > .btn { margin-top: var(--space-lg); }
 .signup-terms input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--accent); flex-shrink: 0; cursor: pointer; }
 .auth-resend { margin-top: var(--space-sm); font-size: var(--step--1); color: var(--text-2); }
 .auth-signup { margin-top: var(--space-md); text-align: center; font-size: var(--step--1); color: var(--text-2); }
+
+/* ── Marca propia del negocio (lib/branding.ts) ──────────────────────────────────────
+   Solo con el color elegido por el negocio: <html data-brand-accent> / <html data-brand-header>.
+   Sin marca, el panel queda con la paleta default de arriba. */
+
+/* Color principal: botones principales e ítem activo del menú (además de --accent). */
+[data-brand-accent] .btn-primary { background: var(--accent); color: var(--on-accent); }
+[data-brand-accent] .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+[data-brand-accent] .nav-link.active { background: var(--accent-soft); color: var(--accent); }
+[data-brand-accent] .bottom-nav-item.active { color: var(--accent); }
+
+/* Color del menú: menú lateral (desktop) y barra de abajo (celular). El texto usa
+   --header-fg (blanco o tinta, el que más contraste da sobre el color elegido). Los menús
+   desplegables que abren desde el lateral conservan la superficie normal (.menu-popover). */
+[data-brand-header] .sidebar { background: var(--header-bg); color: var(--header-fg); border-right-color: transparent; }
+[data-brand-header] .sidebar .nav-link,
+[data-brand-header] .sidebar .user-chip,
+[data-brand-header] .sidebar .brand-button { color: var(--header-fg); }
+[data-brand-header] .sidebar .nav-link:hover,
+[data-brand-header] .sidebar .user-chip:hover,
+[data-brand-header] .sidebar .user-chip[aria-expanded="true"],
+[data-brand-header] .sidebar .brand-button:hover,
+[data-brand-header] .sidebar .brand-button[aria-expanded="true"] { background: var(--header-hover); color: var(--header-fg); }
+[data-brand-header] .sidebar .nav-link.active { background: color-mix(in srgb, var(--header-fg) 16%, transparent); color: var(--header-fg); }
+[data-brand-header] .sidebar .nav-group-label,
+[data-brand-header] .sidebar .nav-lock,
+[data-brand-header] .sidebar .nav-link.locked,
+[data-brand-header] .sidebar .user-chip-role,
+[data-brand-header] .sidebar .brand-name-sub,
+[data-brand-header] .sidebar .brand-switch-icon,
+[data-brand-header] .sidebar .sidebar-product { color: var(--header-muted); }
+[data-brand-header] .sidebar .sidebar-nav-end,
+[data-brand-header] .sidebar .nav-separator { border-color: color-mix(in srgb, var(--header-fg) 18%, transparent); }
+[data-brand-header] .sidebar .brand-logo { box-shadow: none; }
+[data-brand-header] .bottom-nav { background: var(--header-bg); border-top-color: transparent; }
+[data-brand-header] .bottom-nav-item,
+[data-brand-header] .bottom-nav-item.locked { color: var(--header-muted); }
+[data-brand-header] .bottom-nav-item.active { color: var(--header-fg); }
