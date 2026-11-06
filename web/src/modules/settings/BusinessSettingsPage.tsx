@@ -242,8 +242,8 @@ function BusinessForm({ settings, canEdit }: { settings: BusinessSettings; canEd
         </h3>
         {!settings.brandingEditable && <p className="settings-help">La marca propia es parte del plan Pro.</p>}
         <div className="form-grid">
-          <ColorField label="Color principal" value={form.accentColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.accentColor")} onChange={(v) => set("accentColor", v)} />
-          <ColorField label="Color del menú" value={form.headerColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.headerColor")} onChange={(v) => set("headerColor", v)} />
+          <ColorField label="Color principal" hint="Botones principales, ítem activo del menú, enlaces y gráficos." value={form.accentColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.accentColor")} onChange={(v) => set("accentColor", v)} />
+          <ColorField label="Color del menú" hint="Fondo del menú lateral (y de la barra de abajo en el celular)." value={form.headerColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.headerColor")} onChange={(v) => set("headerColor", v)} />
         </div>
         <TextField
           label="Logo (URL https)"
@@ -274,13 +274,16 @@ function BusinessForm({ settings, canEdit }: { settings: BusinessSettings; canEd
   );
 }
 
-function ColorField({ label, value, disabled, error, onChange }: { label: string; value: string; disabled: boolean; error?: string; onChange: (v: string) => void }) {
+/** Valor inicial de la paleta cuando el campo está vacío (el acento default de global.css). */
+const DEFAULT_PICKER_COLOR = "#0b7a68";
+
+function ColorField({ label, hint, value, disabled, error, onChange }: { label: string; hint: string; value: string; disabled: boolean; error?: string; onChange: (v: string) => void }) {
   return (
     <div className="color-input">
       <div className="color-input-text">
-        <TextField label={label} value={value} placeholder="#rrggbb (vacío = el de la plataforma)" disabled={disabled} maxLength={7} error={error} onChange={(e) => onChange(e.target.value.trim())} />
+        <TextField label={label} hint={hint} value={value} placeholder="#rrggbb (vacío = el de la plataforma)" disabled={disabled} maxLength={7} error={error} onChange={(e) => onChange(e.target.value.trim())} />
       </div>
-      <input type="color" aria-label={`${label}: elegir en la paleta`} value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : "#0b7d72"} disabled={disabled} onChange={(e) => onChange(e.target.value)} />
+      <input type="color" aria-label={`${label}: elegir en la paleta`} value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : DEFAULT_PICKER_COLOR} disabled={disabled} onChange={(e) => onChange(e.target.value)} />
     </div>
   );
 }

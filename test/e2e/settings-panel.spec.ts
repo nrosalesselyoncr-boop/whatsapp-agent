@@ -84,3 +84,37 @@ test("plan Básico: métodos de pago y campos personalizados con candado", async
   await nav.getByRole("button", { name: "Métodos de pago (disponible en el plan Pro)" }).click();
   await expect(page.getByRole("dialog", { name: "Disponible en el plan Pro" })).toContainText("Métodos de pago es parte del plan Pro");
 });
+
+test("dueña: la marca propia pinta el menú lateral, los botones principales y el ítem activo; vacía vuelve al default", async ({ page }) => {
+  await login(page, "duena@demo.test");
+  const html = page.locator("html");
+  const sidebar = page.locator("aside.sidebar");
+  const newButton = page.getByRole("button", { name: "Nuevo", exact: true });
+  const bg = (el: typeof sidebar) => el.evaluate((n) => getComputedStyle(n).backgroundColor);
+  const defaultSidebar = await bg(sidebar);
+  const defaultButton = await bg(newButton);
+
+  await openSettings(page, "Negocio");
+  await page.getByLabel("Color principal", { exact: true }).fill("#d6336c");
+  await page.getByLabel("Color del menú", { exact: true }).fill("#3b1f4a");
+  await page.getByRole("button", { name: "Guardar", exact: true }).click();
+  await expect(page.getByText("Listo, los datos del negocio quedaron guardados.")).toBeVisible();
+
+  // Color del menú → fondo del menú lateral (antes no pintaba nada visible del panel).
+  await expect(html).toHaveAttribute("data-brand-header", "");
+  await expect.poll(() => bg(sidebar)).toBe("rgb(59, 31, 74)");
+  // Color principal → botón principal e ítem activo del menú (ajustado a contraste AA).
+  await expect(html).toHaveAttribute("data-brand-accent", "");
+  await expect.poll(() => bg(newButton)).not.toBe(defaultButton);
+  const accent = await html.evaluate((n) => getComputedStyle(n).getPropertyValue("--accent").trim());
+  expect(accent.toLowerCase()).toBe("#d6336c");
+
+  // Campos vacíos = la paleta de la plataforma otra vez.
+  await page.getByLabel("Color principal", { exact: true }).fill("");
+  await page.getByLabel("Color del menú", { exact: true }).fill("");
+  await page.getByRole("button", { name: "Guardar", exact: true }).click();
+  await expect(html).not.toHaveAttribute("data-brand-header");
+  await expect(html).not.toHaveAttribute("data-brand-accent");
+  await expect.poll(() => bg(sidebar)).toBe(defaultSidebar);
+  await expect.poll(() => bg(newButton)).toBe(defaultButton);
+});

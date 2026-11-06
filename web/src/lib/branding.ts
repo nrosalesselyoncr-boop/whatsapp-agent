@@ -1,11 +1,14 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Marca: la del producto (nombre en un solo lugar, PLAN-GESTION.md §8) y la del negocio
-// (white-label). El color del negocio reemplaza SOLO el acento (--accent en global.css:
-// enlaces, foco, selección); tinta, neutrales y estados no cambian, así el panel se ve
-// sobrio aunque el negocio elija un fucsia. El acento se ajusta a contraste AA (≥ 4.5:1)
-// contra la superficie de cada tema: se oscurece en claro y se aclara en oscuro. El color
-// de encabezado solo pinta el panel de marca del acceso. Sin marca configurada no se toca
-// nada. A diferencia del tema (lib/theme.ts), depende de datos del backend
+// (white-label). El color principal reemplaza el acento (--accent en global.css: enlaces,
+// foco, selección, gráficos) y, cuando el negocio lo eligió, también pinta los botones
+// principales y el ítem activo del menú; neutrales y estados no cambian. El acento se
+// ajusta a contraste AA (≥ 4.5:1) contra la superficie de cada tema: se oscurece en claro
+// y se aclara en oscuro. El color del menú pinta el menú lateral (y la barra de abajo en
+// el celular), con el texto en blanco o tinta según contraste. Cada color elegido marca
+// <html> (`data-brand-accent` / `data-brand-header`) para que global.css active esas
+// reglas solo con marca propia: sin marca configurada el panel queda con su paleta default.
+// A diferencia del tema (lib/theme.ts), depende de datos del backend
 // (`me.business.branding`), así que se aplica desde un efecto del layout autenticado y se
 // limpia al salir.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -89,11 +92,16 @@ const BRAND_PROPERTIES = [
   "--brand-header-fg",
 ];
 
+/** Marcas en <html> que activan en global.css las reglas de marca propia. */
+const BRAND_FLAGS = ["brandAccent", "brandHeader"] as const;
+
 /** Pinta el panel con la marca del negocio. Cada color ausente o inválido deja su default. */
 export function applyBranding(branding: Branding | null | undefined): void {
   resetBranding();
-  const root = document.documentElement.style;
+  const html = document.documentElement;
+  const root = html.style;
   if (branding?.accentColor && RE_HEX.test(branding.accentColor)) {
+    html.dataset.brandAccent = "";
     const light = accentFor(branding.accentColor, SURFACE_LIGHT, "#000000");
     const dark = accentFor(branding.accentColor, SURFACE_DARK, "#ffffff");
     root.setProperty("--brand-accent-light", light);
@@ -102,6 +110,7 @@ export function applyBranding(branding: Branding | null | undefined): void {
     root.setProperty("--brand-on-accent-dark", textOn(dark, INK_DARK));
   }
   if (branding?.headerColor && RE_HEX.test(branding.headerColor)) {
+    html.dataset.brandHeader = "";
     root.setProperty("--brand-header-bg", branding.headerColor);
     root.setProperty("--brand-header-fg", textOn(branding.headerColor, INK_LIGHT));
   }
@@ -109,14 +118,26 @@ export function applyBranding(branding: Branding | null | undefined): void {
 
 /** Vuelve a la paleta default (logout, cambio de negocio). */
 export function resetBranding(): void {
-  const root = document.documentElement.style;
-  for (const property of BRAND_PROPERTIES) root.removeProperty(property);
+  const html = document.documentElement;
+  for (const property of BRAND_PROPERTIES) html.style.removeProperty(property);
+  for (const flag of BRAND_FLAGS) delete html.dataset[flag];
 }
+
+/** Origen ficticio para resolver una ruta relativa y ver si se queda en el mismo origen. */
+const SAME_ORIGIN_PROBE = "https://same-origin.invalid";
 
 /** Logo utilizable: solo http(s) o una ruta del mismo origen (nunca `javascript:` ni data). */
 export function safeLogoUrl(url: string | undefined): string | null {
   if (!url) return null;
-  if (url.startsWith("/") && !url.startsWith("//")) return url;
+  if (url.startsWith("/")) {
+    // Ruta del mismo origen. Se resuelve como la resolvería el navegador: "//host",
+    // "/\host" o "/<tab>/host" apuntan a OTRO host aunque empiecen con una sola "/".
+    try {
+      return new URL(url, SAME_ORIGIN_PROBE).origin === SAME_ORIGIN_PROBE ? url : null;
+    } catch {
+      return null;
+    }
+  }
   try {
     const parsed = new URL(url);
     return parsed.protocol === "https:" || parsed.protocol === "http:" ? parsed.href : null;

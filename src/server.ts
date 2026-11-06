@@ -7,10 +7,11 @@ import { getDb, startLocalDb } from "./platform/db/client";
 import { withSafetyNet } from "./platform/net/http";
 import type { Loop } from "./platform/net/scheduler";
 import { drainTasks, pendingTaskCount } from "./platform/net/shutdown";
-import { configuredAlertChannels } from "./platform/observability/alerts";
+import { alertChannelsWarning, configuredAlertChannels } from "./platform/observability/alerts";
+import { log } from "./platform/observability/log";
 import { startMetricsReport } from "./platform/observability/metrics";
-import { captureError, initSentry, isSentryConfigured } from "./platform/observability/sentry";
-import { startQueueWorker, type QueueWorker } from "./platform/queue";
+import { captureError, currentRelease, initSentry, isSentryConfigured } from "./platform/observability/sentry";
+import { startQueueMonitor, startQueueWorker, type QueueWorker } from "./platform/queue";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Arranque del proceso (node:http, sin framework). Siempre sobre Postgres: con
@@ -25,14 +26,20 @@ initSentry(); // antes de aceptar tráfico: registra los handlers globales de er
 
 // ── Fail-closed de secretos en producción ──
 // Antes de cargar la app (que importa los módulos de sesión y de cifrado): sin
-// PANEL_SESSION_SECRET o TOKENS_ENCRYPTION_KEY el proceso no atiende ni un request, y el
-// mensaje lista TODO lo que falta de una vez. Ver src/platform/config/requiredSecrets.ts.
+// PANEL_SESSION_SECRET o TOKENS_ENCRYPTION_KEY (o con un placeholder de .env.example, o
+// un secreto corto/adivinable) el proceso no atiende ni un request, y el mensaje lista
+// TODO lo que falla de una vez. Ver src/platform/config/requiredSecrets.ts.
 const secretProblems = productionSecretProblems();
 if (secretProblems.length > 0) {
-  console.error(`❌ Faltan secretos obligatorios en producción:\n${secretProblems.map((p) => `   • ${p}`).join("\n")}`);
+  console.error(`❌ Faltan secretos obligatorios en producción (o no sirven):\n${secretProblems.map((p) => `   • ${p}`).join("\n")}`);
   process.exit(1);
 }
 for (const warning of productionConfigWarnings()) console.warn(`⚠️  ${warning}`);
+// Advertencia fuerte (decisión del usuario: no frena el arranque): en producción sin
+// Sentry, un error del servidor o del panel no le llega a nadie. Evento buscable en los logs.
+if (process.env.NODE_ENV === "production" && !isSentryConfigured()) {
+  log.error("sentry_missing_in_production", { hint: "Cargá SENTRY_DSN en el .env del servidor (DEPLOY.md §16)." });
+}
 
 // La app y los handlers de la cola se cargan recién ahora (import dinámico): así el
 // chequeo de arriba corre antes que cualquier módulo que lea los secretos al importarse
@@ -95,8 +102,11 @@ server.listen(PORT, () => {
   const storage = process.env.DATABASE_URL ? "PostgreSQL" : "PostgreSQL local (PGlite)";
   console.log(`${PRODUCT_NAME} escuchando en http://localhost:${PORT}  ·  Rol: ${ROLE}  ·  Base: ${storage}`);
   if (!SERVES_WEB) console.log("Rol worker: sin landing/panel/API en este proceso (solo /health).");
-  console.log(`Sentry: ${isSentryConfigured() ? "activo ✅" : "no configurado (opcional, falta SENTRY_DSN)"}`);
+  const release = currentRelease();
+  console.log(`Sentry: ${isSentryConfigured() ? `activo ✅${release ? ` (release ${release.slice(0, 12)})` : " (sin SENTRY_RELEASE)"}` : "no configurado (opcional, falta SENTRY_DSN)"}`);
   console.log(`Alertas a la plataforma: ${configuredAlertChannels().join(" + ")}`);
+  // Producción sin canal que llegue a una persona: además del aviso de arriba, un error en el log estructurado.
+  if (alertChannelsWarning()) log.error("platform_alerts_unconfigured", { channels: configuredAlertChannels() });
 
   // Trabajo de fondo: con `ROLE=web` este proceso no lo arranca (lo atiende la réplica
   // worker, o este mismo proceso con `ROLE=all`). El worker de la cola corre los handlers
@@ -107,6 +117,7 @@ server.listen(PORT, () => {
     // Un negocio pausado (cobro manual) no procesa trabajo nuevo: la cola lo posterga (salvo
     // completar lo que ya entró por WhatsApp, sin responder).
     queueWorker = startQueueWorker({ db, canRunJob: createJobGate(db, plans) });
+    loops.push(startQueueMonitor(db)); // alertas `queue_backlog` / `queue_stuck` (src/platform/queue/monitor.ts)
     loops.push(...startModuleSchedulers(db, plans));
   }
 });

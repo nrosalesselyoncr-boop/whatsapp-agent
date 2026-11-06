@@ -77,7 +77,8 @@ export default defineConfig(({ mode }) => {
           start_url: "/panel/",
           scope: "/panel/",
           display: "standalone",
-          orientation: "portrait-primary",
+          // "any": en tablet (y en celular acostado) la app instalada gira con el equipo.
+          orientation: "any",
           lang: "es",
           dir: "ltr",
           background_color: "#F6F8F9",

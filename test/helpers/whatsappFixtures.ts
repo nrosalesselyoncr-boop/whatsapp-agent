@@ -38,6 +38,8 @@ export interface FakeWhatsApp {
   agentResult: AgentTurnResult | ((input: AgentTurnInput) => AgentTurnResult | Promise<AgentTurnResult>);
   /** Si está, el próximo envío falla con este error (y se borra). */
   failNextSend: Error | null;
+  /** Lo que el pipeline mandó a Sentry (`deps.reportError`). */
+  reported: { error: unknown; context: Record<string, unknown> }[];
   transcript: string;
 }
 
@@ -52,6 +54,7 @@ export function fakeWhatsApp(db: Db, overrides: Partial<WhatsAppDeps> = {}): Fak
     uploads: [],
     agentResult: okResult("¡Hola! ¿En qué te ayudo?"),
     failNextSend: null,
+    reported: [],
     transcript: "Quiero una cita para mañana",
   };
   const send = async (msg: SentMessage) => {
@@ -100,6 +103,9 @@ export function fakeWhatsApp(db: Db, overrides: Partial<WhatsAppDeps> = {}): Fak
       fake.pushes.push({ target, payload: JSON.parse(payload) });
     },
     getAiLimits: () => ({ monthlyConversations: null, monthlySpendMicros: null }),
+    reportError: (error, context) => {
+      fake.reported.push({ error, context });
+    },
     ...overrides,
   });
   return fake;
@@ -178,3 +184,32 @@ export function sign(raw: string, secret = APP_SECRET): string {
 }
 
 export { okResult };
+
+/** Página Ogg mínima (sin CRC: el lector de duración no lo valida). */
+function oggPage(headerType: number, granule: bigint, sequence: number, packet: Buffer): Buffer {
+  const header = Buffer.alloc(27);
+  header.write("OggS", 0, "latin1");
+  header[4] = 0;
+  header[5] = headerType;
+  header.writeBigInt64LE(granule, 6);
+  header.writeUInt32LE(1, 14);
+  header.writeUInt32LE(sequence, 18);
+  header[26] = 1;
+  return Buffer.concat([header, Buffer.from([packet.length]), packet]);
+}
+
+/** Nota de voz Ogg/Opus de `seconds` segundos (solo contenedor: encabezado y una página final). */
+export function oggOpusAudio(seconds: number, preSkip = 312): Buffer {
+  const head = Buffer.alloc(19);
+  head.write("OpusHead", 0, "latin1");
+  head[8] = 1;
+  head[9] = 1;
+  head.writeUInt16LE(preSkip, 10);
+  head.writeUInt32LE(48_000, 12);
+  const tags = Buffer.from("OpusTags\0\0\0\0\0\0\0\0", "latin1");
+  return Buffer.concat([
+    oggPage(2, 0n, 0, head),
+    oggPage(0, 0n, 1, tags),
+    oggPage(4, BigInt(Math.round(seconds * 48_000) + preSkip), 2, Buffer.from("audio-de-mentira")),
+  ]);
+}
