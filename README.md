@@ -190,7 +190,7 @@ Procedimiento, **una vez al mes** (y cada vez que el CI avise de un vencimiento)
    es una excepción que aprueba el dueño del producto y se anota en el ROADMAP y en el commit.
 4. Avisos de desarrollo: evaluarlos en `desarrollo` (por qué no afectan a producción) con fecha `revisar`; borrar los
    ítems que el reporte marca como "ya no aparece".
-5. Verificar: `npm ci`, `npm run typecheck`, `npm test`, `npm ci --prefix web`, `npm run build --prefix web`.
+5. Verificar: `npm ci`, `npm ci --prefix web` (el typecheck raíz lo necesita), `npm run typecheck`, `npm test`, `npm run build --prefix web`.
 
 **Alertas de Dependabot (solo alertas, sin PRs automáticos):** se activan en GitHub → Settings → Code security →
 Dependabot alerts (no se versiona un `dependabot.yml`: no se quieren PRs que suban a versiones de días). Las alertas

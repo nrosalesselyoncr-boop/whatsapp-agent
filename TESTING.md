@@ -13,7 +13,7 @@
 | Comando | Qué corre | Dónde corre |
 |---|---|---|
 | `npm test` | `node:test` vía `tsx --test` sobre `test/unit`, `test/security`, `test/reliability` y `test/architecture`. La base es un Postgres **efímero en el proceso** (PGlite + las migraciones reales de `./drizzle`): sin `DATABASE_URL`, sin Docker, sin red. | CI, job `verify` (paso "Tests (unit, security, reliability; PGlite en el proceso)") |
-| `npm run typecheck` / `npm run typecheck --prefix web` | `tsc --noEmit` del backend (incluye `test/**` y `eval/**`) y del panel (app + service worker). | CI, job `verify` |
+| `npm run typecheck` / `npm run typecheck --prefix web` | `tsc --noEmit` del backend (incluye `test/**` y `eval/**`) y del panel (app + service worker). El del backend necesita `web/node_modules`: los tests del panel importan `format.ts` que toman tipos de los `*Api.ts` (React Query). | CI, job `verify` (después de `npm ci` y `npm ci --prefix web`) |
 | `npm run db:check` | Drift entre los `schema.ts` y `./drizzle` (`scripts/checkMigrations.ts`, ángulo 7). | CI, job `verify` |
 | `npm run test:e2e` | Build del panel + Playwright, proyectos `server` y `panel-mock` (ángulos 6 y 9). | CI, job `e2e` (`npx playwright test`) |
 | `npm run eval` | Evals del agente contra OpenAI real (ángulo 4). **No** corre en CI. | A mano |
