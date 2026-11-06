@@ -93,8 +93,10 @@ primer negocio (uñas y pestañas) e invitación por correo entregada.
 - Restore probado (`verifyRestore.ts` contra un Supabase aparte) y copia de los backups fuera del servidor.
 - Sentry, `CHECK_SECRETS_DENYLIST`, deploy key y variables del workflow (§26.4) antes de cualquier push a `main`.
 - Completar los `[PENDIENTE]` de privacidad y términos (Meta ya apunta a esas URLs).
-- CI de GitHub en rojo por dos causas ajenas a los PRs: el typecheck raíz incluye archivos de `web/` antes de instalar
-  sus dependencias, y `ubuntu-latest` pasó a 26.04, donde Playwright 1.60 no instala Chromium (fijar `ubuntu-24.04`).
+- CI de GitHub en rojo por dos causas ajenas a los PRs, **arreglado en la rama `prod/ci-verde`** (espera push y merge;
+  confirmar en Actions): el typecheck raíz sigue los `import type` de `web/src/modules/*/format.ts` (que importa
+  `test/unit/panelFormat.test.ts`) hasta los `*Api.ts`, que piden React Query → ahora `npm ci --prefix web` va antes del
+  typecheck; y `ubuntu-latest` pasó a 26.04, donde Playwright 1.60 no instala Chromium → `verify` y `e2e` en `ubuntu-24.04`.
 
 **Ojo al operar:** `npm run typecheck` en el servidor se queda sin memoria (1 GB); correrlo en CI o en la Mac. Un
 `pm2 reload` con un solo proceso corta ~15 s (arranque de tsx), y el smoke corrido enseguida da 502: esperar y repetir.
