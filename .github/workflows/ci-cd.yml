@@ -21,7 +21,10 @@ jobs:
     name: Typecheck + tests + build
     # No corre en un workflow_dispatch (ese trigger es solo para el rollback manual).
     if: github.event_name != 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    # Fijado (no ubuntu-latest): ubuntu-latest ya es 26.04 y Playwright 1.60 no trae Chromium
+    # para esa versión (`playwright install --with-deps` falla). verify y e2e van iguales; al
+    # subir Playwright se puede volver a ubuntu-latest.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -61,6 +64,13 @@ jobs:
       - name: Instalar dependencias (backend)
         run: npm ci
 
+      # Va ANTES del typecheck del backend: test/unit (panelFormat.test.ts) importa la lógica
+      # pura del panel, y web/src/modules/{sales,scheduling,whatsapp}/format.ts toman sus tipos
+      # con `import type` de los *Api.ts, que importan react y @tanstack/react-query. tsc sigue
+      # esos imports y necesita web/node_modules (en runtime los tests no: el tipo se borra).
+      - name: Instalar dependencias (panel)
+        run: npm ci --prefix web
+
       - name: Typecheck (backend; legacy/ queda fuera del build)
         run: npm run typecheck
 
@@ -69,9 +79,6 @@ jobs:
 
       - name: Guardrail de migraciones (drift entre los schema.ts y ./drizzle)
         run: npm run db:check
-
-      - name: Instalar dependencias (panel)
-        run: npm ci --prefix web
 
       - name: Typecheck (panel)
         run: npm run typecheck --prefix web
@@ -83,7 +90,10 @@ jobs:
     name: Smoke E2E (Playwright)
     # No corre en un workflow_dispatch (ese trigger es solo para el rollback manual).
     if: github.event_name != 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    # Fijado (no ubuntu-latest): ubuntu-latest ya es 26.04 y Playwright 1.60 no trae Chromium
+    # para esa versión (`playwright install --with-deps` falla). verify y e2e van iguales; al
+    # subir Playwright se puede volver a ubuntu-latest.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
