@@ -16,6 +16,8 @@ diga cuál.
 - Si es de una fase posterior a la actual, o está marcada *validar*, decime qué meta o qué señal falta y preguntame si
   igual seguimos.
 - Si ya existe `docs/plan-producto/specs/<slug>.md`, retomá desde ahí: no la reescribas.
+- Si es del grupo M (momentos mágicos), revisá primero si su prueba barata ya se hizo y qué salió (FEEDBACK). Si no se
+  hizo, proponeme hacerla antes de construir y ayudame a prepararla.
 
 **Ciclo de una épica**
 

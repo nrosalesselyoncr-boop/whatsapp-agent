@@ -6,12 +6,141 @@ Las épicas de [`PLAN-PRODUCTO.md`](../../PLAN-PRODUCTO.md), en el orden en que 
 - **El brief de acá dice el porqué y el alcance mínimo.** El detalle técnico no se escribe por adelantado: lo arma
   Claude al empezar la épica, en `specs/<slug>.md`, leyendo el código de ese día. Así no envejece.
 - **El estado de cada épica vive en `ROADMAP.md` (Carril V)**, no acá.
-- **Orden:** de arriba hacia abajo dentro de la fase. No se arranca una fase sin cumplir la meta de la anterior.
+- **Orden:** de arriba hacia abajo dentro de la fase. No se arranca una fase sin cumplir la meta de la anterior. El
+  grupo **M** (momentos mágicos) va aparte: se prueba desde ya, en paralelo a la fase en curso.
 - **Tamaños:** S = un PR chico · M = uno o dos PRs con flujo o migración nuevos · L = tres o más PRs, o depende de
   terceros (Meta, pagos).
 - **Evidencia:** *hipótesis* mientras ningún cliente lo haya pedido. `/feedback` la va actualizando ("pedido por 2
   negocios"). Con evidencia, una épica puede subir de lugar; sin evidencia, las *validar* no se construyen.
 - **"Ya hay"** se escribió el 2026-11-10 mirando el código de `prod/readiness`. La especificación lo vuelve a verificar.
+
+---
+
+## M · Momentos mágicos
+
+Lo que hace que alguien se enamore del producto y no solo lo use (`PLAN-PRODUCTO.md` §3.1). **Cada uno se prueba a mano
+con el primer negocio antes de construirlo**, y se construye solo si la prueba enamora: lo vuelve a pedir al día
+siguiente, se molesta si falta, o se lo muestra a una colega sin que nadie se lo pida. Las maquetas para mostrar están
+en [`maquetas/`](maquetas/).
+
+### M1 · "Mi socia me habla" — `socia-por-audio` · L
+
+- **La escena:** a las 6:45 llega un audio: "Buenos días. Hoy tenés 6 citas, la primera a las 9. Ayer entraron ₡85.000.
+  Quedan 3 campos libres el jueves, ¿los lleno?". La dueña contesta con otro audio ("sí, y bloqueame el viernes después
+  de la 1") y queda hecho.
+- **Por qué enamora:** trabaja con las manos ocupadas; el audio es como ya se comunica. Deja de sentirse sola con el
+  negocio. Es la apuesta principal: las demás se enchufan en ella.
+- **Prueba barata:** durante cinco días, mandarle a mano un audio a las 6:45 con su día (leyendo el panel) y hacer en
+  el panel lo que conteste. Señal: al tercer día lo espera o pregunta por él.
+- **Se construye en rebanadas:** (1) audio de la mañana y resumen de la noche, solo lectura; (2) cinco órdenes por
+  audio o texto, con confirmación antes de cambiar algo: ver la agenda, bloquear un horario, mover o cancelar una cita,
+  cuánto se vendió, llenar huecos; (3) propuestas que la socia hace sola ("hay 12 clientas que no vienen hace 6 semanas,
+  ¿les escribo?"); (4) el cierre de la semana: cuánto entró, cuánto apartar para insumos e impuestos según los
+  porcentajes que ella defina, cuánto es su sueldo y qué servicio le deja más por hora.
+- **Ya hay:** transcripción de audios, los servicios del núcleo (agenda, reportes, campañas), push y auditoría. La API de
+  WhatsApp permite mandar notas de voz (Ogg/Opus con `voice: true`, según la documentación de Meta).
+- **Decisiones tuyas:** nombre por defecto de la asistente (la dueña lo puede cambiar); la voz; a qué hora habla.
+- **Cuidado:** solo teléfonos verificados del equipo; confirmación o PIN para lo sensible; nunca clonar la voz de la
+  dueña para hablarles a sus clientas; cada mensaje cuesta (V0.4).
+- **Absorbe:** V2.1 (resumen diario) y V3.2 (copiloto).
+- **Evidencia:** hipótesis.
+
+### M2 · "Cotiza con solo ver la foto" — `cotizador-por-foto` · M
+
+- **La escena:** la clienta manda una foto de referencia y pregunta "¿cuánto me sale?". La asistente responde: "es
+  acrílico largo en almendra, con francés y 4 uñas decoradas a mano: entre ₡18.000 y ₡20.000, unas 2 horas", ofrece
+  horarios, agenda el tiempo correcto y le deja la foto a la profesional para que tenga todo listo.
+- **Por qué enamora:** es la pregunta que más se repite en uñas y pestañas, y hoy siempre la contesta una persona.
+- **Prueba barata:** pedirle a la primera clienta 15 fotos que le hayan mandado y cuánto cobró por cada una; pasarlas
+  por el modelo con su tabla de precios y comparar. Señal: acierta el nivel en 12 de 15 y ella dice "eso lo usaría".
+- **Se construye:** una tabla de niveles del negocio (sencillo, medio, elaborado, por uña decorada, extra por largo)
+  con fotos de ejemplo; la asistente clasifica, da un rango y la duración, agenda y adjunta la foto a la cita. Si no
+  está segura, le pasa a la dueña su mejor estimación ("creo que es nivel 3, ¿confirmás?") y aprende de la corrección.
+- **Ya hay:** el agente recibe fotos; hoy, ante un diseño de precio variable, pide la foto y pasa a una persona (caso de
+  eval 19). Precio y duración por servicio.
+- **Cuidado:** siempre un rango y "te lo confirma la profesional al verte", nunca un precio exacto. Sin imágenes
+  generadas de "así te quedaría": crean expectativas que el trabajo real puede no cumplir; mejor mostrar trabajos
+  reales del negocio (M5).
+- **Evidencia:** hipótesis; en una búsqueda rápida no apareció ningún producto que cotice desde la foto.
+
+### M3 · "El SINPE se confirma solo" — `sinpe-solo` · L
+
+- **La escena:** la asistente pide la seña: "hacé un SINPE de ₡5.000 al 8888-1234 y poné en el detalle: LUNA47". Cuando
+  el banco avisa que entró la plata, le escribe a la clienta "recibido, tu cita quedó confirmada" y a la dueña "Mariana
+  pagó la seña, no tenés que revisar nada".
+- **Por qué enamora:** nadie quiere abrir la app del banco por cada seña ni discutir por un comprobante. El Banco
+  Central recomienda fiarse del aviso del propio banco y no del comprobante que manda quien paga.
+- **Prueba barata:** que la primera clienta reenvíe tres avisos de SINPE recibido de su banco (correo o SMS), para ver
+  qué datos traen. Señal: el aviso llega por correo y trae monto, nombre y detalle.
+- **Se construye:** una dirección de correo propia por negocio; la dueña crea en su correo una regla que reenvía solo
+  los avisos de SINPE (con el paso de verificación del reenvío guiado); el sistema lee monto, nombre y detalle; al
+  llegar el aviso que coincide con el código, registra la seña y confirma la cita. Si el banco no avisa por correo o
+  no hay coincidencia, queda el camino de V2.2 (comprobante y un toque).
+- **Ya hay:** señas en Ventas y correo saliente. No hay correo entrante (el DNS está en Cloudflare, que ofrece
+  enrutamiento de correo: a evaluar en la especificación).
+- **Cuidado:** nunca credenciales del banco: solo los avisos, guardando lo mínimo. Cada banco tiene su formato y lo
+  puede cambiar: un lector por banco y una alerta cuando deja de reconocer. Revisar las reglas vigentes de SINPE para
+  comercios.
+- **Mejora:** V2.2, y vuelve innecesaria V3.7 para la mayoría.
+- **Evidencia:** hipótesis fuerte; falta ver el aviso real del banco de la primera clienta.
+
+### M4 · "Ya me conoce" — `ya-me-conoce` · M
+
+- **La escena:** al conectar su número: "Ya leí tus chats de los últimos 3 meses. Esto aprendí: set acrílico ₡15.000,
+  atendés de martes a sábado, pedís ₡5.000 de seña, saludás con «hola linda». ¿Empiezo a atender así?".
+- **Por qué enamora:** no llena formularios y se siente conocida desde el primer minuto.
+- **Prueba barata:** que la primera clienta exporte 5 chats (sin archivos) y sacar de ahí, con el modelo, el resumen
+  "esto aprendí"; mostrárselo. Señal: "¿cómo supo eso?" y menos de tres correcciones.
+- **Se construye:** al conectar con coexistencia, pedir el historial (hay una sola oportunidad, dentro de las 24 horas
+  de conectar, y los webhooks tienen que estar listos antes) y extraer solo hechos del negocio: servicios y precios,
+  horario, política de seña, preguntas frecuentes y forma de saludar. Se muestra para confirmar. Después aprende de
+  las correcciones de la dueña en la bandeja ("a las frecuentes les doy 10 %": ¿lo aplico siempre?). Mientras no haya
+  coexistencia: subir chats exportados o la foto de la lista de precios (V1.2).
+- **Cuidado:** son mensajes de las clientas: se procesan para configurar el negocio, no se guarda el texto y va en la
+  política de privacidad. Siempre confirma la dueña.
+- **Depende de:** V0.3 para la versión automática. **Mejora:** V1.2.
+- **Evidencia:** hipótesis.
+
+### M5 · "Me hace quedar como una pro" — `me-hace-quedar-pro` · M
+
+- **La escena:** cada tarde: "tu historia de mañana está lista, tocá y compartila" con la imagen de espacios
+  disponibles y su marca. Al terminar un trabajo, la profesional le manda la foto a la asistente: la clienta la recibe
+  con los cuidados y el link de reseña, y a las tres semanas, "ya te toca relleno".
+- **Por qué enamora:** publicar los espacios y las fotos todos los días es una carga; esto la hace ver profesional sin
+  esfuerzo.
+- **Prueba barata:** armarle a mano la historia de mañana y mandársela. Señal: la publica, y al otro día la pide.
+- **Se construye:** (1) la imagen diaria de espacios disponibles, lista para compartir; (2) foto del trabajo terminado:
+  queda en la ficha, se le manda a la clienta y vuelve con un texto listo para Instagram; (3) cuando alguien pregunta
+  "¿tenés fotos?", la asistente manda trabajos reales parecidos.
+- **Ya hay:** marca propia, fotos en Storage, reseñas, recordatorios.
+- **Cuidado:** permiso de la clienta para publicar su foto. Generar la imagen sin dependencias pesadas.
+- **Se conecta con:** V2.6 (fotos en la ficha) y V3.1 (te toca de nuevo).
+- **Evidencia:** hipótesis (publicar los espacios disponibles en historias es práctica común del rubro).
+
+### M6 · "Tu recepcionista en 60 segundos" — `recepcionista-en-60s` · M
+
+- **La escena:** en la landing: "mandanos tu lista de precios". Un minuto después: "esta es TU asistente, escribile
+  como si fueras una clienta". La prueba con sus servicios y sus precios, y se la reenvía a una colega.
+- **Por qué enamora:** ve la suya, no una demo genérica, antes de registrarse. También sirve para vender: se le arma la
+  asistente a un negocio y se le manda el link.
+- **Prueba barata:** armarle a mano la asistente a una colega de la primera clienta en el chat de prueba y mandarle el
+  link. Señal: la prueba y pregunta el precio.
+- **Se construye:** un número de Selyon que atiende muchas asistentes de prueba (cada link trae un código que elige
+  cuál); alta sin registro desde la lista de precios; vence a los 7 días; botón "la quiero para mi negocio".
+- **Cuidado:** tope de costo por prueba y por día; ningún dato real de clientas.
+- **Depende de:** V1.1 y V1.2. **Mejora:** V1.5.
+- **Evidencia:** hipótesis.
+
+### M7 · "Mi semana, para presumir" — `mi-semana` · S
+
+- **La escena:** el sábado llega una tarjeta linda: "23 clientas atendidas, ₡412.000, 3 clientas nuevas, 14 citas las
+  agendó tu asistente mientras trabajabas".
+- **Por qué enamora:** ve lo que logró, y lo comparte. Cada tarjeta compartida nos muestra a otras dueñas.
+- **Prueba barata:** una tarjeta hecha a mano con sus números reales. Señal: la comparte en su estado.
+- **Se construye:** tarjeta semanal y mensual con botón para compartir y opción de ocultar los montos. A fin de año, "tu
+  año" para el negocio y, con permiso, para cada clienta.
+- **Se conecta con:** V1.7 (los mismos números, con "cómo se calcula").
+- **Evidencia:** hipótesis.
 
 ---
 
@@ -122,6 +251,7 @@ sin tocar nada técnico; 4 de 5 siguen activos a las 4 semanas.
 - **Decisiones tuyas:** tope de costo de IA por alta.
 - **Listo cuando:** de una foto real de una lista de precios sale un catálogo revisable; nunca se guarda sin que la
   dueña confirme; tests con el modelo simulado.
+- **Momento mágico:** M4 lo aprende de sus chats.
 - **Evidencia:** hipótesis.
 
 ### V1.3 · Plantillas de Meta solas — `plantillas-meta-auto` · M
@@ -156,6 +286,7 @@ sin tocar nada técnico; 4 de 5 siguen activos a las 4 semanas.
 - **Decisiones tuyas:** precios, oferta, número de la demo.
 - **Te toca a vos:** conseguir el número de la demo.
 - **Listo cuando:** un visitante agenda una cita ficticia desde la landing sin hablar con nadie.
+- **Momento mágico:** M6 le arma su propia asistente.
 - **Evidencia:** hipótesis fuerte (es como se venden estos productos).
 
 ### V1.6 · Embudo de activación — `embudo-activacion` · S
@@ -178,6 +309,7 @@ sin tocar nada técnico; 4 de 5 siguen activos a las 4 semanas.
 - **Ya hay:** métricas del agente y de crecimiento, reportes y correo por la cola.
 - **Decisiones tuyas:** la regla de "horas ahorradas"; si además se manda por WhatsApp (cuesta una plantilla).
 - **Listo cuando:** el primer negocio recibe su resumen con números que coinciden con Reportes.
+- **Momento mágico:** M7 lo vuelve una tarjeta para compartir.
 - **Evidencia:** hipótesis fuerte.
 
 ---
@@ -194,6 +326,7 @@ agente; 40 % o más de las dueñas estaría "muy decepcionada" si lo perdiera.
   agente ("mientras dormías agendó 3"). Por push y por correo; por WhatsApp solo si el costo lo justifica.
 - **Ya hay:** push por usuario, correo por la cola, Inicio con citas de hoy y sin confirmar.
 - **Listo cuando:** dueña y profesional reciben cada uno lo suyo; se puede apagar.
+- **Momento mágico:** la versión que enamora es M1 (por audio y con respuesta).
 - **Evidencia:** hipótesis.
 
 ### V2.2 · Señas por SINPE desde el chat — `senas-sinpe` · L
@@ -207,6 +340,7 @@ agente; 40 % o más de las dueñas estaría "muy decepcionada" si lo perdiera.
 - **Decisiones tuyas:** monto por defecto; cuánto se espera el comprobante.
 - **Cuidado:** un comprobante se puede falsificar: siempre aprueba una persona. La confirmación automática es V3.7.
 - **Listo cuando:** una cita con seña pasa de pedida a confirmada sin que la dueña escriba un mensaje.
+- **Momento mágico:** M3 la confirma sola con el aviso del banco.
 - **Evidencia:** hipótesis fuerte (práctica común del rubro).
 
 ### V2.3 · Política de cancelación y no-shows — `no-shows` · M
@@ -295,6 +429,7 @@ agente; 40 % o más de las dueñas estaría "muy decepcionada" si lo perdiera.
   administración, que confirma antes de cambiar algo y deja todo en la auditoría.
 - **Cuidado:** solo teléfonos verificados del equipo, y PIN para lo sensible.
 - **Listo cuando:** las diez preguntas y acciones más comunes pasan en evals propios.
+- **Momento mágico:** se adelanta dentro de M1.
 - **Evidencia:** hipótesis.
 
 ### V3.3 · Instagram y Messenger en la misma bandeja — `instagram-messenger` · L

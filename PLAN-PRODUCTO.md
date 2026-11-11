@@ -25,6 +25,10 @@ y la plata.
 
 Lo ya construido cubre casi todo el "qué hace". Lo que falta es sobre todo de los puntos 1, 3 y 5.
 
+**La apuesta para que se enamoren (§3.1).** De un sistema nadie se enamora. Cada negocio no recibe un panel: recibe
+**una socia**, una asistente con nombre que atiende a las clientas, le habla a la dueña por audio, hace lo que le pide,
+le cuida la plata y le cuenta cómo va el negocio. Sus siete "momentos mágicos" se prueban desde ya con el primer negocio.
+
 **Cinco fases, cada una con una meta que la cierra.** No se arranca la siguiente hasta cumplir la meta de la actual.
 Las metas son iniciales: se recalibran con datos reales.
 
@@ -99,6 +103,42 @@ nombre y propone "¿con Ana, como siempre?"; el recordatorio trae el link de Waz
 te agendé 3 citas"; se festeja la primera cita del agente y la número 100; "deshacer" en vez de "¿estás segura?"; el
 soporte lo contesta una persona en minutos.
 
+### 3.1 Lo que lo hace inolvidable: una socia, no un sistema
+
+Las funciones de arriba hacen que el producto sirva. No alcanzan para que alguien se enamore. **La apuesta es que cada
+negocio no reciba un panel, sino una socia**: una asistente con nombre (lo elige la dueña), que atiende a las clientas,
+le habla a la dueña por audio, hace lo que ella le pide, le cuida la plata y le cuenta cómo va el negocio. El panel sigue
+existiendo, pero deja de ser la puerta de entrada: la puerta es el WhatsApp.
+
+Tres cosas hacen que una persona se encariñe con un producto, y la socia apunta a las tres:
+
+- **Relación:** le habla, la conoce y le festeja los logros.
+- **Magia:** hace cosas que la dueña creía imposibles.
+- **Orgullo:** la hace quedar como una profesional y le muestra lo que logró.
+
+**Los siete momentos mágicos** (briefs en el backlog, grupo M):
+
+| # | Momento | La escena | Por qué enamora |
+|---|---|---|---|
+| **M1** | "Mi socia me habla" | A las 6:45 llega un audio: "hoy tenés 6 citas, ayer entraron ₡85.000 y quedan 3 campos el jueves, ¿los lleno?". La dueña contesta con otro audio y queda hecho | Tiene las manos ocupadas todo el día: maneja el negocio por audios |
+| **M2** | "Cotiza con solo ver la foto" | La clienta manda la foto de Pinterest. La asistente reconoce técnica, largo y uñas decoradas, da el precio según la tabla del negocio, agenda el tiempo correcto y le deja la foto a la profesional | Es lo que hoy contesta a mano muchas veces al día. En una búsqueda rápida no apareció ningún producto que lo haga |
+| **M3** | "El SINPE se confirma solo" | La asistente pide la seña con un código para el detalle. Cuando el banco avisa que entró la plata, confirma la cita sola | Nunca más revisar comprobantes. El Banco Central recomienda fiarse del aviso del propio banco y no del comprobante |
+| **M4** | "Ya me conoce" | Al conectar el número lee los chats de los últimos meses y dice: "esto aprendí de tu negocio: precios, horario, cómo saludás" | Cero formularios: se siente conocida desde el primer minuto |
+| **M5** | "Me hace quedar como una pro" | Cada tarde llega la historia de "espacios disponibles" lista para compartir. La clienta recibe la foto de su trabajo y, a las tres semanas, "ya te toca" | Le hace el mercadeo de todos los días, que hoy es una carga |
+| **M6** | "Tu recepcionista en 60 segundos" | En la landing: "mandanos tu lista de precios". Un minuto después: "esta es TU asistente, escribile como si fueras una clienta" | Prueba la suya, no una genérica, antes de registrarse, y se la reenvía a una colega |
+| **M7** | "Mi semana, para presumir" | Una tarjeta linda: 23 clientas, ₡412.000, 3 nuevas, 14 citas agendadas por la asistente | Orgullo que se comparte en historias; cada tarjeta lleva nuestra marca |
+
+**Cuál es la apuesta principal.** M1, porque es la única que cambia lo que el producto *es* y sirve para cualquier rubro.
+Las demás se enchufan en ella: es la socia la que avisa "llegó el SINPE" o "tu historia está lista". M2 es el golpe de
+efecto para uñas y pestañas, y M3 para Costa Rica.
+
+**Cada momento se prueba barato antes de construirlo**, a mano y con el primer negocio (la prueba de cada uno está en su
+brief). No se pregunta "¿te gusta?". La señal de amor es otra: lo vuelve a pedir al día siguiente, se molesta si falta,
+o se lo muestra a una colega sin que nadie se lo pida. Las maquetas para mostrar están en
+[`docs/plan-producto/maquetas/`](docs/plan-producto/maquetas/).
+
+**Fuera del software, tres ideas más** (§5 y §6): el turno de noche gratis, la garantía automática y el kit de bienvenida.
+
 ---
 
 ## 4. Las épicas, por fase
@@ -106,6 +146,15 @@ soporte lo contesta una persona en minutos.
 El porqué, el alcance mínimo y el "listo cuando" de cada una están en
 [`docs/plan-producto/BACKLOG.md`](docs/plan-producto/BACKLOG.md). Tamaños: **S** = un PR chico · **M** = uno o dos PRs
 con flujo o migración nuevos · **L** = tres o más PRs, o depende de terceros (Meta, pagos).
+
+**M · Momentos mágicos** (se prueban ya, en paralelo; se construyen si su prueba enamora)
+- M1 "Mi socia me habla": el negocio por audios (L)
+- M2 "Cotiza con solo ver la foto" (M)
+- M3 "El SINPE se confirma solo" (L)
+- M4 "Ya me conoce": aprende de los chats (M)
+- M5 "Me hace quedar como una pro": historias y fotos listas (M)
+- M6 "Tu recepcionista en 60 segundos" (M)
+- M7 "Mi semana, para presumir" (S)
 
 **V0 · Un negocio feliz**
 - V0.1 CI en verde otra vez (S)
@@ -188,13 +237,25 @@ cupo en el plan y cobrar el extra.
 - **Pregunta abierta:** si 3 de los primeros 5 negocios son de una sola persona y el Básico las frena, se crea un plan
   "Solo" más barato (1 profesional, menos conversaciones).
 
+**Tres experimentos de precio que nadie más ofrece** (uno a la vez, con pocos negocios, comparando contra el precio fijo):
+
+- **Turno de noche gratis.** La asistente atiende gratis de noche y los domingos, que es cuando más duele y cuando se
+  pierden las citas. Cada mañana la dueña ve "mientras dormías te agendé 3 citas". Paga cuando la quiere también de día
+  y con todo lo demás. Solo cuando el alta ya no necesite ayuda nuestra (M4 y M6), porque cada negocio gratis cuesta
+  tiempo de conexión y soporte.
+- **Garantía automática.** Si un mes la asistente no trajo más de lo que cuesta el plan, ese mes no se cobra, y lo
+  calcula el propio sistema con los números de "Tu mes con Selyon" (V1.7), sin que nadie reclame.
+- **Precio por resultado.** "Pagás por cada cita que te agenda, con un tope igual al precio del plan. Si no agenda, no
+  pagás."
+
 ---
 
 ## 6. Cómo conseguir los primeros 20
 
 1. **La red de la primera clienta.** El gremio de uñas y pestañas se conoce: tres demostraciones en persona, con el
    teléfono de ella, valen más que cualquier anuncio.
-2. **Demo viva** (V1.5): "escribile a este número y pedí una cita". Es la mejor venta de un producto así.
+2. **Demo viva** (V1.5): "escribile a este número y pedí una cita". Es la mejor venta de un producto así. La versión
+   que enamora es la personalizada (M6): se le arma su propia asistente con su lista de precios y se le manda el link.
 3. **Oferta de clientes fundadores** (§5).
 4. **Alta acompañada:** mientras V0.3 y V1 no estén, conectás vos el WhatsApp de cada negocio en una videollamada de 30
    minutos. No escala, y está bien: de ahí sale la lista de fricciones.
@@ -202,6 +263,8 @@ cupo en el plan y cobrar el extra.
 6. **Canales siguientes:** Instagram y TikTok mostrando chats reales, distribuidoras de insumos y academias de uñas y
    pestañas (con comisión por referido), grupos del gremio.
 7. **Referidos entre negocios** (V4.2) cuando haya unos 20.
+8. **Kit de bienvenida.** A cada negocio nuevo le llega un rótulo con su QR de reservas y calcomanías "Reservá por
+   WhatsApp 24/7". Cuesta poco, se siente como un regalo y lo ve cada clienta y cada colega que entra al local.
 
 Claude ayuda con todo lo escrito: páginas por rubro, guiones de video, respuestas a objeciones, casos de éxito y mensajes
 de venta. Eso se le pide en una sesión normal; no necesita épica.
@@ -308,6 +371,7 @@ recepcionista de voz por teléfono y pasarela de pagos propia.
 | Sentarte una hora con la primera clienta mientras usa el panel, y pasar todo por `/feedback` | `/prod-readiness` con los P0 que faltan |
 | Confirmar en la página oficial de Meta la tarifa de mensajes vigente para Costa Rica | `/producto numero-real-coexistencia` (especificación y preguntas mientras Meta aprueba) |
 | Decidir precios, número oficial y lo pendiente de Carril P | `/producto ayuda-y-feedback` |
+| Mostrarle las maquetas de los momentos mágicos a la primera clienta y a tres colegas, y anotar cuál piden | Preparar las pruebas baratas de M1, M2 y M3 |
 
 ---
 
@@ -326,3 +390,11 @@ Son de terceros salvo donde dice "oficial"; lo marcado *a verificar* arriba no s
 - Tilopay, API y SDK con SINPE Móvil: <https://tilopay.com/guias/api-y-sdk>
 - ONVO Pay, tarjetas y SINPE Móvil: <https://wordpress.org/plugins/onvo-pay/>
 - Factura electrónica 4.4 obligatoria: <https://siemprealdia.co/costa-rica/impuestos/hacienda-confirma-obligatoriedad-de-la-factura-electronica-4-4/>
+- Banco Central (oficial), estafas con comprobantes falsos de SINPE Móvil y verificación con el aviso del banco:
+  <https://www.bccr.fi.cr/comunicacion-y-prensa/Docs_Comunicados_Prensa/CP-BCCR-026-2021-Alerta_intentos_estafas_timo_basado_Sinpe_Movil.pdf>
+  y <https://www.teletica.com/calle-7/aprenda-a-identificar-las-sinpe-estafas_337689>
+- Meta (oficial), notas de voz por la API: <https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/audio-messages>
+- Historial de chats al conectar con coexistencia: <https://chakrahq.com/article/whatsapp-coexistence-chat-history-sync>
+  y <https://developers.telnyx.com/docs/messaging/whatsapp/coexistence>
+- Agentes de IA para salones de uñas (ninguno cotiza desde una foto): <https://hyperleap.ai/nail-salon-agents> y
+  <https://ciela.ai/agents/nail-salon-quote-generator>
