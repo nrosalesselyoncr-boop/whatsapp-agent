@@ -28,6 +28,10 @@ Agente de WhatsApp con IA (soporte + agenda de citas) para lavacar, multi-tenant
 
 `docs/prompts-produccion/` es una serie de prompts (uno por punto del checklist de producción). Se arranca con `/prod-readiness`: el orquestador trabaja siempre sobre la cabeza del **último PR abierto** (ver `00-INDICE.md`) y lleva el estado en `PROGRESO.md`. Cada prompt corre en su rama `prod/<slug>` y se mergea a `prod/readiness` solo con aprobación del usuario.
 
+## Plan de producto (Carril V)
+
+`PLAN-PRODUCTO.md` dice qué le falta al producto para que los negocios lo usen todos los días y lo paguen, en fases con una meta que cierra cada una. Los briefs de las épicas están en `docs/plan-producto/BACKLOG.md` y su estado en el Carril V del ROADMAP. Se ejecuta con `/producto [slug]` (especificación al momento en `docs/plan-producto/specs/`, rama `feat/<slug>` y PR apilado sobre el último PR abierto) y con `/feedback` (lo que dicen los clientes, sin datos personales: el repo es público). No se arranca una fase sin cumplir la meta de la anterior, ni una épica marcada *validar* sin su señal.
+
 ## Convenciones del repo
 
 - **Identificadores en inglés** (decisión del 2026-10-19): clases, funciones, variables, tipos, archivos, carpetas,

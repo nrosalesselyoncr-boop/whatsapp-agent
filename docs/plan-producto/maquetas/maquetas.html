@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Selyon · Una socia, no un sistema</title>
+<!--
+  Maquetas de los "momentos mágicos" (PLAN-PRODUCTO.md §3.1, grupo M del backlog).
+  Son IDEAS para mostrarles a dueñas de negocios y ver cuál piden; nada de esto existe todavía.
+  Cada <section class="slide"> es una página de 1080×1920. render.mjs exporta:
+    · las maquetas sueltas (las secciones sin la clase "deck") a PNG, para reenviar por WhatsApp;
+    · la presentación completa, en el orden de este archivo, a un PDF.
+  Todos los nombres, números y montos son inventados.
+-->
+<style>
+  :root {
+    --ink: #16181D; --muted: #5F6672; --teal: #0B7A68; --teal-soft: #DDF1EC;
+    --cream: #F7F2EB; --blush: #F6DDD6; --chat: #EFE7DE; --out: #D9FDD3; --line: #E6E1D9;
+    --tick: #34A7E0; --gold: #C9A227;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #cfcfcf; font-family: "Inter", "Noto Color Emoji", system-ui, sans-serif; color: var(--ink); }
+  .slide {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden; display: flex; flex-direction: column;
+    align-items: center; padding: 64px 64px 44px;
+    background:
+      radial-gradient(900px 620px at 100% 0%, var(--blush) 0%, transparent 62%),
+      radial-gradient(760px 560px at 0% 100%, var(--teal-soft) 0%, transparent 60%),
+      var(--cream);
+  }
+  .top { width: 100%; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 12px; font-size: 25px; font-weight: 600; letter-spacing: .02em;
+    color: var(--teal); background: #fff; border: 2px solid var(--teal-soft); border-radius: 999px; padding: 10px 24px;
+  }
+  .tag i { width: 12px; height: 12px; border-radius: 50%; background: var(--teal); display: inline-block; }
+  h1 { font-family: "Inter Display", "Inter", sans-serif; font-size: 78px; line-height: 1.02; letter-spacing: -.035em; font-weight: 800; margin-top: 26px; }
+  .sub { font-size: 33px; line-height: 1.3; color: var(--muted); margin-top: 18px; max-width: 900px; }
+
+  /* Teléfono */
+  .phone {
+    width: 868px; flex: 1; min-height: 0; margin-top: 44px; border-radius: 62px; border: 14px solid #15171B; background: #fff;
+    box-shadow: 0 40px 80px -30px rgba(22,24,29,.45), 0 0 0 2px rgba(255,255,255,.5) inset; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .head { display: flex; align-items: center; gap: 20px; padding: 24px 28px; background: #fff; border-bottom: 1px solid var(--line); }
+  .back { width: 16px; height: 16px; border-left: 4px solid var(--teal); border-bottom: 4px solid var(--teal); transform: rotate(45deg); margin: 0 4px 0 8px; }
+  .avatar {
+    width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0;
+    font-weight: 700; font-size: 28px; color: #fff; background: linear-gradient(135deg, #0B7A68, #14A38B);
+  }
+  .avatar.studio { background: linear-gradient(135deg, #D6336C, #F08CA8); }
+  .who { flex: 1; min-width: 0; }
+  .who b { display: block; font-size: 30px; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .who span { font-size: 23px; color: var(--teal); }
+  .dots { display: flex; flex-direction: column; gap: 6px; margin-right: 6px; }
+  .dots i { width: 7px; height: 7px; border-radius: 50%; background: #8A9099; }
+
+  .chat { flex: 1; min-height: 0; background: var(--chat); padding: 22px 22px 18px; display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; overflow: hidden; }
+  .pill { align-self: center; background: #fff; color: #5b6470; font-size: 21px; font-weight: 500; padding: 8px 20px; border-radius: 12px; box-shadow: 0 1px 1px rgba(0,0,0,.06); }
+  .pill.bank { background: #E7F6EF; color: #0A6A4F; font-weight: 600; display: inline-flex; gap: 10px; align-items: center; }
+  .msg { display: flex; flex-direction: column; max-width: 80%; }
+  .msg.in { align-self: flex-start; align-items: flex-start; }
+  .msg.out { align-self: flex-end; align-items: flex-end; }
+  .bubble { position: relative; font-size: 28px; line-height: 1.33; padding: 16px 20px 14px; border-radius: 22px; background: #fff; box-shadow: 0 1px 1.5px rgba(0,0,0,.10); }
+  .msg.in .bubble { border-top-left-radius: 6px; }
+  .msg.out .bubble { background: var(--out); border-top-right-radius: 6px; }
+  .meta { display: flex; justify-content: flex-end; align-items: center; gap: 8px; font-size: 19px; color: #7a8591; margin-top: 4px; }
+  .ticks { width: 30px; height: 18px; }
+  .btns { width: 100%; margin-top: 6px; display: flex; flex-direction: column; gap: 6px; }
+  .btns div { background: #fff; border-radius: 16px; text-align: center; color: var(--teal); font-weight: 600; font-size: 27px; padding: 15px 12px; box-shadow: 0 1px 1.5px rgba(0,0,0,.10); }
+  .msg.wide { max-width: 86%; }
+  .m2 .msg.in { max-width: 86%; }
+  .m2 .photo { width: 400px; height: 245px; }
+  .btns.row { flex-direction: row; }
+  .btns.row div { flex: 1; font-size: 25px; }
+  .msg.wide .bubble { width: 100%; }
+
+  /* Nota de voz */
+  .voice { display: flex; align-items: center; gap: 16px; min-width: 520px; }
+  .play { width: 58px; height: 58px; border-radius: 50%; background: var(--teal); display: grid; place-items: center; flex-shrink: 0; }
+  .play::after { content: ""; border-left: 20px solid #fff; border-top: 12px solid transparent; border-bottom: 12px solid transparent; margin-left: 6px; }
+  .msg.out .play { background: #5B6470; }
+  .wave { flex: 1; display: flex; align-items: center; gap: 4px; height: 54px; }
+  .wave i { flex: 1; border-radius: 3px; background: #B7BEC6; }
+  .wave i.on { background: var(--teal); }
+  .msg.out .wave i.on { background: #4C8F6F; }
+  .dur { font-size: 21px; color: #6b7480; font-variant-numeric: tabular-nums; }
+  .transcript { font-size: 24px; line-height: 1.35; color: #4b5560; font-style: italic; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #CBD2D9; }
+
+  /* Foto de referencia (ilustración) */
+  .photo { width: 440px; height: 270px; border-radius: 16px; overflow: hidden; display: block; }
+  .caption { margin-top: 10px; }
+
+  /* Tarjetas dentro del chat */
+  .learn { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 2px; }
+  .learn li { display: flex; gap: 14px; align-items: flex-start; font-size: 27px; line-height: 1.3; }
+  .learn li::before { content: ""; width: 30px; height: 30px; flex-shrink: 0; margin-top: 3px; border-radius: 50%; background: var(--teal-soft) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 12.5l4 4 8-9' fill='none' stroke='%230B7A68' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/20px no-repeat; }
+
+  .story { width: 360px; height: 520px; border-radius: 22px; padding: 30px 26px; display: flex; flex-direction: column; color: #fff;
+    background: radial-gradient(360px 300px at 100% 0%, #F08CA8 0%, transparent 70%), linear-gradient(160deg, #3B1F4A 0%, #6B2A5B 55%, #D6336C 120%); }
+  .story small { font-size: 19px; letter-spacing: .18em; font-weight: 700; opacity: .9; }
+  .story b { font-family: "Inter Display", "Inter", sans-serif; font-size: 44px; line-height: 1.02; letter-spacing: -.03em; margin-top: 10px; }
+  .story em { font-style: normal; font-size: 24px; opacity: .92; margin-top: 10px; }
+  .story .slots { display: flex; flex-direction: column; gap: 12px; margin-top: 26px; }
+  .story .slots span { background: rgba(255,255,255,.16); border: 1.5px solid rgba(255,255,255,.55); border-radius: 999px; font-size: 27px; font-weight: 700; padding: 10px 0; text-align: center; }
+  .story .cta { margin-top: auto; background: #fff; color: #3B1F4A; border-radius: 14px; font-size: 23px; font-weight: 700; text-align: center; padding: 13px 8px; }
+  .story .sig { font-size: 19px; text-align: center; margin-top: 12px; opacity: .9; }
+
+  .week { width: 560px; border-radius: 22px; padding: 30px 30px 26px; color: #fff;
+    background: radial-gradient(420px 300px at 0% 0%, #14A38B 0%, transparent 70%), linear-gradient(150deg, #0A4F45 0%, #0B7A68 60%, #16181D 130%); }
+  .week small { font-size: 19px; letter-spacing: .18em; font-weight: 700; opacity: .85; }
+  .week .big { font-family: "Inter Display", "Inter", sans-serif; font-size: 82px; font-weight: 800; letter-spacing: -.04em; line-height: 1; margin-top: 12px; }
+  .week .lbl { font-size: 23px; opacity: .9; margin-top: 4px; }
+  .week .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 24px; }
+  .week .grid div { background: rgba(255,255,255,.12); border-radius: 16px; padding: 16px 16px 14px; }
+  .week .grid b { font-size: 40px; letter-spacing: -.03em; display: block; }
+  .week .grid span { font-size: 20px; opacity: .92; line-height: 1.25; display: block; margin-top: 2px; }
+  .week cite { display: block; font-style: normal; font-size: 18px; opacity: .8; margin-top: 4px; }
+  .week q { display: block; font-size: 23px; font-style: italic; margin-top: 22px; opacity: .95; quotes: "«" "»"; }
+
+  .input { display: flex; align-items: center; gap: 16px; padding: 16px 20px 22px; background: var(--chat); }
+  .field { flex: 1; background: #fff; border-radius: 999px; padding: 18px 28px; font-size: 26px; color: #9aa2ab; }
+  .mic { width: 70px; height: 70px; border-radius: 50%; background: var(--teal); display: grid; place-items: center; }
+  .mic::after { content: ""; width: 18px; height: 30px; border-radius: 10px; background: #fff; }
+
+  /* Aviso en el teléfono de la dueña (M3) */
+  .notif { width: 868px; margin-top: 22px; background: #fff; border-radius: 28px; padding: 20px 26px; display: flex; gap: 20px; align-items: center;
+    box-shadow: 0 18px 40px -22px rgba(22,24,29,.5); border: 1px solid var(--line); }
+  .notif .avatar { width: 64px; height: 64px; font-size: 25px; }
+  .notif small { display: block; font-size: 20px; color: var(--muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .notif p { font-size: 26px; line-height: 1.3; margin-top: 2px; }
+
+  .foot { width: 100%; display: flex; justify-content: space-between; align-items: flex-end; margin-top: 26px; gap: 24px; }
+  .why { font-size: 29px; line-height: 1.3; font-weight: 600; max-width: 720px; }
+  .brand { text-align: right; flex-shrink: 0; }
+  .brand b { font-family: "Inter Display", "Inter", sans-serif; font-size: 34px; letter-spacing: -.03em; color: var(--teal); display: block; }
+  .brand span { font-size: 17px; color: var(--muted); display: block; margin-top: 2px; }
+
+  /* Maqueta M6: foto de la lista de precios y tarjeta con el enlace */
+  .pricephoto { width: 400px; height: 250px; border-radius: 16px; overflow: hidden; display: grid; place-items: center; background: linear-gradient(135deg, #E9DBCB, #D8C1AB); }
+  .paper { width: 300px; background: #fff; border-radius: 6px; padding: 18px 20px 14px; transform: rotate(-4deg); box-shadow: 0 14px 24px -12px rgba(0,0,0,.4); font-size: 17px; line-height: 1.2; }
+  .paper strong { display: block; font-size: 22px; letter-spacing: -.01em; color: #D6336C; }
+  .paper small { display: block; font-size: 12px; letter-spacing: .16em; color: #8A9099; margin: 2px 0 8px; }
+  .paper div { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1.5px dotted #D5D9DE; padding: 5px 0; }
+  .linkcard { display: flex; align-items: center; gap: 18px; background: var(--teal-soft); border-radius: 18px; padding: 18px 20px; min-width: 540px; }
+  .linkcard .avatar { width: 62px; height: 62px; font-size: 25px; }
+  .linkcard b { display: block; font-size: 27px; }
+  .linkcard em { font-style: normal; font-size: 22px; color: var(--teal); font-weight: 600; }
+  .linkcard .go { margin-left: auto; margin-right: 8px; width: 16px; height: 16px; border-right: 4px solid var(--teal); border-top: 4px solid var(--teal); transform: rotate(45deg); }
+
+  /* ── Presentación: páginas que no son maquetas (clase "deck") ── */
+  @page { size: 1080px 1920px; margin: 0; }
+  @media print { body { background: none; } .slide { break-after: page; } .slide:last-of-type { break-after: auto; } }
+  .num { position: absolute; top: 76px; right: 64px; font-size: 22px; font-weight: 600; letter-spacing: .06em; color: var(--muted); }
+  .deck .body { flex: 1; min-height: 0; width: 100%; display: flex; flex-direction: column; justify-content: center; }
+  .deck .sub { max-width: 940px; }
+
+  .cover { justify-content: space-between; align-items: stretch; padding: 120px 72px 76px; color: #fff;
+    background: radial-gradient(1000px 760px at 105% -5%, #18B197 0%, transparent 60%), radial-gradient(900px 820px at -10% 105%, #5A2A66 0%, transparent 62%), #0A4F45; }
+  .cover .num { color: rgba(255,255,255,.7); top: 80px; }
+  .cover .kicker { font-size: 26px; letter-spacing: .24em; font-weight: 700; opacity: .85; }
+  .cover h1 { font-size: 140px; line-height: .96; letter-spacing: -.045em; margin-top: 44px; }
+  .cover .lead { font-size: 42px; line-height: 1.28; margin-top: 40px; opacity: .93; }
+  .hello { background: #fff; color: var(--ink); border-radius: 40px; padding: 36px 38px 40px; box-shadow: 0 50px 90px -34px rgba(0,0,0,.6); }
+  .hello-head { display: flex; gap: 20px; align-items: center; margin-bottom: 28px; }
+  .hello-head b { font-size: 34px; display: block; }
+  .hello-head em { font-style: normal; font-size: 24px; color: var(--teal); }
+  .hello .voice { min-width: 0; }
+  .hello p { font-size: 37px; line-height: 1.34; font-style: italic; color: #39414c; margin-top: 28px; }
+  .cover-foot { display: flex; flex-direction: column; gap: 10px; font-size: 27px; }
+  .cover-foot span + span { font-size: 23px; opacity: .75; }
+
+  .notis { width: 100%; display: flex; flex-direction: column; gap: 20px; }
+  .noti { display: flex; align-items: center; gap: 24px; background: #fff; border-radius: 30px; padding: 28px 30px; border: 1px solid var(--line); box-shadow: 0 16px 34px -24px rgba(22,24,29,.5); }
+  .noti .dot { width: 70px; height: 70px; border-radius: 22px; background: var(--teal-soft); display: grid; place-items: center; font-size: 36px; flex-shrink: 0; }
+  .noti b { font-size: 32px; }
+  .noti p { font-size: 32px; line-height: 1.25; color: #39414c; margin-top: 2px; }
+  .noti time { margin-left: auto; align-self: flex-start; font-size: 24px; color: var(--muted); white-space: nowrap; }
+  .pains { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 44px; }
+  .pains div { background: rgba(255,255,255,.75); border: 2px solid var(--teal-soft); border-radius: 28px; padding: 30px 26px 32px; }
+  .pains span { font-size: 54px; }
+  .pains p { font-size: 31px; line-height: 1.24; font-weight: 600; margin-top: 12px; }
+  .punch { font-family: "Inter Display", "Inter", sans-serif; font-size: 70px; font-weight: 800; letter-spacing: -.035em; line-height: 1.05; margin-top: 56px; }
+  .punch em { font-style: normal; color: var(--teal); }
+
+  .cards2 { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .card { background: #fff; border-radius: 32px; padding: 40px 36px 44px; border: 1px solid var(--line); box-shadow: 0 18px 36px -26px rgba(22,24,29,.5); }
+  .card .ico { font-size: 72px; display: block; }
+  .card b { font-size: 43px; line-height: 1.1; letter-spacing: -.02em; display: block; margin-top: 16px; }
+  .card p { font-size: 31px; line-height: 1.32; color: var(--muted); margin-top: 12px; }
+  .trio { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+  .trio div { background: var(--ink); color: #fff; border-radius: 28px; padding: 32px 26px 34px; }
+  .trio b { font-size: 40px; display: block; color: #7FE0CB; }
+  .trio span { font-size: 28px; line-height: 1.28; display: block; margin-top: 8px; opacity: .92; }
+
+  .bigcards { width: 100%; display: flex; flex-direction: column; gap: 26px; }
+  .bigcard { display: flex; gap: 32px; align-items: flex-start; background: #fff; border-radius: 36px; padding: 46px 40px 48px; border: 1px solid var(--line); box-shadow: 0 18px 36px -26px rgba(22,24,29,.5); }
+  .bigcard .n { width: 92px; height: 92px; border-radius: 50%; background: var(--teal); color: #fff; font-size: 46px; font-weight: 800; display: grid; place-items: center; flex-shrink: 0; }
+  .bigcard .n.emoji { background: var(--teal-soft); font-size: 50px; font-weight: 400; }
+  .bigcard b { font-size: 47px; letter-spacing: -.025em; line-height: 1.08; display: block; }
+  .bigcard p { font-size: 34px; line-height: 1.34; color: #454d58; margin-top: 14px; }
+  .callout { width: 100%; margin-top: 30px; border-radius: 36px; padding: 52px 46px 58px; color: #fff; background: linear-gradient(150deg, #0A4F45, #0B7A68);
+    font-family: "Inter Display", "Inter", sans-serif; font-size: 64px; font-weight: 800; line-height: 1.08; letter-spacing: -.035em; }
+  .callout small { display: block; font-family: "Inter", sans-serif; font-size: 27px; font-weight: 600; letter-spacing: .14em; opacity: .8; margin-bottom: 18px; }
+
+  .index { width: 100%; list-style: none; display: flex; flex-direction: column; gap: 16px; }
+  .index li { display: flex; align-items: center; gap: 24px; background: #fff; border-radius: 26px; padding: 24px 28px; font-size: 37px; font-weight: 600; letter-spacing: -.01em; border: 1px solid var(--line); }
+  .index li span { width: 62px; height: 62px; border-radius: 50%; background: var(--teal-soft); color: var(--teal); display: grid; place-items: center; font-weight: 800; flex-shrink: 0; }
+  .asks { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 30px; }
+  .asks div { background: var(--ink); color: #fff; border-radius: 28px; padding: 34px 30px 36px; font-size: 35px; font-weight: 600; line-height: 1.2; }
+</style>
+</head>
+<body>
+
+<!-- Íconos reutilizables -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="ticks" viewBox="0 0 30 18"><path d="M1.5 9.5l5 5L17 3.5M11.5 13.5l1.5 1L27.5 3.5" fill="none" stroke="#34A7E0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- ═════════════ Presentación · portada, problema e idea ═════════════ -->
+<section class="slide deck cover" id="P01-portada">
+  <div>
+    <div class="kicker">SELYON · PROPUESTA</div>
+    <h1>Una socia,<br>no un sistema.</h1>
+    <p class="lead">Siete momentos para que la dueña de un negocio de belleza se enamore de su asistente.</p>
+  </div>
+  <div class="hello">
+    <div class="hello-head"><span class="avatar">L</span><div><b>Luna</b><em>tu asistente · 6:45 a. m.</em></div></div>
+    <div class="voice"><span class="play"></span><span class="wave" data-on="12"></span><span class="dur">0:34</span></div>
+    <p>«Buenos días. Hoy tenés 6 citas y ayer entraron ₡85.000. Quedan 3 campos libres el jueves, ¿los lleno?»</p>
+  </div>
+  <div class="cover-foot"><span>Para revisar y opinar · Noviembre de 2026</span><span>Todo lo que vas a ver son ideas. Nada de esto existe todavía.</span></div>
+</section>
+
+<section class="slide deck" id="P02-el-problema">
+  <div class="top">
+    <span class="tag"><i></i>El problema</span>
+    <h1>Atendés clientas con las manos y el negocio con el teléfono</h1>
+    <p class="sub">Son las 11 de la noche y el WhatsApp sigue sonando.</p>
+  </div>
+  <div class="body">
+  <div class="notis">
+    <div class="noti"><span class="dot">💬</span><div><b>Mariana</b><p>Hola! Cuánto me sale algo así? 📷</p></div><time>8:41 p. m.</time></div>
+    <div class="noti"><span class="dot">💬</span><div><b>Sofi</b><p>Tenés campo mañana en la tarde?</p></div><time>9:15 p. m.</time></div>
+    <div class="noti"><span class="dot">💬</span><div><b>Karla</b><p>Ya te hice el SINPE, revisá porfa 🙏</p></div><time>9:52 p. m.</time></div>
+    <div class="noti"><span class="dot">💬</span><div><b>Número nuevo</b><p>Info</p></div><time>10:30 p. m.</time></div>
+    <div class="noti"><span class="dot">💬</span><div><b>Dani</b><p>Perdón, mañana no puedo llegar 😔</p></div><time>11:04 p. m.</time></div>
+  </div>
+  <div class="pains">
+    <div><span>🌙</span><p>Citas que se pierden de noche</p></div>
+    <div><span>🧾</span><p>Comprobantes que hay que revisar</p></div>
+    <div><span>📣</span><p>Espacios que hay que publicar cada día</p></div>
+  </div>
+  <p class="punch">Y mañana, <em>otra vez.</em></p>
+  </div>
+  <div class="foot"><p class="why">Así es hoy el día de casi cualquier negocio de belleza.</p><div class="brand"><b>Selyon</b></div></div>
+</section>
+
+<section class="slide deck" id="P03-la-idea">
+  <div class="top">
+    <span class="tag"><i></i>La idea</span>
+    <h1>De un sistema nadie se enamora. De una socia, sí.</h1>
+    <p class="sub">Cada negocio recibe una asistente con nombre. Vive en su WhatsApp: no hay que aprender ningún programa.</p>
+  </div>
+  <div class="body">
+  <div class="cards2">
+    <div class="card"><span class="ico">💬</span><b>Atiende a tus clientas</b><p>A cualquier hora, con tus precios y tu forma de hablar.</p></div>
+    <div class="card"><span class="ico">🎙️</span><b>Te habla por audio</b><p>Te cuenta el día y hace lo que le pedís.</p></div>
+    <div class="card"><span class="ico">💰</span><b>Te cuida la plata</b><p>Señas confirmadas y campos llenos.</p></div>
+    <div class="card"><span class="ico">✨</span><b>Te hace quedar como una pro</b><p>Historias, fotos y recordatorios listos.</p></div>
+  </div>
+  <div class="trio">
+    <div><b>Relación</b><span>Te habla, te conoce y festeja con vos.</span></div>
+    <div><b>Magia</b><span>Hace cosas que creías imposibles.</span></div>
+    <div><b>Orgullo</b><span>Te muestra lo que lograste.</span></div>
+  </div>
+  <p class="punch">Le escribís o le hablás, <em>como a una persona.</em></p>
+  </div>
+  <div class="foot"><p class="why">Vos le ponés el nombre. En esta presentación se llama Luna.</p><div class="brand"><b>Selyon</b></div></div>
+</section>
+
+<!-- ───────────── M1 · Mi socia me habla ───────────── -->
+<section class="slide" id="M1-mi-socia-me-habla">
+  <div class="top">
+    <span class="tag"><i></i>Esto lo ves vos</span>
+    <h1>Tu asistente te habla,<br>y vos le contestás</h1>
+    <p class="sub">Un audio cada mañana con tu día. Le respondés con otro audio y queda hecho.</p>
+  </div>
+  <div class="phone">
+    <div class="head"><span class="back"></span><span class="avatar">L</span><div class="who"><b>Luna</b><span>tu asistente · en línea</span></div><div class="dots"><i></i><i></i><i></i></div></div>
+    <div class="chat">
+      <span class="pill">AYER</span>
+      <div class="msg in"><div class="bubble">Buenas noches, Vale 🌙 Hoy atendiste a 7 clientas y entraron ₡85.000. Mañana temprano te cuento el día.<div class="meta">8:15 p. m.</div></div></div>
+      <span class="pill">HOY</span>
+      <div class="msg in wide"><div class="bubble">
+        <div class="voice"><span class="play"></span><span class="wave" data-on="9"></span><span class="dur">0:34</span></div>
+        <div class="transcript">«Buenos días, Vale. Hoy tenés 6 citas; la primera es Mariana a las 9. Ayer entraron ₡85.000. Quedan 3 campos libres el jueves, ¿los lleno?»</div>
+        <div class="meta">6:45 a. m.</div>
+      </div></div>
+      <div class="msg out wide"><div class="bubble">
+        <div class="voice"><span class="play"></span><span class="wave" data-on="30"></span><span class="dur">0:07</span></div>
+        <div class="transcript">«Sí, llenalos. Y bloqueame el viernes después de la 1.»</div>
+        <div class="meta">6:52 a. m. <svg class="ticks"><use href="#ticks"/></svg></div>
+      </div></div>
+      <div class="msg in"><div class="bubble">Hecho ✅ Viernes bloqueado desde la 1:00 p. m. Les escribí a 6 clientas a las que ya les toca relleno.<div class="meta">6:52 a. m.</div></div></div>
+      <div class="msg in"><div class="bubble">Ya se llenaron 2 de los 3 campos del jueves: <b>+₡28.000</b> 🎉<div class="meta">11:20 a. m.</div></div></div>
+    </div>
+    <div class="input"><span class="field">Mensaje</span><span class="mic"></span></div>
+  </div>
+  <div class="foot"><p class="why">Manejás el negocio por audios, con las manos ocupadas.</p><div class="brand"><b>Selyon</b><span>Maqueta de una idea. Todavía no existe.</span></div></div>
+</section>
+
+<!-- ───────────── M2 · Cotiza con solo ver la foto ───────────── -->
+<section class="slide m2" id="M2-cotiza-con-la-foto">
+  <div class="top">
+    <span class="tag"><i></i>Esto lo ve tu clienta</span>
+    <h1>Cotiza con solo<br>ver la foto</h1>
+    <p class="sub">Tu clienta manda la foto y recibe precio y horarios.</p>
+  </div>
+  <div class="phone">
+    <div class="head"><span class="back"></span><span class="avatar studio">EV</span><div class="who"><b>Estudio Vale · Uñas y pestañas</b><span>en línea</span></div><div class="dots"><i></i><i></i><i></i></div></div>
+    <div class="chat">
+      <div class="msg out"><div class="bubble">
+        <svg class="photo" viewBox="0 0 440 270" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7E3DA"/><stop offset="1" stop-color="#E8C2B4"/></linearGradient>
+            <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EBC0A6"/><stop offset="1" stop-color="#DFAA8E"/></linearGradient>
+            <linearGradient id="nude" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F9DDD6"/><stop offset="1" stop-color="#F2C4BC"/></linearGradient>
+            <g id="nail">
+              <rect x="-6" y="92" width="72" height="230" rx="34" fill="url(#skin)"/>
+              <path d="M2 150 L2 66 C2 24 30 2 30 2 C30 2 58 24 58 66 L58 150 Q30 166 2 150 Z" fill="url(#nude)" stroke="#E3B0A6" stroke-width="1.5"/>
+              <path d="M2 66 C2 24 30 2 30 2 C30 2 58 24 58 66 Q30 44 2 66 Z" fill="#fff"/>
+              <path d="M12 132 Q14 84 22 62" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".55"/>
+            </g>
+          </defs>
+          <rect width="440" height="270" fill="url(#bg)"/>
+          <circle cx="388" cy="44" r="70" fill="#fff" opacity=".28"/>
+          <g transform="translate(34 96) rotate(-9 30 150)"><use href="#nail"/><circle cx="30" cy="102" r="5" fill="#C9A227"/><circle cx="30" cy="120" r="3.5" fill="#C9A227"/></g>
+          <g transform="translate(112 62) rotate(-4 30 150)"><use href="#nail"/><path d="M14 112 Q30 92 46 112" fill="none" stroke="#C9A227" stroke-width="3" stroke-linecap="round"/></g>
+          <g transform="translate(190 50)"><use href="#nail"/><circle cx="30" cy="104" r="6" fill="#fff" stroke="#C9A227" stroke-width="2.5"/><circle cx="19" cy="118" r="3" fill="#C9A227"/><circle cx="41" cy="118" r="3" fill="#C9A227"/></g>
+          <g transform="translate(268 62) rotate(4 30 150)"><use href="#nail"/><path d="M18 98 L42 122 M42 98 L18 122" stroke="#C9A227" stroke-width="2.5" stroke-linecap="round"/></g>
+          <g transform="translate(346 96) rotate(9 30 150)"><use href="#nail"/></g>
+        </svg>
+        <div class="caption">Hola! Cuánto me sale algo así? 😍</div>
+        <div class="meta">8:41 p. m. <svg class="ticks"><use href="#ticks"/></svg></div>
+      </div></div>
+      <div class="msg in"><div class="bubble">¡Hola, Mariana! Qué lindo diseño 😍 Es acrílico largo en almendra, con francés y 4 uñas decoradas a mano. Te sale <b>entre ₡18.000 y ₡20.000</b> y tarda unas 2 horas.<div class="meta">8:41 p. m.</div></div></div>
+      <div class="msg in"><div class="bubble">¿Te sirve el jueves a las 3:00 p. m. o el sábado a las 10:00 a. m.?<div class="meta">8:41 p. m.</div></div>
+        <div class="btns row"><div>Jueves 3:00 p. m.</div><div>Sábado 10:00 a. m.</div></div></div>
+      <div class="msg out"><div class="bubble">Jueves 3:00 p. m.<div class="meta">8:43 p. m. <svg class="ticks"><use href="#ticks"/></svg></div></div></div>
+      <div class="msg in"><div class="bubble">Listo, te agendé 💅 Le dejé tu foto a Vale para que tenga todo preparado.<div class="meta">8:43 p. m.</div></div></div>
+    </div>
+    <div class="input"><span class="field">Mensaje</span><span class="mic"></span></div>
+  </div>
+  <div class="foot"><p class="why">A las 8:41 de la noche, sin que nadie toque el teléfono.</p><div class="brand"><b>Selyon</b><span>Maqueta de una idea. Todavía no existe.</span></div></div>
+</section>
+
+<!-- ───────────── M3 · El SINPE se confirma solo ───────────── -->
+<section class="slide" id="M3-el-sinpe-se-confirma-solo">
+  <div class="top">
+    <span class="tag"><i></i>Esto lo ve tu clienta</span>
+    <h1>El SINPE<br>se confirma solo</h1>
+    <p class="sub">Cuando tu banco avisa que entró la plata, la cita queda confirmada. Sin comprobantes.</p>
+  </div>
+  <div class="phone">
+    <div class="head"><span class="back"></span><span class="avatar studio">EV</span><div class="who"><b>Estudio Vale · Uñas y pestañas</b><span>en línea</span></div><div class="dots"><i></i><i></i><i></i></div></div>
+    <div class="chat">
+      <div class="msg out"><div class="bubble">Jueves 3:00 p. m.<div class="meta">8:43 p. m. <svg class="ticks"><use href="#ticks"/></svg></div></div></div>
+      <div class="msg in"><div class="bubble">¡Perfecto! Te guardo ese campo 15 minutos mientras hacés la seña 💕<div class="meta">8:44 p. m.</div></div></div>
+      <div class="msg in"><div class="bubble">Para apartar tu campo del jueves, hacé un SINPE de <b>₡5.000</b> al 8XXX-XX12 (Valeria M.) y poné en el detalle: <b>LUNA47</b><div class="meta">8:44 p. m.</div></div></div>
+      <div class="msg out"><div class="bubble">Listo, ya lo hice 🙌<div class="meta">8:46 p. m. <svg class="ticks"><use href="#ticks"/></svg></div></div></div>
+      <span class="pill bank">🏦 El banco avisó que entró la plata · 8:46 p. m.</span>
+      <div class="msg in"><div class="bubble">✅ Recibido: ₡5.000. Tu cita del jueves a las 3:00 p. m. quedó confirmada. ¡Te esperamos!<div class="meta">8:46 p. m.</div></div></div>
+    </div>
+    <div class="input"><span class="field">Mensaje</span><span class="mic"></span></div>
+  </div>
+  <div class="notif"><span class="avatar">L</span><div><small>Mientras tanto, en tu teléfono</small><p><b>Luna:</b> Mariana pagó la seña de ₡5.000. Cita confirmada, no tenés que revisar nada.</p></div></div>
+  <div class="foot"><p class="why">Nunca más revisar comprobantes ni abrir la app del banco.</p><div class="brand"><b>Selyon</b><span>Maqueta de una idea. Todavía no existe.</span></div></div>
+</section>
+
+<!-- ───────────── M4 · Ya me conoce ───────────── -->
+<section class="slide" id="M4-ya-me-conoce">
+  <div class="top">
+    <span class="tag"><i></i>Esto lo ves vos</span>
+    <h1>Te conoce desde<br>el primer día</h1>
+    <p class="sub">Sin formularios: aprende de cómo ya atendés.</p>
+  </div>
+  <div class="phone">
+    <div class="head"><span class="back"></span><span class="avatar">L</span><div class="who"><b>Luna</b><span>tu asistente · en línea</span></div><div class="dots"><i></i><i></i><i></i></div></div>
+    <div class="chat">
+      <span class="pill">HOY</span>
+      <div class="msg in"><div class="bubble">¡Hola, Vale! Soy Luna, tu asistente 💚 Ya leí tus chats de los últimos 3 meses. Esto aprendí de tu estudio:<div class="meta">9:02 a. m.</div></div></div>
+      <div class="msg in wide"><div class="bubble">
+        <ul class="learn">
+          <li>Set acrílico ₡15.000 · Relleno ₡10.000</li>
+          <li>Pestañas clásicas ₡18.000</li>
+          <li>Atendés de martes a sábado, de 9 a 6</li>
+          <li>Pedís ₡5.000 de seña por SINPE</li>
+          <li>Saludás con «Hola linda» 💕</li>
+          <li>Las 14 preguntas que más te hacen</li>
+        </ul>
+        <div class="meta">9:02 a. m.</div>
+      </div></div>
+      <div class="msg in"><div class="bubble">¿Empiezo a atender así?<div class="meta">9:02 a. m.</div></div>
+        <div class="btns"><div>Sí, así es</div><div>Corregir algo</div></div></div>
+      <div class="msg out"><div class="bubble">Sí, así es 😍 ¿Cómo supiste todo eso?<div class="meta">9:03 a. m. <svg class="ticks"><use href="#ticks"/></svg></div></div></div>
+    </div>
+    <div class="input"><span class="field">Mensaje</span><span class="mic"></span></div>
+  </div>
+  <div class="foot"><p class="why">Lista para atender en minutos, no en días.</p><div class="brand"><b>Selyon</b><span>Maqueta de una idea. Todavía no existe.</span></div></div>
+</section>
+
+<!-- ───────────── M5 · Me hace quedar como una pro ───────────── -->
+<section class="slide" id="M5-me-hace-quedar-pro">
+  <div class="top">
+    <span class="tag"><i></i>Esto lo ves vos</span>
+    <h1>Tu historia de mañana,<br>ya lista</h1>
+    <p class="sub">Cada tarde te llegan los espacios disponibles con tu marca. Solo la compartís.</p>
+  </div>
+  <div class="phone">
+    <div class="head"><span class="back"></span><span class="avatar">L</span><div class="who"><b>Luna</b><span>tu asistente · en línea</span></div><div class="dots"><i></i><i></i><i></i></div></div>
+    <div class="chat">
+      <div class="msg in"><div class="bubble">Tu historia de mañana está lista. Tocá y compartila en tu estado 👇<div class="meta">7:30 p. m.</div></div></div>
+      <div class="msg in"><div class="bubble">
+        <div class="story">
+          <small>ESPACIOS DISPONIBLES</small>
+          <b>Jueves 12<br>de noviembre</b>
+          <div class="slots"><span>10:00 a. m.</span><span>1:30 p. m.</span><span>4:00 p. m.</span></div>
+          <div class="cta">Reservá por WhatsApp</div>
+          <div class="sig">Estudio Vale · Uñas y pestañas</div>
+        </div>
+        <div class="meta">7:30 p. m.</div>
+      </div></div>
+      <div class="msg out"><div class="bubble">Me encanta 😍<div class="meta">7:31 p. m. <svg class="ticks"><use href="#ticks"/></svg></div></div></div>
+      <div class="msg in"><div class="bubble">También le mandé a Mariana la foto de sus uñas de hoy. En 3 semanas le recuerdo que le toca relleno.<div class="meta">7:31 p. m.</div></div></div>
+    </div>
+    <div class="input"><span class="field">Mensaje</span><span class="mic"></span></div>
+  </div>
+  <div class="foot"><p class="why">Tu mercadeo de todos los días, hecho.</p><div class="brand"><b>Selyon</b><span>Maqueta de una idea. Todavía no existe.</span></div></div>
+</section>
+
+<!-- ───────────── M6 · Tu recepcionista en 60 segundos ───────────── -->
+<section class="slide" id="M6-tu-asistente-en-60-segundos">
+  <div class="top">
+    <span class="tag"><i></i>Esto lo ves vos</span>
+    <h1>Tu propia asistente<br>en 60 segundos</h1>
+    <p class="sub">Mandás tu lista de precios y la probás.</p>
+  </div>
+  <div class="phone">
+    <div class="head"><span class="back"></span><span class="avatar">S</span><div class="who"><b>Selyon</b><span>en línea</span></div><div class="dots"><i></i><i></i><i></i></div></div>
+    <div class="chat">
+      <div class="msg out"><div class="bubble">
+        <div class="pricephoto"><div class="paper">
+          <strong>Estudio Vale</strong><small>LISTA DE PRECIOS</small>
+          <div><span>Set acrílico</span><span>₡15.000</span></div>
+          <div><span>Relleno</span><span>₡10.000</span></div>
+          <div><span>Semipermanente</span><span>₡9.000</span></div>
+          <div><span>Pestañas clásicas</span><span>₡18.000</span></div>
+        </div></div>
+        <div class="caption">Esta es mi lista de precios 👆</div>
+        <div class="meta">2:10 p. m. <svg class="ticks"><use href="#ticks"/></svg></div>
+      </div></div>
+      <div class="msg in"><div class="bubble">¡Listo, Vale! Armé tu asistente con tus 12 servicios y tus precios 💚 Probala: escribile como si fueras una clienta.<div class="meta">2:11 p. m.</div></div></div>
+      <div class="msg in wide"><div class="bubble">
+        <div class="linkcard"><span class="avatar">L</span><div><b>Luna · asistente de Estudio Vale</b><em>Tocá para chatear con ella</em></div><span class="go"></span></div>
+        <div class="meta">2:11 p. m.</div>
+      </div></div>
+      <div class="msg out"><div class="bubble">Le pregunté por el relleno y lo supo 😱<div class="meta">2:14 p. m. <svg class="ticks"><use href="#ticks"/></svg></div></div></div>
+      <div class="msg in"><div class="bubble">Así va a atender a tus clientas. Cuando quieras, la conectamos a tu número.<div class="meta">2:14 p. m.</div></div></div>
+    </div>
+    <div class="input"><span class="field">Mensaje</span><span class="mic"></span></div>
+  </div>
+  <div class="foot"><p class="why">Probás la tuya, con tus precios, antes de pagar nada.</p><div class="brand"><b>Selyon</b><span>Maqueta de una idea. Todavía no existe.</span></div></div>
+</section>
+
+<!-- ───────────── M7 · Mi semana, para presumir ───────────── -->
+<section class="slide" id="M7-mi-semana">
+  <div class="top">
+    <span class="tag"><i></i>Esto lo ves vos</span>
+    <h1>Tu semana,<br>para presumir</h1>
+    <p class="sub">Cada sábado ves lo que lograste, y lo que tu asistente hizo mientras trabajabas.</p>
+  </div>
+  <div class="phone">
+    <div class="head"><span class="back"></span><span class="avatar">L</span><div class="who"><b>Luna</b><span>tu asistente · en línea</span></div><div class="dots"><i></i><i></i><i></i></div></div>
+    <div class="chat">
+      <span class="pill">SÁBADO</span>
+      <div class="msg in"><div class="bubble">¡Qué semana, Vale! 🎉<div class="meta">6:10 p. m.</div></div></div>
+      <div class="msg in"><div class="bubble">
+        <div class="week">
+          <small>TU SEMANA</small>
+          <div class="big">₡412.000</div>
+          <div class="lbl">en 23 clientas atendidas</div>
+          <div class="grid">
+            <div><b>3</b><span>clientas nuevas</span></div>
+            <div><b>14</b><span>citas que agendé yo mientras trabajabas</span></div>
+          </div>
+          <q>La mejor, súper puntual</q><cite>Una clienta, esta semana</cite>
+        </div>
+        <div class="meta">6:10 p. m.</div>
+      </div></div>
+      <div class="msg in"><div class="bubble">Vas 18 % arriba de la semana pasada. ¿Te cuento qué servicio te dejó más?<div class="meta">6:10 p. m.</div></div></div>
+      <div class="msg out"><div class="bubble">Sí, contame<div class="meta">6:12 p. m. <svg class="ticks"><use href="#ticks"/></svg></div></div></div>
+    </div>
+    <div class="input"><span class="field">Mensaje</span><span class="mic"></span></div>
+  </div>
+  <div class="foot"><p class="why">Orgullo que dan ganas de compartir.</p><div class="brand"><b>Selyon</b><span>Maqueta de una idea. Todavía no existe.</span></div></div>
+</section>
+
+<!-- ═════════════ Presentación · cierre ═════════════ -->
+<section class="slide deck" id="P11-y-ademas">
+  <div class="top">
+    <span class="tag"><i></i>Y además</span>
+    <h1>Tres ideas para que nadie tenga miedo de probar</h1>
+    <p class="sub">Lo difícil no es usarla. Es animarse a empezar.</p>
+  </div>
+  <div class="body">
+  <div class="bigcards">
+    <div class="bigcard"><span class="n emoji">🌙</span><div><b>Turno de noche gratis</b><p>La asistente atiende gratis de noche y los domingos, que es cuando más citas se pierden. Se paga cuando se la quiere también de día.</p></div></div>
+    <div class="bigcard"><span class="n emoji">🛡️</span><div><b>Garantía automática</b><p>Si un mes no trajo más de lo que cuesta, ese mes no se cobra. Lo calcula el sistema, sin reclamos.</p></div></div>
+    <div class="bigcard"><span class="n emoji">🎁</span><div><b>Kit de bienvenida</b><p>Un rótulo con el código QR de reservas y calcomanías «Reservá por WhatsApp 24/7» para el local.</p></div></div>
+  </div>
+  </div>
+  <div class="foot"><p class="why">Probar no tiene que dar miedo ni costar plata.</p><div class="brand"><b>Selyon</b></div></div>
+</section>
+
+<section class="slide deck" id="P12-como-se-prueba">
+  <div class="top">
+    <span class="tag"><i></i>Cómo sabemos si enamora</span>
+    <h1>Antes de construir,<br>lo probamos a mano</h1>
+    <p class="sub">Con un negocio real y sin programar nada.</p>
+  </div>
+  <div class="body">
+  <div class="bigcards">
+    <div class="bigcard"><span class="n">1</span><div><b>El SINPE: tres avisos del banco</b><p>Ver qué dice el banco cuando entra un SINPE. Si trae monto, nombre y detalle, se puede confirmar solo.</p></div></div>
+    <div class="bigcard"><span class="n">2</span><div><b>La foto: quince cotizaciones reales</b><p>Quince fotos de referencia y cuánto se cobró por cada una, para comparar con lo que diría la asistente.</p></div></div>
+    <div class="bigcard"><span class="n">3</span><div><b>El audio: cinco mañanas</b><p>Un audio a las 6:45 con el día, hecho a mano. Si al tercer día ya se lo espera, es por ahí.</p></div></div>
+  </div>
+  <div class="callout"><small>LA SEÑAL</small>No es «qué lindo».<br>Es «¿cuándo lo puedo usar?»</div>
+  </div>
+  <div class="foot"><p class="why">Se construye solo lo que enamora en la prueba.</p><div class="brand"><b>Selyon</b></div></div>
+</section>
+
+<section class="slide deck" id="P13-tu-turno">
+  <div class="top">
+    <span class="tag"><i></i>Tu turno</span>
+    <h1>¿Cuál te haría decir<br>«la quiero ya»?</h1>
+  </div>
+  <div class="body">
+  <ol class="index">
+    <li><span>1</span>Tu asistente te habla, y vos le contestás</li>
+    <li><span>2</span>Cotiza con solo ver la foto</li>
+    <li><span>3</span>El SINPE se confirma solo</li>
+    <li><span>4</span>Te conoce desde el primer día</li>
+    <li><span>5</span>Tu historia de mañana, ya lista</li>
+    <li><span>6</span>Tu propia asistente en 60 segundos</li>
+    <li><span>7</span>Tu semana, para presumir</li>
+  </ol>
+  <div class="asks">
+    <div>¿Cuál te enamora más?</div>
+    <div>¿Cuál dejarías por fuera?</div>
+    <div>¿Qué le falta?</div>
+    <div>¿Qué nombre le pondrías a tu asistente?</div>
+  </div>
+  </div>
+  <div class="foot"><p class="why">Todo esto son ideas. Nada existe todavía: por eso tu opinión llega a tiempo.</p><div class="brand"><b>Selyon</b></div></div>
+</section>
+
+<script>
+  // Barras de las notas de voz: alturas fijas (misma imagen en cada exportación).
+  const H = [22, 40, 64, 34, 78, 52, 28, 70, 44, 86, 58, 30, 66, 40, 74, 50, 26, 60, 36, 82, 48, 30, 68, 42, 56, 24, 46, 32, 20, 38];
+  for (const wave of document.querySelectorAll(".wave")) {
+    const on = Number(wave.dataset.on || 0);
+    H.forEach((h, i) => {
+      const bar = document.createElement("i");
+      bar.style.height = h + "%";
+      if (i < on) bar.className = "on";
+      wave.appendChild(bar);
+    });
+  }
+</script>
+</body>
+</html>
