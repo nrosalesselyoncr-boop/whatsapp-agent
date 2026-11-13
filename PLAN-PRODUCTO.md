@@ -135,7 +135,9 @@ efecto para uñas y pestañas, y M3 para Costa Rica.
 **Cada momento se prueba barato antes de construirlo**, a mano y con el primer negocio (la prueba de cada uno está en su
 brief). No se pregunta "¿te gusta?". La señal de amor es otra: lo vuelve a pedir al día siguiente, se molesta si falta,
 o se lo muestra a una colega sin que nadie se lo pida. Las maquetas para mostrar están en
-[`docs/plan-producto/maquetas/`](docs/plan-producto/maquetas/).
+[`docs/plan-producto/maquetas/`](docs/plan-producto/maquetas/), junto con la presentación completa de la propuesta
+([`propuesta-una-socia.pdf`](docs/plan-producto/maquetas/propuesta-una-socia.pdf), 13 páginas en vertical para leer en
+el celular y compartir por WhatsApp).
 
 **Fuera del software, tres ideas más** (§5 y §6): el turno de noche gratis, la garantía automática y el kit de bienvenida.
 
