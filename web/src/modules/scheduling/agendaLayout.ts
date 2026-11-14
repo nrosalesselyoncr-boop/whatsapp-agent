@@ -52,6 +52,28 @@ export function weekDates(date: string): string[] {
   return Array.from({ length: 7 }, (_, i) => addDays(monday, i));
 }
 
+/** "AAAA-MM-DD" + n meses, con el día recortado al último del mes (31 ene + 1 → 28/29 feb). */
+export function addMonths(date: string, months: number): string {
+  const [y, m, d] = date.split("-").map(Number);
+  const first = new Date(Date.UTC(y, m - 1 + months, 1));
+  const lastDay = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + 1, 0)).getUTCDate();
+  return `${first.getUTCFullYear()}-${String(first.getUTCMonth() + 1).padStart(2, "0")}-${String(Math.min(d, lastDay)).padStart(2, "0")}`;
+}
+
+/**
+ * Días de la rejilla del mes de `date`: semanas completas de lunes a domingo, desde la que
+ * tiene el día 1 hasta la que tiene el último (28, 35 o 42 días).
+ */
+export function monthDates(date: string): string[] {
+  const first = `${date.slice(0, 8)}01`;
+  const last = addDays(addMonths(first, 1), -1);
+  const start = weekDates(first)[0];
+  const end = weekDates(last)[6];
+  const out: string[] = [];
+  for (let d = start; d <= end; d = addDays(d, 1)) out.push(d);
+  return out;
+}
+
 /**
  * Rango de la rejilla de un día: de la apertura más temprana al cierre más tarde de la
  * sucursal (redondeado a horas enteras), estirado para que entren las citas que haya.

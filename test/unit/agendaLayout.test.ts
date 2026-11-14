@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { addDays, gridRange, hhmm, layoutColumns, weekDates, workingWindows } from "../../web/src/modules/scheduling/agendaLayout";
+import { addDays, addMonths, gridRange, hhmm, layoutColumns, monthDates, weekDates, workingWindows } from "../../web/src/modules/scheduling/agendaLayout";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Geometría de la Agenda del panel (web/src/modules/scheduling/agendaLayout.ts, sin
@@ -48,4 +48,18 @@ test("fechas: semana de lunes a domingo y formato de horas", () => {
   assert.equal(weekDates("2026-10-25")[0], "2026-10-19", "el domingo es el último día de su semana");
   assert.equal(addDays("2026-02-28", 1), "2026-03-01");
   assert.equal(hhmm(9 * 60 + 5), "09:05");
+});
+
+test("mes: semanas completas de lunes a domingo y meses con el día recortado", () => {
+  // Noviembre 2026: el 1 es domingo y el 30 lunes → del lun 26 oct al dom 6 dic (6 semanas).
+  const nov = monthDates("2026-11-14");
+  assert.equal(nov.length, 42);
+  assert.equal(nov[0], "2026-10-26");
+  assert.equal(nov.at(-1), "2026-12-06");
+  // Febrero 2027: arranca lunes y termina domingo → 4 semanas justas.
+  assert.deepEqual([monthDates("2027-02-10").length, monthDates("2027-02-10")[0]], [28, "2027-02-01"]);
+  assert.equal(addMonths("2026-01-31", 1), "2026-02-28");
+  assert.equal(addMonths("2028-01-31", 1), "2028-02-29");
+  assert.equal(addMonths("2026-12-15", 1), "2027-01-15");
+  assert.equal(addMonths("2026-01-15", -1), "2025-12-15");
 });

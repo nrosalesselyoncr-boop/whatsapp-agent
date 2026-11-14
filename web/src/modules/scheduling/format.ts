@@ -43,6 +43,12 @@ export function formatLongDate(date: string): string {
   return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString("es-CR", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" });
 }
 
+/** "AAAA-MM-DD" → "noviembre de 2026". */
+export function formatMonth(date: string): string {
+  const [y, m] = date.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString("es-CR", { month: "long", year: "numeric", timeZone: "UTC" });
+}
+
 /** "AAAA-MM-DD" → "lun 26 oct". */
 export function formatShortDate(date: string): string {
   const [y, m, d] = date.split("-").map(Number);

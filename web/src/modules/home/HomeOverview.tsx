@@ -5,6 +5,7 @@ import { errorMessage } from "../../lib/api";
 import { formatCents } from "../../lib/money";
 import ErrorState from "../../ui/ErrorState";
 import { DayBarChart } from "../reports/charts";
+import { addDays } from "../scheduling/agendaLayout";
 import { compactCents, formatInt } from "../reports/format";
 import { useHomeOverview } from "../reports/reportsApi";
 import "../reports/reports.css";
@@ -86,11 +87,11 @@ export default function HomeOverview() {
             Para atender
           </h2>
           <div className="ho-alerts">
-            <Link className="ho-alert" to={`/agenda?date=${o.date}`}>
+            <Link className="ho-alert" to={`/agenda?date=${o.date}&view=day`}>
               <span>Sin confirmar hoy</span>
               <span className={"ho-alert-count tnum" + (unconfirmed.today === 0 ? " zero" : "")}>{formatInt(unconfirmed.today)}</span>
             </Link>
-            <Link className="ho-alert" to="/agenda">
+            <Link className="ho-alert" to={`/agenda?date=${addDays(o.date, 1)}&view=day`}>
               <span>Sin confirmar mañana</span>
               <span className={"ho-alert-count tnum" + (unconfirmed.tomorrow === 0 ? " zero" : "")}>{formatInt(unconfirmed.tomorrow)}</span>
             </Link>

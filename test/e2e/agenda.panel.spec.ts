@@ -40,7 +40,7 @@ function freeMonday(): string {
 test("agendar, confirmar, reprogramar y cancelar una cita", async ({ page }) => {
   await login(page, "duena@demo.test");
   const monday = freeMonday();
-  await page.goto(`/panel/agenda?date=${monday}`);
+  await page.goto(`/panel/agenda?date=${monday}&view=day`);
   await expect(heading(page, "Agenda")).toBeVisible();
   await expect(page.getByRole("group", { name: "Carril de Dra. Carmen Ruiz" })).toBeVisible();
 
@@ -104,7 +104,7 @@ test("agendar, confirmar, reprogramar y cancelar una cita", async ({ page }) => 
 test("campos de la cita (Pro): se cargan al agendar y se editan en el detalle; el Básico no los ve", async ({ page }) => {
   await login(page, "duena@demo.test");
   const monday = freeMonday();
-  await page.goto(`/panel/agenda?date=${monday}`);
+  await page.goto(`/panel/agenda?date=${monday}&view=day`);
   await page.getByRole("button", { name: "Nueva cita" }).click();
   const dialog = page.getByRole("dialog", { name: "Nueva cita" });
   await dialog.getByLabel("Buscar paciente").fill("María Fernández");
@@ -157,13 +157,41 @@ test('"+ Nuevo → Cita" abre el diálogo y la vista semana navega', async ({ pa
   await expect(page.locator(".agenda-date")).not.toHaveText(before ?? "");
   // Del día de la semana a la vista día.
   await page.getByRole("button", { name: /^Ver el día/ }).first().click();
-  await expect(page).not.toHaveURL(/view=week/);
+  await expect(page).toHaveURL(/view=day/);
   await expect(page.getByRole("button", { name: "Día", exact: true })).toHaveAttribute("aria-pressed", "true");
+});
+
+test("la agenda abre en la vista mes: navega por mes, muestra las citas y abre el día", async ({ page }) => {
+  await login(page, "duena@demo.test");
+  await page.goto("/panel/agenda");
+  await expect(page.getByRole("button", { name: "Mes", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("grid", { name: "Mes" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Hoy" })).toBeDisabled();
+  // Las citas del mes se ven en la rejilla y abren su detalle.
+  const item = page.locator(".month-item").first();
+  await expect(item).toBeVisible();
+  await item.click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toBeHidden();
+
+  const before = await page.locator(".agenda-date").textContent();
+  await page.getByRole("button", { name: "Mes siguiente" }).click();
+  await expect(page.locator(".agenda-date")).not.toHaveText(before ?? "");
+  await expect(page.getByRole("button", { name: "Hoy" })).toBeEnabled();
+  await page.getByRole("button", { name: "Mes anterior" }).click();
+  await expect(page.locator(".agenda-date")).toHaveText(before ?? "");
+
+  // Tocar un día abre la vista día.
+  await page.getByRole("button", { name: /^Ver el día/ }).first().click();
+  await expect(page).toHaveURL(/view=day/);
+  await expect(page.locator(".lane-header").first()).toBeVisible();
 });
 
 test("profesional: solo su carril y sin reasignar", async ({ page }) => {
   await login(page, "profesional@demo.test");
   await expect(heading(page, "Mi agenda")).toBeVisible();
+  await page.getByRole("button", { name: "Día", exact: true }).click();
   await expect(page.locator(".lane-header")).toHaveText(["Dr. Carlos Rojas"]);
   await page.getByRole("button", { name: "Semana" }).click();
   const items = page.locator(".week-item");
@@ -215,6 +243,7 @@ test("móvil (375 px): agenda y nueva cita sin scroll horizontal", async ({ page
   await expect(heading(page, "Agenda")).toBeVisible();
   const noHorizontalScroll = () => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
   expect(await noHorizontalScroll()).toBe(true);
+  await expect(page.getByRole("grid", { name: "Mes" })).toBeVisible();
   await page.getByRole("button", { name: "Semana" }).click();
   expect(await noHorizontalScroll()).toBe(true);
   await page.getByRole("button", { name: "Nueva cita" }).click();
