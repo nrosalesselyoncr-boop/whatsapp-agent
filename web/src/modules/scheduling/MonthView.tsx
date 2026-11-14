@@ -20,10 +20,16 @@ const WEEKDAYS = ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"];
 /** Citas que entran en una celda; el resto queda en "+N más" (que abre el día). */
 const MAX_PER_DAY = 3;
 
+/** Hora corta para el celular: "8:00", "15:30" → "3:30" (sin "a. m." / "p. m."). */
+function shortTime(iso: string, timeZone: string): string {
+  const [h, m] = isoToZoned(iso, timeZone).time.split(":").map(Number);
+  return `${h % 12 || 12}:${String(m).padStart(2, "0")}`;
+}
+
 /**
  * Vista mes: rejilla de lunes a domingo con las primeras citas de cada día. Tocar un día
- * (o "+N más") abre la vista día; tocar una cita abre su detalle. En el celular las citas
- * se resumen en un número por día.
+ * (o "+N más") abre la vista día; tocar una cita abre su detalle. En el celular es la
+ * misma rejilla, más compacta (hora corta arriba y el nombre abajo).
  */
 export default function MonthView({ days, month, timeZone, appointments, staffColors, onSelect, onOpenDay }: Props) {
   const me = useSession();
@@ -57,7 +63,6 @@ export default function MonthView({ days, month, timeZone, appointments, staffCo
               <div key={date} className={cls} role="gridcell">
                 <button type="button" className="month-day-link" onClick={() => onOpenDay(date)} aria-label={`Ver el día ${label}, ${count}`}>
                   <span className="month-day-num tnum">{Number(date.slice(8))}</span>
-                  {list.length > 0 && <span className="month-day-count tnum">{list.length}</span>}
                 </button>
                 {list.length > 0 && (
                   <ul className="month-list">
@@ -71,6 +76,9 @@ export default function MonthView({ days, month, timeZone, appointments, staffCo
                           title={`${formatTime(a.startsAt, timeZone)} · ${a.client?.name ?? "—"} · ${a.staff?.name ?? ""} · ${STATUS_LABEL[a.status]}`}
                         >
                           <span className="month-item-time tnum">{formatTime(a.startsAt, timeZone)}</span>
+                          <span className="month-item-time-short tnum" aria-hidden="true">
+                            {shortTime(a.startsAt, timeZone)}
+                          </span>
                           <span className="month-item-client">{a.client?.name ?? "—"}</span>
                         </button>
                       </li>
