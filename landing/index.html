@@ -2,552 +2,679 @@
 <html lang="es-CR">
 <head>
 <meta charset="utf-8">
-<!-- MARCA: Selyon es la marca paraguas; el producto en vivo es "Recepcionista IA". -->
-<title>Selyon — agentes de IA que atienden, agendan y venden por tu negocio</title>
-<meta name="description" content="Selyon crea agentes de inteligencia artificial que responden, cotizan, agendan y venden por vos. Empezá con el agente de WhatsApp que ya atiende a clientes reales.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selyon CRM — agenda, clientes y WhatsApp con IA para negocios con cita</title>
+<meta name="description" content="Software de gestión para clínicas dentales, centros de estética y salones de uñas en Costa Rica: agenda por profesional, clientes, cobros, comisiones, reportes y un agente de WhatsApp con IA que responde y agenda solo.">
+<link rel="canonical" href="https://crm.selyon.app/">
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1013" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="canonical" href="/">
+<link rel="preload" href="/panel/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/landing/site.css">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_CR">
-<meta property="og:title" content="Selyon — agentes de IA que atienden, agendan y venden por tu negocio">
-<meta property="og:description" content="Empezá con el agente de WhatsApp que ya atiende a clientes reales: responde, cotiza, agenda y recuerda las citas solo.">
-<meta property="og:image" content="/landing/og.png">
-<link rel="stylesheet" href="/landing/estilos.css">
+<meta property="og:site_name" content="Selyon CRM">
+<meta property="og:url" content="https://crm.selyon.app/">
+<meta property="og:title" content="Selyon CRM — tu agenda llena y tu WhatsApp al día">
+<meta property="og:description" content="Agenda por profesional, clientes, cobros y comisiones, con un agente de WhatsApp que responde y agenda solo. Para clínicas dentales, estética y uñas.">
+<meta property="og:image" content="https://crm.selyon.app/landing/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Selyon CRM: agenda por profesional y agente de WhatsApp con IA">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Selyon CRM","applicationCategory":"BusinessApplication","operatingSystem":"Web, Android, iOS","url":"https://crm.selyon.app/","inLanguage":"es-CR","description":"Software de gestión para negocios con cita (clínicas dentales, estética y uñas): agenda, clientes, cobros, comisiones, reportes y agente de WhatsApp con IA.","publisher":{"@type":"Organization","name":"Selyon","areaServed":"CR"}}
+</script>
 </head>
 <body>
 
-<header class="cabecera">
-  <div class="contenedor contenedor--ancha">
-    <a class="marca" href="#top">
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="marca-degradado" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#248DE3"/>
-            <stop offset="1" stop-color="#103050"/>
-          </linearGradient>
-        </defs>
-        <rect width="36" height="36" rx="10" fill="url(#marca-degradado)"/>
-        <path d="M10 24.5 L18 8 L26 24.5" stroke="#7AFAFC" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <circle cx="18" cy="8" r="3" fill="#FFC517"/>
-        <circle cx="10" cy="24.5" r="2.4" fill="#7AFAFC"/>
-        <circle cx="26" cy="24.5" r="2.4" fill="#7AFAFC"/>
-      </svg>
-      <span class="marca-texto">selyon</span>
+<!-- Íconos (trazo 1.75, estilo Lucide). Se usan con <svg><use href="#i-…"/></svg>. -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z"/><path d="M8.8 8.2c.2-.5.5-.6.9-.6h.5c.2 0 .4 0 .5.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.1.1-.2.3 0 .5.4.8 1.6 2 2.6 2.4.2.1.4.1.5-.1l.6-.7c.2-.2.4-.2.6-.1l1.6.8c.2.1.4.2.4.4 0 .5-.2 1.2-.7 1.5-.6.4-1.4.6-2.6.2-2-.7-3.9-2.6-4.6-4.4-.5-1.3-.3-2.5-.2-2.9Z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M3.5 9.5h17M8 2.5v4M16 2.5v4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9.5" cy="8" r="3.5"/><path d="M3.5 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1M16 4.6a3.5 3.5 0 0 1 0 6.8M20.5 20v-1a4 4 0 0 0-2.5-3.7"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M16 15h2"/></symbol>
+  <symbol id="i-percent" viewBox="0 0 24 24"><path d="M18.5 5.5l-13 13"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3.5 20.5h17M7 17v-5M12 17V6.5M17 17V10"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.5 3.2 8.2 7.5 9.5 4.3-1.3 7.5-5 7.5-9.5V6L12 3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8.5a6 6 0 1 0-12 0c0 6.5-2.5 8-2.5 8h17S18 15 18 8.5Z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3.5 2.6 5.3 5.9.8-4.3 4.2 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.2 5.9-.8L12 3.5Z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2.5"/><path d="M8 10.5v-3a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.5v12M7 10.5l5 5 5-5M4 20.5h16"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9L12 3.5Z"/><path d="M19 16.5v4M17 18.5h4"/></symbol>
+  <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M3.5 10v4a1 1 0 0 0 1 1H7l6.5 4.5v-15L7 9H4.5a1 1 0 0 0-1 1Z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3.5 13.5h5l1.5 2.5h4l1.5-2.5h5"/><path d="M5.8 5h12.4l2.3 8.5v5a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5v-5L5.8 5Z"/></symbol>
+  <symbol id="i-tooth" viewBox="0 0 24 24"><path d="M7.5 3.5c-2.4 0-4 1.9-4 4.4 0 2.9 1.4 4.4 1.9 6.9.5 2.6 1.1 5.7 2.6 5.7s1.6-3 2.5-5c.5-1.1 2.5-1.1 3 0 .9 2 1 5 2.5 5s2.1-3.1 2.6-5.7c.5-2.5 1.9-4 1.9-6.9 0-2.5-1.6-4.4-4-4.4-1.8 0-2.7 1-4.5 1s-2.7-1-4.5-1Z"/></symbol>
+  <symbol id="i-polish" viewBox="0 0 24 24"><path d="M9.5 2.5h5v5h-5z"/><path d="M8 7.5h8A1.5 1.5 0 0 1 17.5 9v10.5A1.5 1.5 0 0 1 16 21H8a1.5 1.5 0 0 1-1.5-1.5V9A1.5 1.5 0 0 1 8 7.5Z"/><path d="M6.5 12.5h11"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Selyon CRM, inicio">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="brand-mark-bg" width="32" height="32" rx="9"/><rect class="brand-mark-bar" x="7" y="9" width="13" height="5" rx="2.5"/><rect class="brand-mark-bar" x="12" y="18" width="13" height="5" rx="2.5"/><circle class="brand-mark-dot" cx="23.5" cy="11.5" r="2.5"/></svg>
+      <span class="brand-name">Selyon <span class="brand-tag">CRM</span></span>
     </a>
-    <div class="nav-derecha">
-      <nav class="nav-enlaces" id="navMenu">
-        <a class="nav-enlace" href="#productos">Productos</a>
-        <a class="nav-enlace" href="#agente">Agente WhatsApp</a>
-        <a class="nav-enlace" href="#como">Cómo funciona</a>
-        <a class="nav-enlace" href="#precios">Precios</a>
-      </nav>
-      <a class="boton boton-amarillo boton-amarillo--chico" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20ver%20la%20demo%20de%20Selyon" target="_blank" rel="noopener">Ver demo</a>
-      <button class="nav-burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMenu">☰</button>
+    <nav class="site-nav" id="site-nav" aria-label="Principal">
+      <a href="#rubros">Rubros</a>
+      <a href="#whatsapp">WhatsApp IA</a>
+      <a href="#gestion">Gestión</a>
+      <a href="#planes">Planes</a>
+      <a href="#preguntas">Preguntas</a>
+      <a class="site-nav-login" href="/panel">Entrar al panel</a>
+    </nav>
+    <div class="header-actions">
+      <a class="header-login" href="/panel">Entrar</a>
+      <a class="btn btn-primary btn-sm" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20ver%20una%20demo%20de%20Selyon%20CRM%20para%20mi%20negocio" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-wa"/></svg>Escribinos</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Abrir menú" data-nav-toggle>
+        <svg class="i i-open" aria-hidden="true"><use href="#i-menu"/></svg>
+        <svg class="i i-close" aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
     </div>
   </div>
 </header>
 
-<main>
+<main id="main">
 
-  <section id="top" class="hero">
-    <div class="hero-grilla" aria-hidden="true"></div>
-    <div class="hero-brillo hero-brillo--1" aria-hidden="true"></div>
-    <div class="hero-brillo hero-brillo--2" aria-hidden="true"></div>
-
-    <div class="hero-grid contenedor--ancha">
+  <!-- ═══ Hero ═══ -->
+  <section class="hero">
+    <div class="hero-backdrop" aria-hidden="true"></div>
+    <div class="container hero-grid">
       <div class="hero-copy">
-        <div class="hero-etiqueta" data-reveal>
-          <span class="hero-etiqueta-punto"></span>
-          Plataforma de agentes de IA
+        <p class="eyebrow"><span class="eyebrow-dot"></span>Para clínicas dentales, estética y uñas · Hecho en Costa Rica</p>
+        <h1>Tu agenda llena y tu WhatsApp al día, <span class="hero-accent">sin vivir pegado al celular.</span></h1>
+        <p class="lead">Selyon CRM junta la agenda de cada profesional, tus clientes, los cobros y las comisiones en un solo lugar. Y suma un agente de WhatsApp con IA que responde, agenda y recuerda las citas por vos, también de noche.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary btn-lg" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20ver%20una%20demo%20de%20Selyon%20CRM%20para%20mi%20negocio" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-wa"/></svg>Pedí una demo por WhatsApp</a>
+          <a class="btn btn-ghost btn-lg" href="#whatsapp">Ver cómo funciona<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
-        <h1 class="hero-titulo" data-reveal>El equipo de IA que <br class="solo-desktop">atiende tu negocio, <br class="solo-desktop"><span class="hero-titulo-gradiente">día y noche.</span></h1>
-        <p class="hero-sub" data-reveal>Selyon crea agentes de inteligencia artificial que responden, cotizan, agendan y venden por vos. Empezá con el agente de WhatsApp que ya atiende a clientes reales.</p>
-        <div class="hero-ctas" data-reveal>
-          <a class="boton boton-amarillo" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20ver%20la%20demo%20de%20Selyon" target="_blank" rel="noopener">Probá la demo en vivo <span>→</span></a>
-          <a class="boton boton-fantasma" href="#productos">Ver productos</a>
-        </div>
-        <!-- Sin logos ni nombres de clientes que no existen: hoy hay UN piloto real. -->
-        <div class="hero-confianza" data-reveal>
-          <span class="hero-confianza-texto">En producción con un lavacar piloto en San José · pensado para negocios que agendan citas</span>
-        </div>
+        <ul class="hero-points" aria-label="Lo esencial">
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Soporte en español, desde Costa Rica</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>WhatsApp oficial de Meta</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>En la compu, la tablet y el celular</li>
+        </ul>
       </div>
 
-      <div class="hero-telefono-wrap" aria-hidden="true">
-        <div class="hero-telefono-glow"></div>
-        <div class="telefono">
-          <div class="telefono-pantalla">
-            <div class="telefono-header">
-              <span class="telefono-avatar">LR</span>
-              <div>
-                <div class="telefono-titulo">Lavacar Rosales</div>
-                <div class="telefono-subtitulo">en línea · agente IA</div>
+      <!-- Maqueta del producto (decorativa): la cita que agenda el agente en el chat aparece en la agenda. -->
+      <div class="hero-visual" aria-hidden="true">
+        <div class="mock-window agenda-mock">
+          <div class="mock-titlebar"><span class="mock-dots"><i></i><i></i><i></i></span><span class="mock-url">crm.selyon.app/panel/agenda</span></div>
+          <div class="agenda-head">
+            <div>
+              <p class="agenda-date">Martes 17 de noviembre</p>
+              <p class="agenda-sub">Sucursal Escazú · 3 profesionales</p>
+            </div>
+            <div class="seg"><span>Mes</span><span>Semana</span><span class="is-on">Día</span></div>
+          </div>
+          <div class="agenda-board">
+            <div class="agenda-times"><span>8:00</span><span>9:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span></div>
+            <div class="agenda-col agenda-col-aux">
+              <p class="agenda-staff"><i class="swatch swatch-3"></i>Ana · higienista</p>
+              <div class="agenda-track">
+                <div class="appt staff-3 r-1 span-2"><b>8:00</b> Limpieza<small>Marco Araya</small></div>
+                <div class="appt staff-3 r-3 span-2"><b>9:00</b> Limpieza<small>Gabriela Ruiz</small></div>
+                <div class="appt staff-3 r-6 span-2"><b>10:30</b> Blanqueamiento<small>Fernanda Alfaro</small></div>
+                <div class="appt staff-3 appt-cancelled r-9 span-2"><b>12:00</b> Limpieza<small>Esteban Rojas</small></div>
               </div>
             </div>
-            <div class="telefono-chat chat-en-vivo" data-chat>
-              <div class="burbuja entra" data-burbuja="1">🎤 Nota de voz · 0:08</div>
-              <div class="burbuja sale" data-burbuja="2">¡Hola! Por lo que me cuentas es lavado completo + encerado para un sedán: ₡18.000, dura ~1h. ¿Te reservo un espacio?</div>
-              <div class="burbuja entra" data-burbuja="3">Sí, ¿qué horarios hay mañana?</div>
-              <div class="burbuja sale" data-burbuja="4">
-                Mañana miércoles tengo:
-                <div class="burbuja-horarios">
-                  <span>9:00 a.m.</span>
-                  <span>11:30 a.m.</span>
-                  <span>2:00 p.m.</span>
-                </div>
+            <div class="agenda-col">
+              <p class="agenda-staff"><i class="swatch swatch-1"></i>Dra. Vargas</p>
+              <div class="agenda-track">
+                <div class="appt staff-1 r-1 span-2"><b>8:00</b> Valoración<small>Pablo Méndez</small></div>
+                <div class="appt staff-1 appt-pending r-4 span-2"><b>9:30</b> Resina<small>Sofía Rojas · sin confirmar</small></div>
+                <div class="appt staff-1 appt-new r-7 span-2"><b>11:00</b> Limpieza<small>Laura Quesada</small><em class="appt-badge">Agendó el agente</em></div>
+                <div class="appt staff-1 r-10 span-2"><b>12:30</b> Endodoncia<small>Daniel Solís</small></div>
               </div>
-              <div class="burbuja sale" data-burbuja="5">11:30 a.m.</div>
-              <div class="burbuja entra" data-burbuja="6">Listo ✅ Cita confirmada mañana 11:30 a.m. — lavado + encerado, sedán. Te recuerdo un día antes.</div>
             </div>
-          </div>
-        </div>
-        <div class="telefono-chip telefono-chip--1">
-          <span class="telefono-chip-icono">✓</span>
-          <div>
-            <div class="telefono-chip-titulo">Cita agendada</div>
-            <div class="telefono-chip-sub">sin intervención humana</div>
-          </div>
-        </div>
-        <div class="telefono-chip telefono-chip--2">
-          <span class="telefono-chip-numero">24/7</span>
-          <div>
-            <div class="telefono-chip-titulo">atención</div>
-            <div class="telefono-chip-sub">también de noche</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Rubros OBJETIVO, no clientes: no poner nombres de negocios que no usan Selyon.
-         Cuando haya clientes reales con permiso escrito, se pueden sumar sus nombres. -->
-    <div class="marquesina" aria-label="Rubros para los que está pensado">
-      <div class="marquesina-pista">
-        <span>Pensado para</span><span>·</span><span>Lavacares</span><span>·</span><span>Talleres</span><span>·</span><span>Clínicas dentales</span><span>·</span><span>Barberías</span><span>·</span><span>Salones de belleza</span><span>·</span><span>Spas</span><span>·</span><span>Veterinarias</span><span>·</span>
-        <span>Pensado para</span><span>·</span><span>Lavacares</span><span>·</span><span>Talleres</span><span>·</span><span>Clínicas dentales</span><span>·</span><span>Barberías</span><span>·</span><span>Salones de belleza</span><span>·</span><span>Spas</span><span>·</span><span>Veterinarias</span><span>·</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Solo datos que el código cumple (no métricas de un solo piloto ni tiempos sin medir):
-       24/7 (el bot responde a cualquier hora), notas de voz + fotos (transcribir.ts + visión C1.5),
-       2 recordatorios por cita (día antes + horas antes, reminders/scheduler.ts), 1 toque para
-       tomar la conversación ("Atender yo" en el panel). -->
-  <section class="metricas">
-    <div class="contenedor contenedor--ancha metricas-grid">
-      <div class="metrica" data-reveal>
-        <div class="metrica-valor metrica-valor--blanco">24/7</div>
-        <div class="metrica-etiqueta">Responde a cualquier hora</div>
-      </div>
-      <div class="metrica" data-reveal>
-        <div class="metrica-valor metrica-valor--cian">Voz + foto</div>
-        <div class="metrica-etiqueta">Entiende audios y cotiza por foto</div>
-      </div>
-      <div class="metrica" data-reveal>
-        <div class="metrica-valor metrica-valor--amarillo">2</div>
-        <div class="metrica-etiqueta">Recordatorios por cita, con botón para confirmar</div>
-      </div>
-      <div class="metrica" data-reveal>
-        <div class="metrica-valor metrica-valor--celeste">1 toque</div>
-        <div class="metrica-etiqueta">Para tomar vos la conversación</div>
-      </div>
-    </div>
-  </section>
-
-  <section id="productos" class="productos">
-    <div class="contenedor">
-      <div class="encabezado-seccion encabezado-seccion--centrado" data-reveal>
-        <span class="ojo-seccion">La suite Selyon</span>
-        <h2>Un producto para cada punto de contacto con tu cliente.</h2>
-        <p>Empezá por donde más lo necesitás. Todos los productos comparten el mismo panel, la misma marca y la misma IA.</p>
-      </div>
-
-      <div class="productos-grid">
-        <article class="tarjeta-producto" data-reveal>
-          <div class="tarjeta-producto-header tarjeta-producto-header--verde">
-            <div class="tarjeta-producto-decoracion" aria-hidden="true"></div>
-            <div class="tarjeta-producto-cabezal">
-              <span class="tarjeta-producto-icono tarjeta-producto-icono--verde">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.6-1.2A9 9 0 1 0 12 3Z" stroke-linejoin="round"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01" stroke-linecap="round"/></svg>
-              </span>
-              <span class="tarjeta-producto-badge tarjeta-producto-badge--disponible">Disponible</span>
-            </div>
-            <div class="tarjeta-producto-preview tarjeta-producto-preview--chat" aria-hidden="true">
-              <div class="preview-burbuja sale">₡18.000, ~1h. ¿Te reservo?</div>
-              <div class="preview-burbuja entra">Sí, mañana 11:30</div>
-            </div>
-          </div>
-          <div class="tarjeta-producto-body">
-            <h3>Recepcionista IA</h3>
-            <p>Tu WhatsApp atendido con IA: responde dudas, cotiza, agenda citas y manda recordatorios. Tu equipo lo supervisa todo desde un panel.</p>
-            <div class="tarjeta-producto-chips">
-              <span class="chip chip--verde">Agenda automática</span>
-              <span class="chip chip--verde">Notas de voz</span>
-              <span class="chip chip--verde">Recordatorios</span>
-            </div>
-            <a class="boton boton-verde" href="#agente">Ver producto <span>→</span></a>
-          </div>
-        </article>
-
-        <!-- CONFIG Menú Digital IA: la página aún no existe en el repo — badge "proximamente"
-             y botón inerte (sin href, clase "boton-disabled"). Cuando el producto esté listo:
-             cambiar la clase del badge a "tarjeta-producto-badge--disponible", el texto a
-             "Disponible", volver el botón a <a> con el href real y quitar "boton-disabled". -->
-        <article class="tarjeta-producto" data-reveal>
-          <div class="tarjeta-producto-header tarjeta-producto-header--azul">
-            <div class="tarjeta-producto-decoracion" aria-hidden="true"></div>
-            <div class="tarjeta-producto-cabezal">
-              <span class="tarjeta-producto-icono tarjeta-producto-icono--azul">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M8 8.5h8M8 12h6M8 15.5h4" stroke-linecap="round"/></svg>
-              </span>
-              <span class="tarjeta-producto-badge tarjeta-producto-badge--proximamente">En desarrollo</span>
-            </div>
-            <div class="tarjeta-producto-preview tarjeta-producto-preview--menu" aria-hidden="true">
-              <div class="preview-plato">
-                <span class="preview-plato-play">▶</span>
-                <span class="preview-plato-kcal">720 kcal</span>
+            <div class="agenda-col">
+              <p class="agenda-staff"><i class="swatch swatch-2"></i>Dr. Mora</p>
+              <div class="agenda-track">
+                <div class="appt staff-2 r-2 span-2"><b>8:30</b> Control de ortodoncia<small>Valeria Jiménez</small></div>
+                <div class="appt staff-2 r-5 span-3"><b>10:00</b> Endodoncia<small>Andrés Castro</small></div>
+                <div class="appt staff-2 appt-pending r-11 span-2"><b>13:00</b> Valoración<small>Carolina Vega · sin confirmar</small></div>
               </div>
-              <div class="preview-plato-nombre">Burger Selyon</div>
-              <div class="preview-plato-desc">Res 200g · queso · papas</div>
             </div>
           </div>
-          <div class="tarjeta-producto-body">
-            <h3>Menú Digital IA</h3>
-            <p>Todavía no disponible. Estamos desarrollando un menú digital con video de cada plato y un mesero de IA que recomienda y resuelve dudas.</p>
-            <div class="tarjeta-producto-chips">
-              <span class="chip chip--azul">Videos de platos</span>
-              <span class="chip chip--azul">Mesero IA</span>
-              <span class="chip chip--azul">Calorías</span>
+        </div>
+
+        <div class="phone hero-phone">
+          <div class="phone-screen">
+            <div class="wa-head">
+              <span class="wa-avatar">CD</span>
+              <div><p class="wa-name">Clínica Dental Demo</p><p class="wa-status">en línea</p></div>
             </div>
-            <span class="boton boton-azul boton-disabled" role="button" aria-disabled="true" title="Todavía no disponible">En desarrollo</span>
+            <div class="wa-chat">
+              <p class="wa-day">Hoy</p>
+              <div class="wa-msg wa-out seq-1">Hola, ¿tienen espacio mañana para una limpieza?<span class="wa-time">7:42 p. m.</span></div>
+              <div class="wa-msg wa-in seq-2">¡Hola, Laura! Claro. La limpieza dura 45 min y cuesta ₡35&nbsp;000. Mañana martes tengo:<span class="wa-time">7:42 p. m.</span></div>
+              <div class="wa-options seq-3"><span>9:00 · Ana</span><span>11:00 · Dra. Vargas</span><span>3:30 · Dr. Mora</span></div>
+              <div class="wa-msg wa-out seq-4">11:00 · Dra. Vargas<span class="wa-time">7:43 p. m.</span></div>
+              <div class="wa-msg wa-in seq-5">Listo ✅ Su cita quedó para mañana a las 11:00 con la Dra. Vargas. Le recordamos un día antes.<span class="wa-time">7:43 p. m.</span></div>
+            </div>
           </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section id="agente" class="agente">
-    <div class="contenedor">
-      <div class="encabezado-seccion" data-reveal>
-        <span class="ojo-seccion ojo-seccion--verde">Producto destacado · Recepcionista IA</span>
-        <h2>Todo lo que hoy hacés a mano por WhatsApp, ahora lo hace el agente.</h2>
-        <p>Nada de esto es promesa a futuro: son funciones que ya corren en producción.</p>
-      </div>
-
-      <div class="features-grid">
-        <article class="feature" data-reveal>
-          <span class="feature-icono feature-icono--verde">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.6-1.2A9 9 0 1 0 12 3Z" stroke-linejoin="round"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01" stroke-linecap="round"/></svg>
-          </span>
-          <h3>Responde a cualquier hora</h3>
-          <p>Dudas, precios y horarios contestados con IA — entendiendo la pregunta, no un menú de opciones.</p>
-        </article>
-
-        <article class="feature" data-reveal>
-          <span class="feature-icono feature-icono--azul">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4" stroke-linecap="round"/><path d="M8.5 13.5l1.8 1.8 3.7-3.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-          <h3>Agenda, reprograma y cancela sola</h3>
-          <p>Respeta tu horario real y, si lo conectás, se sincroniza con tu Google Calendar. Los cambios de cita los maneja el agente.</p>
-        </article>
-
-        <article class="feature" data-reveal>
-          <span class="feature-icono feature-icono--verde">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M8 8.5h8M8 12h8M8 15.5h5" stroke-linecap="round"/></svg>
-          </span>
-          <h3>Botones y listas nativas</h3>
-          <p>El cliente elige tocando, como en cualquier chat de WhatsApp — nada de escribir horarios a mano.</p>
-        </article>
-
-        <article class="feature" data-reveal>
-          <span class="feature-icono feature-icono--azul">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8.5a6 6 0 0 0-12 0c0 6-2.5 7.5-2.5 7.5h17S18 14.5 18 8.5Z" stroke-linejoin="round"/><path d="M10 19.5a2 2 0 0 0 4 0" stroke-linecap="round"/></svg>
-          </span>
-          <h3>Recordatorios con confirmación</h3>
-          <p>Un día antes y unas horas antes, con botón para confirmar o reprogramar — para que los no-shows no te coman la agenda.</p>
-        </article>
-
-        <article class="feature" data-reveal>
-          <span class="feature-icono feature-icono--verde">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3.5M9.5 20.5h5" stroke-linecap="round"/></svg>
-          </span>
-          <h3>Entiende notas de voz</h3>
-          <p>El cliente manda un audio explicando lo que necesita y el agente lo transcribe y lo entiende igual.</p>
-        </article>
-
-        <article class="feature" data-reveal>
-          <span class="feature-icono feature-icono--azul">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="4" width="17" height="13" rx="2.5"/><path d="M8 20.5h8M12 17v3.5" stroke-linecap="round"/><path d="M7 13l2.8-3.2L12 12l2.5-3.5L17 11" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-          <h3>Panel para tu equipo</h3>
-          <p>Bandeja con takeover humano, CRM y métricas — instalable en el celular, con notificaciones.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="panel-showcase">
-    <div class="panel-showcase-glow" aria-hidden="true"></div>
-    <div class="contenedor">
-      <div class="encabezado-seccion encabezado-seccion--centrado" data-reveal>
-        <span class="ojo-seccion">El panel de control</span>
-        <h2>Tu equipo ve todo y toma el control cuando quiera.</h2>
-        <p>Bandeja de conversaciones, ficha de cada cliente y métricas del negocio. En claro u oscuro, del celular al escritorio.</p>
-      </div>
-
-      <div class="navegador-marco" data-reveal>
-        <div class="navegador-barra">
-          <span class="navegador-punto navegador-punto--rojo"></span>
-          <span class="navegador-punto navegador-punto--amarillo"></span>
-          <span class="navegador-punto navegador-punto--verde"></span>
-          <span class="navegador-url">tu-negocio · panel Selyon</span>
         </div>
-        <img src="/landing/panel-dashboard-oscuro.webp" alt="Dashboard del panel Selyon: conversaciones, citas agendadas, conversión e ingresos estimados" width="1600" height="960" loading="lazy">
-      </div>
 
-      <div class="panel-mobile-grid">
-        <div class="panel-mobile-item" data-reveal>
-          <div class="panel-mobile-figura">
-            <img src="/landing/panel-bandeja-claro.webp" alt="Bandeja de conversaciones en modo claro, vista móvil" width="800" height="1000" loading="lazy">
-          </div>
-          <p class="panel-mobile-caption">Bandeja + chat · claro</p>
-        </div>
-        <div class="panel-mobile-item" data-reveal>
-          <div class="panel-mobile-figura">
-            <img src="/landing/panel-bandeja-oscuro.webp" alt="Bandeja de conversaciones en modo oscuro, vista móvil" width="800" height="1000" loading="lazy">
-          </div>
-          <p class="panel-mobile-caption">Bandeja + chat · oscuro</p>
+        <div class="toast hero-toast">
+          <span class="toast-icon"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span>
+          <div><p class="toast-title">Cita agendada por el agente</p><p class="toast-sub">Mar 17 · 11:00 · Dra. Vargas</p></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="como" class="como">
-    <div class="contenedor">
-      <div class="encabezado-seccion encabezado-seccion--centrado encabezado-seccion--pequena" data-reveal>
-        <span class="ojo-seccion">Cómo funciona</span>
+  <!-- ═══ Rubros ═══ -->
+  <section class="section" id="rubros">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>Hecho para negocios con cita</p>
+        <h2>Arranca con la plantilla de tu rubro.</h2>
+        <p class="section-sub">Mismo sistema, distinto vocabulario: Selyon CRM precarga servicios, duraciones, campos de la ficha y la forma de hablar del agente según tu tipo de negocio. Después lo ajustás a tu medida.</p>
+      </div>
+
+      <div class="tabs" data-tabs>
+        <div class="tab-list" role="tablist" aria-label="Rubros">
+          <button class="tab" role="tab" id="tab-dental" aria-controls="panel-dental" aria-selected="true" type="button"><svg class="i" aria-hidden="true"><use href="#i-tooth"/></svg>Dental</button>
+          <button class="tab" role="tab" id="tab-estetica" aria-controls="panel-estetica" aria-selected="false" tabindex="-1" type="button"><svg class="i" aria-hidden="true"><use href="#i-sparkle"/></svg>Estética</button>
+          <button class="tab" role="tab" id="tab-unas" aria-controls="panel-unas" aria-selected="false" tabindex="-1" type="button"><svg class="i" aria-hidden="true"><use href="#i-polish"/></svg>Uñas</button>
+        </div>
+
+        <div class="tab-panel" role="tabpanel" id="panel-dental" aria-labelledby="tab-dental" tabindex="0">
+          <div class="rubro">
+            <div class="rubro-copy">
+              <h3>Pacientes que llegan a su cita.</h3>
+              <p>Valoraciones, limpiezas y tratamientos con su duración real y tiempo de limpieza entre pacientes. El recordatorio con botón para confirmar le baja a las ausencias, y el agente responde las dudas de siempre: precios, horarios, ubicación y formas de pago.</p>
+              <ul class="checks">
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Habla de «pacientes» y de «usted», si así lo preferís</li>
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Campos como alergias o responsable de un menor</li>
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Agenda por odontólogo, higienista y sucursal</li>
+              </ul>
+            </div>
+            <div class="rubro-card" aria-hidden="true">
+              <div class="client-card">
+                <div class="client-top"><span class="avatar avatar-1">VJ</span><div><p class="client-name">Valeria Jiménez</p><p class="client-meta">Paciente desde marzo · 6 citas</p></div><span class="chip chip-ok">Activa</span></div>
+                <dl class="client-fields">
+                  <div><dt>Alergias</dt><dd>Penicilina</dd></div>
+                  <div><dt>Responsable</dt><dd>—</dd></div>
+                  <div><dt>Próxima cita</dt><dd>Mar 17 · 8:30 · Control de ortodoncia</dd></div>
+                  <div><dt>Notas</dt><dd>Prefiere citas temprano.</dd></div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" role="tabpanel" id="panel-estetica" aria-labelledby="tab-estetica" tabindex="0">
+          <div class="rubro">
+            <div class="rubro-copy">
+              <h3>Tratamientos bien explicados, señas bien registradas.</h3>
+              <p>Limpiezas faciales, depilación y tratamientos con su preparación. Lo que necesita valoración previa no se agenda en línea: el agente lo explica y lo pasa a tu equipo. Las señas quedan registradas en la cita.</p>
+              <ul class="checks">
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Campos como tipo de piel o tratamientos previos</li>
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Señas y pagos por SINPE Móvil, efectivo o tarjeta</li>
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Pide reseñas de Google después de la cita</li>
+              </ul>
+            </div>
+            <div class="rubro-card" aria-hidden="true">
+              <div class="client-card">
+                <div class="client-top"><span class="avatar avatar-3">FA</span><div><p class="client-name">Fernanda Alfaro</p><p class="client-meta">Clienta desde enero · 9 citas</p></div><span class="chip chip-vip">VIP</span></div>
+                <dl class="client-fields">
+                  <div><dt>Tipo de piel</dt><dd>Mixta, sensible</dd></div>
+                  <div><dt>Próxima cita</dt><dd>Jue 19 · 4:00 p. m. · Limpieza facial profunda</dd></div>
+                  <div><dt>Seña</dt><dd><span class="money">₡10&nbsp;000</span> · SINPE Móvil</dd></div>
+                  <div><dt>Gasto total</dt><dd><span class="money">₡312&nbsp;000</span></dd></div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" role="tabpanel" id="panel-unas" aria-labelledby="tab-unas" tabindex="0">
+          <div class="rubro">
+            <div class="rubro-copy">
+              <h3>Mani y pedi en una sola cita, cada estilista con su precio.</h3>
+              <p>Varios servicios en la misma cita, precio y duración por estilista, y comisiones calculadas sobre lo cobrado. El agente ofrece el complemento justo («¿le sumamos pedicura?») sin que nadie tenga que acordarse.</p>
+              <ul class="checks">
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Campos como forma o largo preferido</li>
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Comisión por estilista, servicio o categoría</li>
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Te avisa quién hace rato no vuelve</li>
+              </ul>
+            </div>
+            <div class="rubro-card" aria-hidden="true">
+              <div class="client-card">
+                <div class="client-top"><span class="avatar avatar-2">GR</span><div><p class="client-name">Gabriela Ruiz</p><p class="client-meta">Clienta desde 2025 · 14 citas</p></div><span class="chip chip-risk">En riesgo</span></div>
+                <dl class="client-fields">
+                  <div><dt>Forma preferida</dt><dd>Almendra, largo medio</dd></div>
+                  <div><dt>Estilista</dt><dd>Ana Brenes</dd></div>
+                  <div><dt>Última visita</dt><dd>Hace 52 días · Acrílicas + pedicura</dd></div>
+                  <div><dt>Etiquetas</dt><dd><span class="tag">Prefiere sábados</span> <span class="tag">Acepta promos</span></dd></div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Antes / con Selyon ═══ -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head section-head-center">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>El día a día, ordenado</p>
+        <h2>Menos chats pendientes. Más citas atendidas.</h2>
+      </div>
+      <div class="compare">
+        <div class="compare-col compare-before">
+          <p class="compare-title">Hoy, sin sistema</p>
+          <ul>
+            <li><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>Mensajes de WhatsApp que se contestan horas después, o nunca.</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>La agenda en un cuaderno, un Excel y la memoria de recepción.</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>Clientes que no llegan porque nadie les recordó.</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>Comisiones sacadas a mano a fin de mes.</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>Sin saber cuánto vendió cada profesional ni qué servicio deja más.</li>
+          </ul>
+        </div>
+        <div class="compare-col compare-after">
+          <p class="compare-title">Con Selyon CRM</p>
+          <ul>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>El agente contesta a cualquier hora y agenda solo.</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Una agenda por profesional y sucursal, siempre al día.</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Recordatorio con botón para confirmar o cancelar.</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Comisiones calculadas sobre lo cobrado, listas para pagar.</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Reportes de ingresos, servicios, profesionales y ocupación.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WhatsApp IA ═══ -->
+  <section class="section" id="whatsapp">
+    <div class="container split">
+      <div class="split-copy">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>Módulo WhatsApp IA</p>
+        <h2>Un agente que atiende como tu mejor recepcionista.</h2>
+        <p class="section-sub">Conoce tus servicios, tus precios y el horario de cada profesional. Responde con lo que vos cargaste y, cuando no sabe algo, no lo inventa: le pasa la conversación a tu equipo.</p>
+        <ul class="feature-list">
+          <li><span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-calendar"/></svg></span><div><h3>Agenda, reprograma y cancela</h3><p>Ofrece horarios reales como botones; el cliente toca y listo. La cita aparece en tu agenda al instante.</p></div></li>
+          <li><span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg></span><div><h3>Entiende notas de voz y fotos</h3><p>Audios de hasta 2 minutos y fotos, como escriben tus clientes de verdad.</p></div></li>
+          <li><span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-globe"/></svg></span><div><h3>Habla como tu negocio</h3><p>De tú, de usted o de vos. Y si te escriben en inglés, responde en inglés.</p></div></li>
+          <li><span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg></span><div><h3>Te avisa cuando hace falta una persona</h3><p>Si el cliente lo pide o el agente no sabe, la conversación pasa a tu bandeja y te llega una notificación.</p></div></li>
+          <li><span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><h3>Recordatorios con confirmación</h3><p>Un día antes, con botones para confirmar o cancelar. Por correo para quien no usa WhatsApp.</p></div></li>
+        </ul>
+      </div>
+
+      <div class="split-visual" aria-hidden="true">
+        <div class="mock-window inbox-mock">
+          <div class="mock-titlebar"><span class="mock-dots"><i></i><i></i><i></i></span><span class="mock-url">WhatsApp IA · Bandeja</span></div>
+          <div class="inbox-filters"><span class="is-on">Todas <b>24</b></span><span>Agente <b>21</b></span><span class="filter-warn">Necesitan respuesta <b>1</b></span></div>
+          <ul class="inbox-list">
+            <li class="inbox-row"><span class="avatar avatar-1">LQ</span><div class="inbox-main"><p><strong>Laura Quesada</strong><time>7:43 p. m.</time></p><p class="inbox-preview">Listo ✅ Su cita quedó para mañana a las 11:00…</p></div><span class="chip chip-agent">Agente</span></li>
+            <li class="inbox-row inbox-row-warn"><span class="avatar avatar-2">GR</span><div class="inbox-main"><p><strong>Gabriela Ruiz</strong><time>7:31 p. m.</time></p><p class="inbox-preview">Quiero hablar con alguien sobre ortodoncia</p></div><span class="chip chip-warn">Pidió una persona</span></li>
+            <li class="inbox-row"><span class="avatar avatar-3">MA</span><div class="inbox-main"><p><strong>Marco Araya</strong><time>7:18 p. m.</time></p><p class="inbox-preview"><svg class="i i-inline" aria-hidden="true"><use href="#i-mic"/></svg>Nota de voz · 0:38</p></div><span class="chip chip-agent">Agente</span></li>
+            <li class="inbox-row"><span class="avatar avatar-4">FA</span><div class="inbox-main"><p><strong>Fernanda Alfaro</strong><time>6:57 p. m.</time></p><p class="inbox-preview">Do you have availability on Friday?</p></div><span class="chip chip-agent">Agente · EN</span></li>
+            <li class="inbox-row"><span class="avatar avatar-5">AC</span><div class="inbox-main"><p><strong>Andrés Castro</strong><time>6:40 p. m.</time></p><p class="inbox-preview">Confirmó su cita de mañana</p></div><span class="chip chip-ok">Confirmada</span></li>
+          </ul>
+        </div>
+        <div class="toast push-toast">
+          <span class="toast-app"><svg class="brand-mark" viewBox="0 0 32 32"><rect class="brand-mark-bg" width="32" height="32" rx="9"/><rect class="brand-mark-bar" x="7" y="9" width="13" height="5" rx="2.5"/><rect class="brand-mark-bar" x="12" y="18" width="13" height="5" rx="2.5"/><circle class="brand-mark-dot" cx="23.5" cy="11.5" r="2.5"/></svg></span>
+          <div><p class="toast-title">Gabriela Ruiz pidió hablar con una persona</p><p class="toast-sub">Selyon CRM · ahora</p></div>
+        </div>
+        <div class="reminder-card">
+          <p class="reminder-label">Recordatorio por WhatsApp</p>
+          <p class="reminder-text">Hola, Andrés. Le recordamos su cita de mañana miércoles a las 10:00 con el Dr. Mora.</p>
+          <div class="reminder-actions"><span>Confirmar</span><span>Cancelar</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Gestión ═══ -->
+  <section class="section section-alt" id="gestion">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>Gestión completa</p>
+        <h2>Todo tu negocio, no solo el chat.</h2>
+        <p class="section-sub">Agenda, clientes, plata y equipo en el mismo lugar. Con o sin el agente de WhatsApp.</p>
+      </div>
+
+      <div class="bento">
+        <article class="bento-card bento-agenda">
+          <div class="bento-text">
+            <span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+            <h3>Agenda por profesional</h3>
+            <p>Mes, semana o día. Horario de cada profesional y sucursal, tiempo entre citas y varios servicios en una misma cita. Sin choques de horario.</p>
+          </div>
+          <div class="mini-month" aria-hidden="true">
+            <span class="mm-h">L</span><span class="mm-h">K</span><span class="mm-h">M</span><span class="mm-h">J</span><span class="mm-h">V</span><span class="mm-h">S</span><span class="mm-h">D</span>
+            <span class="mm-d"><b>9</b><i class="d1"></i><i class="d2"></i></span><span class="mm-d"><b>10</b><i class="d1"></i><i class="d3"></i><i class="d2"></i></span><span class="mm-d"><b>11</b><i class="d2"></i></span><span class="mm-d"><b>12</b><i class="d1"></i><i class="d1"></i><i class="d3"></i></span><span class="mm-d"><b>13</b><i class="d3"></i><i class="d2"></i></span><span class="mm-d"><b>14</b><i class="d1"></i><i class="d3"></i><i class="d3"></i></span><span class="mm-d mm-off"><b>15</b></span>
+            <span class="mm-d"><b>16</b><i class="d2"></i><i class="d1"></i></span><span class="mm-d mm-today"><b>17</b><i class="d1"></i><i class="d2"></i><i class="d3"></i></span><span class="mm-d"><b>18</b><i class="d3"></i></span><span class="mm-d"><b>19</b><i class="d1"></i><i class="d2"></i></span><span class="mm-d"><b>20</b><i class="d2"></i><i class="d3"></i><i class="d1"></i></span><span class="mm-d"><b>21</b><i class="d1"></i></span><span class="mm-d mm-off"><b>22</b></span>
+          </div>
+        </article>
+
+        <article class="bento-card bento-clients">
+          <div class="bento-text">
+            <span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg></span>
+            <h3>Clientes que vuelven</h3>
+            <p>Ficha con historial, visitas y gasto. Estados que se calculan solos para saber a quién llamar.</p>
+          </div>
+          <ul class="client-mini" aria-hidden="true">
+            <li><span class="avatar avatar-4 avatar-sm">FA</span><span class="cm-name">Fernanda Alfaro<small>9 visitas · ₡312&nbsp;000</small></span><span class="chip chip-vip">VIP</span></li>
+            <li><span class="avatar avatar-1 avatar-sm">LQ</span><span class="cm-name">Laura Quesada<small>6 visitas · ₡184&nbsp;500</small></span><span class="chip chip-ok">Activa</span></li>
+            <li><span class="avatar avatar-2 avatar-sm">GR</span><span class="cm-name">Gabriela Ruiz<small>Hace 52 días</small></span><span class="chip chip-risk">En riesgo</span></li>
+            <li><span class="avatar avatar-3 avatar-sm">SR</span><span class="cm-name">Sofía Rojas<small>Primera cita el martes</small></span><span class="chip chip-new">Nueva</span></li>
+          </ul>
+        </article>
+
+        <article class="bento-card bento-sales">
+          <div class="bento-text">
+            <span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-wallet"/></svg></span>
+            <h3>Cobros y señas</h3>
+            <p>Registrá pagos por método, lo pendiente y el resumen del día.</p>
+          </div>
+          <div class="day-summary" aria-hidden="true">
+            <p class="ds-row"><span>SINPE Móvil</span><span class="money">₡120&nbsp;000</span></p><span class="ds-bar ds-w-48"></span>
+            <p class="ds-row"><span>Tarjeta</span><span class="money">₡86&nbsp;500</span></p><span class="ds-bar ds-w-34"></span>
+            <p class="ds-row"><span>Efectivo</span><span class="money">₡45&nbsp;000</span></p><span class="ds-bar ds-w-18"></span>
+            <p class="ds-row ds-total"><span>Cobrado hoy</span><span class="money">₡251&nbsp;500</span></p>
+          </div>
+        </article>
+
+        <article class="bento-card bento-commissions">
+          <div class="bento-text">
+            <span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-percent"/></svg></span>
+            <h3>Comisiones sin calculadora</h3>
+            <p>Reglas por profesional, servicio o categoría, sobre lo cobrado. Cada quien ve las suyas.</p>
+          </div>
+          <ul class="comm-list" aria-hidden="true">
+            <li><span class="avatar avatar-1 avatar-sm">DV</span><span>Dra. Vargas</span><span class="money">₡96&nbsp;000</span></li>
+            <li><span class="avatar avatar-2 avatar-sm">DM</span><span>Dr. Mora</span><span class="money">₡78&nbsp;750</span></li>
+            <li><span class="avatar avatar-3 avatar-sm">AB</span><span>Ana Brenes</span><span class="money">₡22&nbsp;500</span></li>
+          </ul>
+        </article>
+
+        <article class="bento-card bento-reports">
+          <div class="bento-text">
+            <span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-chart"/></svg></span>
+            <h3>Reportes que se entienden</h3>
+            <p>Ingresos, servicios, profesionales, ocupación y de dónde llegan tus citas. Por sucursal y con descarga en CSV.</p>
+          </div>
+          <div class="bars" aria-hidden="true">
+            <i class="h-4"></i><i class="h-6"></i><i class="h-5"></i><i class="h-7"></i><i class="h-3"></i><i class="h-8"></i><i class="h-6"></i><i class="h-9"></i><i class="h-5"></i><i class="h-7"></i><i class="h-8"></i><i class="h-6"></i><i class="h-9"></i><i class="h-10 is-on"></i>
+          </div>
+        </article>
+
+        <article class="bento-card bento-small">
+          <span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg></span>
+          <h3>Varias sucursales</h3>
+          <p>Cada sucursal con su horario y su equipo; el agente pregunta a cuál quiere ir el cliente.</p>
+        </article>
+        <article class="bento-card bento-small">
+          <span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg></span>
+          <h3>Un usuario por persona</h3>
+          <p>Dueña, recepción y profesionales, cada quien con su acceso. Cada profesional ve «Mi agenda».</p>
+        </article>
+        <article class="bento-card bento-small">
+          <span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></span>
+          <h3>Se instala como app</h3>
+          <p>En el celular, la tablet o la compu, con notificaciones. Sin descargar nada de una tienda.</p>
+        </article>
+        <article class="bento-card bento-small">
+          <span class="feature-icon"><svg class="i" aria-hidden="true"><use href="#i-megaphone"/></svg></span>
+          <h3>Campañas y reseñas</h3>
+          <p>Promociones solo a quien aceptó recibirlas, reseñas de Google y seguimiento de cotizaciones.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Cómo empezamos ═══ -->
+  <section class="section" id="empezar">
+    <div class="container">
+      <div class="section-head section-head-center">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>Cómo empezamos</p>
         <h2>En marcha en días, no en meses.</h2>
       </div>
-      <div class="como-grid">
-        <div class="paso" data-reveal>
-          <div class="paso-numero">1</div>
-          <h3>Configuramos tu negocio</h3>
-          <p>Servicios, precios y horarios. Lo que hoy tenés en la cabeza, ahora lo sabe el agente.</p>
-        </div>
-        <div class="paso" data-reveal>
-          <div class="paso-numero">2</div>
+      <ol class="steps">
+        <li class="step">
+          <span class="step-num">01</span>
+          <h3>Conversamos</h3>
+          <p>Nos contás de tu negocio por WhatsApp o en una llamada: rubro, sucursales, equipo y cómo agendás hoy.</p>
+        </li>
+        <li class="step">
+          <span class="step-num">02</span>
+          <h3>Cargamos tu negocio</h3>
+          <p>Partimos de la plantilla de tu rubro y la dejamos a tu medida: servicios, precios, horarios y profesionales.</p>
+        </li>
+        <li class="step">
+          <span class="step-num">03</span>
           <h3>Conectamos tu WhatsApp</h3>
-          <p>A la plataforma oficial de Meta: con un número nuevo o pasando el tuyo desde la app de WhatsApp Business.</p>
-        </div>
-        <div class="paso" data-reveal>
-          <div class="paso-numero">3</div>
-          <h3>El agente atiende, vos supervisás</h3>
-          <p>Cada conversación y cada cita queda en el panel, en tiempo real.</p>
-        </div>
-      </div>
+          <p>A la plataforma oficial de Meta, con un número nuevo o con el tuyo. Te acompañamos en la verificación que pide Meta.</p>
+        </li>
+      </ol>
+      <p class="steps-note">La agenda y los clientes funcionan desde el primer día; el agente se enciende cuando Meta aprueba tu número.</p>
     </div>
   </section>
 
-  <!-- Caso real descrito con hechos, SIN cita inventada. PENDIENTE: si el piloto da una cita
-       textual con permiso escrito, se puede volver al formato testimonio (comilla + estrellas). -->
-  <section class="testimonio">
-    <div class="contenedor contenedor--media">
-      <div class="testimonio-tarjeta" data-reveal>
-        <div class="testimonio-contenido">
-          <p class="testimonio-texto">Caso piloto: un lavacar en San José atiende su WhatsApp con Selyon. El agente responde consultas, cotiza, agenda y recuerda las citas; el dueño supervisa y toma las conversaciones que hacen falta desde el panel.</p>
-          <div class="testimonio-autor">
-            <span class="testimonio-avatar">CR</span>
-            <div>
-              <div class="testimonio-nombre">Lavacar piloto</div>
-              <div class="testimonio-ubicacion">San José, Costa Rica · en producción con Selyon</div>
-            </div>
-          </div>
-        </div>
+  <!-- ═══ Planes ═══
+       Límites reales de src/modules/billing/catalog.ts (Básico: 1 sucursal, 3 profesionales,
+       2 usuarios, 500 conversaciones; Pro: base de 5 profesionales y 8 usuarios, 3000
+       conversaciones). Sin precio publicado todavía: se consulta por WhatsApp. -->
+  <section class="section section-alt" id="planes">
+    <div class="container">
+      <div class="section-head section-head-center">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>Planes</p>
+        <h2>Empezá por el agente o llevá todo el negocio.</h2>
+        <p class="section-sub">Precios de lanzamiento en colones. Escribinos y te armamos el plan según tus sucursales y tu equipo.</p>
       </div>
-    </div>
-  </section>
-
-  <section id="precios" class="precios">
-    <div class="contenedor contenedor--media">
-      <div class="encabezado-seccion encabezado-seccion--centrado" data-reveal>
-        <span class="ojo-seccion">Planes</span>
-        <h2>Precios de lanzamiento.</h2>
-        <p class="parrafo-16">Escribinos y los vemos juntos según tu negocio.</p>
-      </div>
-      <div class="planes-grid">
-        <div class="plan plan--basico" data-reveal>
-          <div class="plan-nombre">Básico</div>
-          <p class="plan-tagline">Para empezar a atender solo.</p>
-          <ul class="plan-lista">
-            <li>Agente de WhatsApp con IA</li>
-            <li>Agenda (con Google Calendar opcional)</li>
-            <li>Recordatorios con confirmación</li>
-            <li>Panel de bandeja y CRM</li>
-            <li>Hasta 500 conversaciones al mes</li>
+      <div class="plans">
+        <article class="plan">
+          <h3 class="plan-name">Básico</h3>
+          <p class="plan-tagline">El agente de WhatsApp y tu agenda.</p>
+          <p class="plan-price">Precio de lanzamiento · en colones</p>
+          <ul class="plan-list">
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Agente de WhatsApp con IA, hasta 500 conversaciones al mes</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Bandeja para tomar cualquier conversación</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Agenda por profesional: mes, semana y día</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Recordatorios por WhatsApp o correo</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Ficha automática de cada cliente</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>1 sucursal, hasta 3 profesionales y 2 usuarios</li>
           </ul>
-          <a class="boton boton-linea" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20consultar%20el%20precio%20del%20plan%20B%C3%A1sico" target="_blank" rel="noopener">Consultar precio</a>
-        </div>
-        <div class="plan plan--pro" data-reveal>
-          <span class="plan-badge">Recomendado</span>
-          <div class="plan-nombre">Pro</div>
-          <p class="plan-tagline">Para equipos y marca propia.</p>
-          <ul class="plan-lista">
-            <li>Todo lo del plan Básico, sin tope mensual</li>
-            <li>Campañas a clientes que aceptan promociones</li>
-            <li>Multi-usuario para tu equipo</li>
-            <li>Marca propia en el panel</li>
-            <li>Seguimiento de cotizaciones y reseñas de Google</li>
+          <a class="btn btn-outline btn-block" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20consultar%20el%20plan%20B%C3%A1sico%20de%20Selyon%20CRM" target="_blank" rel="noopener">Consultar el Básico</a>
+        </article>
+        <article class="plan plan-featured">
+          <span class="plan-badge">Gestión completa</span>
+          <h3 class="plan-name">Pro</h3>
+          <p class="plan-tagline">Todo tu negocio en un solo lugar.</p>
+          <p class="plan-price">Precio de lanzamiento · en colones</p>
+          <ul class="plan-list">
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Todo lo del Básico, con hasta 3&nbsp;000 conversaciones al mes</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Clientes con estados, campos propios, etiquetas e importación</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Cobros, señas, pendientes y resumen del día</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Comisiones y liquidaciones</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Reportes con descarga en CSV</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Campañas, reseñas de Google y marca propia</li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Sucursales, profesionales y usuarios según tu equipo</li>
           </ul>
-          <a class="boton boton-amarillo" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20consultar%20el%20precio%20del%20plan%20Pro" target="_blank" rel="noopener">Consultar precio</a>
-        </div>
-      </div>
-      <p class="precios-nota" data-reveal>Precios de lanzamiento — escribinos y armamos el plan a tu medida.</p>
-    </div>
-  </section>
-
-  <section class="faq">
-    <div class="contenedor contenedor--angosta">
-      <h2 data-reveal>Preguntas frecuentes</h2>
-      <div class="faq-lista" data-reveal>
-        <details>
-          <summary><span>¿Necesito cambiar mi número de WhatsApp?</span><span>+</span></summary>
-          <p>Depende. El agente funciona sobre la plataforma oficial de WhatsApp de Meta, y un número conectado ahí deja de poder usarse en la app de WhatsApp Business del celular. Podés usar un número nuevo, o pasar tu número actual desde la app: tus clientes te siguen escribiendo al mismo número, pero tu equipo lo atiende desde el panel y el historial de la app no se traslada. Te ayudamos a elegir.</p>
-        </details>
-        <details>
-          <summary><span>¿Y si el agente no sabe algo?</span><span>+</span></summary>
-          <p>Está configurado para no inventar: responde con la información que cargaste y, si no sabe, pasa la conversación a una persona de tu equipo y te avisa. Como toda IA puede equivocarse, así que lo importante conviene confirmarlo.</p>
-        </details>
-        <details>
-          <summary><span>¿Puedo responder yo directamente?</span><span>+</span></summary>
-          <p>Sí. Desde el panel podés tomar cualquier conversación y contestar vos mismo cuando quieras.</p>
-        </details>
-        <details>
-          <summary><span>¿Qué pasa con los datos de mis clientes?</span><span>+</span></summary>
-          <p>Vos sos el responsable de esos datos y Selyon los trata por encargo tuyo, solo para atender consultas y citas. Se procesan con proveedores como Meta y OpenAI (EE. UU.), y solo reciben promociones los clientes que aceptan expresamente. Los detalles están en la <a href="/privacidad">política de privacidad</a> y el <a href="/contrato">contrato para negocios</a>.</p>
-        </details>
-        <details>
-          <summary><span>¿Cuánto tarda en estar funcionando?</span><span>+</span></summary>
-          <p>Días, no meses: la configuración es cargar tus servicios, precios y horarios. Lo que más puede demorar son los trámites que pide Meta para el número (verificación y plantillas).</p>
-        </details>
-        <details>
-          <summary><span>¿Sirve para mi tipo de negocio?</span><span>+</span></summary>
-          <p>Sirve para negocios que trabajan con citas: lavacares, talleres, clínicas, barberías, salones, spas y similares. Hoy no toma pedidos de comida ni cobra pagos dentro del chat.</p>
-        </details>
+          <a class="btn btn-primary btn-block" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20consultar%20el%20plan%20Pro%20de%20Selyon%20CRM" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-wa"/></svg>Consultar el Pro</a>
+          <p class="plan-note">¿No querés el agente? El Pro también va sin él.</p>
+        </article>
       </div>
     </div>
   </section>
 
-  <section class="cta-final-seccion">
-    <div class="cta-final">
-      <div class="cta-final-grilla" aria-hidden="true"></div>
-      <div class="cta-final-contenido" data-reveal>
-        <h2>Dejá que Selyon<br class="solo-desktop">atienda por vos.</h2>
-        <p>Probá la demo en vivo ahora mismo, sin compromiso ni instalar nada.</p>
-        <div class="cta-final-ctas">
-          <a class="boton boton-amarillo" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20ver%20la%20demo%20de%20Selyon" target="_blank" rel="noopener">Probá la demo en vivo <span>→</span></a>
-          <a class="boton boton-fantasma" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20hablar%20de%20Selyon%20para%20mi%20negocio" target="_blank" rel="noopener">Hablar con ventas</a>
-        </div>
+  <!-- ═══ Confianza ═══ -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow eyebrow-on-dark"><span class="eyebrow-dot"></span>Tus datos, cuidados</p>
+        <h2>Serio con la información de tus clientes.</h2>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-item"><svg class="i" aria-hidden="true"><use href="#i-lock"/></svg><h3>Cada negocio ve solo lo suyo</h3><p>Los datos de cada negocio están separados desde la base de datos, no solo en la pantalla.</p></div>
+        <div class="trust-item"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg><h3>Acceso protegido</h3><p>Verificación en dos pasos y un usuario por persona, con el permiso justo para su rol.</p></div>
+        <div class="trust-item"><svg class="i" aria-hidden="true"><use href="#i-wa"/></svg><h3>WhatsApp oficial</h3><p>Usamos la plataforma oficial de Meta, no apps no autorizadas que ponen en riesgo tu número.</p></div>
+        <div class="trust-item"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg><h3>Tus datos son tuyos</h3><p>Descargá tus clientes y reportes en CSV cuando querás. Sin historia clínica: solo las notas que vos decidís.</p></div>
+      </div>
+      <p class="trust-legal">Selyon trata los datos por encargo de tu negocio, con la Ley 8968 en mente. Detalles en la <a href="/privacidad">política de privacidad</a> y el <a href="/contrato">contrato para negocios</a>.</p>
+    </div>
+  </section>
+
+  <!-- ═══ Preguntas frecuentes ═══ -->
+  <section class="section" id="preguntas">
+    <div class="container faq-wrap">
+      <div class="section-head">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>Preguntas frecuentes</p>
+        <h2>Lo que nos preguntan antes de empezar.</h2>
+        <p class="section-sub">¿Te quedó otra duda? <a class="text-link" href="https://wa.me/50683658231?text=Hola%2C%20tengo%20una%20pregunta%20sobre%20Selyon%20CRM" target="_blank" rel="noopener">Escribinos por WhatsApp</a>.</p>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>¿Tengo que usar el agente de WhatsApp?</summary>
+          <p>No. El plan Pro también se contrata sin agente: agenda, clientes, cobros, comisiones y reportes, con recordatorios por correo o por WhatsApp si conectás tu número.</p>
+        </details>
+        <details>
+          <summary>¿Necesito cambiar mi número de WhatsApp?</summary>
+          <p>Depende. El agente funciona sobre la plataforma oficial de WhatsApp de Meta, y un número conectado ahí deja de usarse en la app de WhatsApp Business del celular. Podés usar un número nuevo o pasar el tuyo: tus clientes te siguen escribiendo al mismo número, pero tu equipo lo atiende desde el panel y el historial de la app no se traslada. Te ayudamos a elegir.</p>
+        </details>
+        <details>
+          <summary>¿Y si el agente se equivoca o no sabe algo?</summary>
+          <p>Está configurado para no inventar: responde con la información que cargaste y, si no sabe, pasa la conversación a una persona de tu equipo y te avisa. Como toda IA puede equivocarse, así que lo importante conviene confirmarlo. Podés tomar cualquier conversación cuando querás.</p>
+        </details>
+        <details>
+          <summary>¿Sirve para mi tipo de negocio?</summary>
+          <p>Está pensado para negocios que trabajan con citas: clínicas dentales, centros de estética, salones de uñas y similares, como barberías, spas o fisioterapia. No lleva historia clínica (solo notas), no toma pedidos de comida ni cobra dentro del chat.</p>
+        </details>
+        <details>
+          <summary>¿Funciona con varias sucursales?</summary>
+          <p>Sí, en el plan Pro. Cada sucursal tiene su horario y su equipo, un profesional puede atender en más de una, y el agente le pregunta al cliente a qué sucursal quiere ir.</p>
+        </details>
+        <details>
+          <summary>¿Puedo cobrar con Selyon CRM?</summary>
+          <p>Registrás pagos y señas por método (efectivo, SINPE Móvil, tarjeta o transferencia), lo pendiente y el resumen del día. Hoy no cobra en línea ni emite factura electrónica.</p>
+        </details>
+        <details>
+          <summary>¿Qué pasa con los datos de mis clientes?</summary>
+          <p>Vos sos el responsable de esos datos y Selyon los trata por encargo tuyo, solo para prestarte el servicio. Parte del procesamiento ocurre con proveedores como Meta y OpenAI (EE. UU.), y solo reciben promociones los clientes que aceptan expresamente. Los detalles están en la <a href="/privacidad">política de privacidad</a> y el <a href="/contrato">contrato para negocios</a>.</p>
+        </details>
+        <details>
+          <summary>¿Cuánto tarda en estar funcionando?</summary>
+          <p>Días, no meses. Cargar servicios, precios, horarios y equipo es rápido con la plantilla de tu rubro. Lo que más puede demorar son los trámites que pide Meta para el número (verificación y plantillas de mensajes).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Cierre ═══ -->
+  <section class="cta-band">
+    <div class="container cta-inner">
+      <h2>Que tu próxima cita se agende sola.</h2>
+      <p>Escribinos y te mostramos Selyon CRM con los servicios de tu negocio. Sin compromiso.</p>
+      <div class="hero-ctas cta-actions">
+        <a class="btn btn-light btn-lg" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20ver%20una%20demo%20de%20Selyon%20CRM%20para%20mi%20negocio" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-wa"/></svg>Pedí una demo por WhatsApp</a>
+        <a class="btn btn-ghost-dark btn-lg" href="#planes">Ver planes</a>
       </div>
     </div>
   </section>
 
 </main>
 
-<footer class="pie">
-  <div class="pie-grid">
-    <div>
-      <a class="marca" href="#top">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-          <rect width="36" height="36" rx="10" fill="url(#marca-degradado)"/>
-          <path d="M10 24.5 L18 8 L26 24.5" stroke="#7AFAFC" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <circle cx="18" cy="8" r="3" fill="#FFC517"/>
-          <circle cx="10" cy="24.5" r="2.4" fill="#7AFAFC"/>
-          <circle cx="26" cy="24.5" r="2.4" fill="#7AFAFC"/>
-        </svg>
-        <span class="marca-texto">selyon</span>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="/" aria-label="Selyon CRM, inicio">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="brand-mark-bg" width="32" height="32" rx="9"/><rect class="brand-mark-bar" x="7" y="9" width="13" height="5" rx="2.5"/><rect class="brand-mark-bar" x="12" y="18" width="13" height="5" rx="2.5"/><circle class="brand-mark-dot" cx="23.5" cy="11.5" r="2.5"/></svg>
+        <span class="brand-name">Selyon <span class="brand-tag">CRM</span></span>
       </a>
-      <p class="pie-desc">Agentes de IA que atienden, agendan y venden por tu negocio. Hecho en Costa Rica.</p>
+      <p>Software de gestión para negocios con cita, con WhatsApp IA. Hecho en Costa Rica.</p>
     </div>
-    <div>
-      <div class="pie-titulo-col">Productos</div>
-      <nav class="pie-enlaces">
-        <a href="#agente">Recepcionista IA</a>
-        <span class="pie-enlace-proximamente" title="Todavía no disponible">Menú Digital IA (en desarrollo)</span>
-        <a href="#precios">Precios</a>
-      </nav>
-    </div>
-    <div>
-      <div class="pie-titulo-col">Selyon</div>
-      <nav class="pie-enlaces">
-        <a href="/privacidad">Política de privacidad</a>
-        <a href="/terminos">Términos del servicio</a>
-        <a href="/contrato">Contrato para negocios</a>
-        <a href="https://wa.me/50683658231?text=Hola%2C%20quiero%20hablar%20de%20Selyon%20para%20mi%20negocio" target="_blank" rel="noopener">Contacto</a>
-      </nav>
-    </div>
+    <nav class="footer-col" aria-label="Producto">
+      <p class="footer-title">Producto</p>
+      <a href="#whatsapp">WhatsApp IA</a>
+      <a href="#gestion">Gestión</a>
+      <a href="#planes">Planes</a>
+      <a href="#preguntas">Preguntas frecuentes</a>
+    </nav>
+    <nav class="footer-col" aria-label="Legal">
+      <p class="footer-title">Legal</p>
+      <a href="/privacidad">Política de privacidad</a>
+      <a href="/terminos">Términos del servicio</a>
+      <a href="/contrato">Contrato para negocios</a>
+    </nav>
+    <nav class="footer-col" aria-label="Contacto">
+      <p class="footer-title">Contacto</p>
+      <a href="https://wa.me/50683658231?text=Hola%2C%20quiero%20hablar%20de%20Selyon%20CRM%20para%20mi%20negocio" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="/panel">Entrar al panel</a>
+    </nav>
   </div>
-  <div class="pie-bottom">© 2026 Selyon. Todos los derechos reservados.</div>
+  <div class="container footer-bottom">
+    <p>© 2026 Selyon. Todos los derechos reservados.</p>
+  </div>
 </footer>
 
 <script>
 (function () {
   "use strict";
-  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var header = document.querySelector("[data-header]");
+  var toggle = document.querySelector("[data-nav-toggle]");
 
-  var reveals = Array.prototype.slice.call(document.querySelectorAll("[data-reveal]"));
-  if (reduce || !("IntersectionObserver" in window)) {
-    reveals.forEach(function (el) { el.classList.add("visible"); });
-  } else {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-    reveals.forEach(function (el) { io.observe(el); });
+  // Menú del celular: abre/cierra con el botón, con Escape y al elegir un enlace.
+  function setNav(open) {
+    header.classList.toggle("nav-open", open);
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+  }
+  if (header && toggle) {
+    toggle.addEventListener("click", function () { setNav(!header.classList.contains("nav-open")); });
+    header.querySelectorAll(".site-nav a").forEach(function (a) { a.addEventListener("click", function () { setNav(false); }); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && header.classList.contains("nav-open")) { setNav(false); toggle.focus(); } });
   }
 
-  // Menú hamburguesa (móvil): togglea .nav-abierta en el <header>
-  var burger = document.querySelector(".nav-burger");
-  var header = document.querySelector(".cabecera");
-  if (burger && header) {
-    burger.addEventListener("click", function () {
-      var abierto = header.classList.toggle("nav-abierta");
-      burger.setAttribute("aria-expanded", abierto ? "true" : "false");
-      burger.setAttribute("aria-label", abierto ? "Cerrar menú" : "Abrir menú");
-    });
-    // Al tocar un enlace del menú, cerrarlo
-    header.querySelectorAll(".nav-enlace").forEach(function (a) {
-      a.addEventListener("click", function () {
-        header.classList.remove("nav-abierta");
-        burger.setAttribute("aria-expanded", "false");
-        burger.setAttribute("aria-label", "Abrir menú");
-      });
-    });
+  // Sombra del encabezado al bajar.
+  if (header) {
+    var onScroll = function () { header.classList.toggle("is-scrolled", window.scrollY > 8); };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
   }
 
-  var chat = document.querySelector("[data-chat]");
-  if (chat) {
-    if (reduce || !("IntersectionObserver" in window)) {
-      chat.classList.add("reproduciendo");
-    } else {
-      var cio = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            chat.classList.remove("reproduciendo");
-            void chat.offsetWidth;
-            chat.classList.add("reproduciendo");
-          } else {
-            chat.classList.remove("reproduciendo");
-          }
-        });
-      }, { threshold: 0.4 });
-      cio.observe(chat);
+  // Pestañas de rubros (patrón ARIA tabs: flechas, Inicio y Fin).
+  document.querySelectorAll("[data-tabs]").forEach(function (root) {
+    var tabs = Array.prototype.slice.call(root.querySelectorAll("[role=tab]"));
+    function select(tab, focus) {
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+      if (focus) tab.focus();
     }
-  }
+    // Sin JS se ven los tres paneles seguidos; con JS, solo el elegido.
+    select(tabs.filter(function (t) { return t.getAttribute("aria-selected") === "true"; })[0] || tabs[0], false);
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener("click", function () { select(tab, false); });
+      tab.addEventListener("keydown", function (e) {
+        var next = null;
+        if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
+        else if (e.key === "ArrowLeft") next = tabs[(i - 1 + tabs.length) % tabs.length];
+        else if (e.key === "Home") next = tabs[0];
+        else if (e.key === "End") next = tabs[tabs.length - 1];
+        if (next) { e.preventDefault(); select(next, true); }
+      });
+    });
+  });
 })();
 </script>
-
 </body>
 </html>

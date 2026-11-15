@@ -2,32 +2,29 @@
 <html lang="es-CR">
 <head>
 <meta charset="utf-8">
-<title>Términos del servicio — Selyon</title>
+<title>Términos del servicio — Selyon CRM</title>
 <meta name="description" content="Términos del servicio de Selyon CRM: para las personas que escriben a un negocio que usa el asistente de WhatsApp y para los negocios y equipos que usan el panel.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/landing/estilos.css">
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1013" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="preload" href="/panel/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/landing/site.css">
 </head>
 <body>
 
-<header class="cabecera">
-  <div class="contenedor contenedor--ancha">
-    <a class="marca" href="/">
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="marca-degradado" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#248DE3"/>
-            <stop offset="1" stop-color="#103050"/>
-          </linearGradient>
-        </defs>
-        <rect width="36" height="36" rx="10" fill="url(#marca-degradado)"/>
-        <path d="M10 24.5 L18 8 L26 24.5" stroke="#7AFAFC" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <circle cx="18" cy="8" r="3" fill="#FFC517"/>
-        <circle cx="10" cy="24.5" r="2.4" fill="#7AFAFC"/>
-        <circle cx="26" cy="24.5" r="2.4" fill="#7AFAFC"/>
-      </svg>
-      <span class="marca-texto">selyon</span>
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<header class="site-header site-header-legal">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Selyon CRM, inicio">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="brand-mark-bg" width="32" height="32" rx="9"/><rect class="brand-mark-bar" x="7" y="9" width="13" height="5" rx="2.5"/><rect class="brand-mark-bar" x="12" y="18" width="13" height="5" rx="2.5"/><circle class="brand-mark-dot" cx="23.5" cy="11.5" r="2.5"/></svg>
+      <span class="brand-name">Selyon <span class="brand-tag">CRM</span></span>
     </a>
+    <div class="header-actions">
+      <a class="header-login header-login-always" href="/panel">Entrar al panel</a>
+    </div>
   </div>
 </header>
 
@@ -50,8 +47,8 @@
        8. [PENDIENTE: correo de soporte]                (E)
        9. [PENDIENTE: canal oficial de contacto]        (E; reemplaza el WhatsApp del piloto)
 -->
-<main class="legal">
-  <div class="contenedor">
+<main class="legal" id="main">
+  <div class="container">
     <a class="volver" href="/">← Volver al inicio</a>
     <p class="aviso-borrador" role="note"><strong>Borrador sin revisión legal.</strong> Este documento todavía no fue revisado por un abogado y puede cambiar. Los datos marcados como <span class="pendiente">[PENDIENTE: …]</span> faltan y se completan antes de su versión final.</p>
     <h1>Términos del servicio</h1>
@@ -183,40 +180,37 @@
   </div>
 </main>
 
-<footer class="pie">
-  <div class="pie-grid">
-    <div>
-      <a class="marca" href="/">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-          <rect width="36" height="36" rx="10" fill="url(#marca-degradado)"/>
-          <path d="M10 24.5 L18 8 L26 24.5" stroke="#7AFAFC" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <circle cx="18" cy="8" r="3" fill="#FFC517"/>
-          <circle cx="10" cy="24.5" r="2.4" fill="#7AFAFC"/>
-          <circle cx="26" cy="24.5" r="2.4" fill="#7AFAFC"/>
-        </svg>
-        <span class="marca-texto">selyon</span>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="/" aria-label="Selyon CRM, inicio">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="brand-mark-bg" width="32" height="32" rx="9"/><rect class="brand-mark-bar" x="7" y="9" width="13" height="5" rx="2.5"/><rect class="brand-mark-bar" x="12" y="18" width="13" height="5" rx="2.5"/><circle class="brand-mark-dot" cx="23.5" cy="11.5" r="2.5"/></svg>
+        <span class="brand-name">Selyon <span class="brand-tag">CRM</span></span>
       </a>
-      <p class="pie-desc">Agentes de IA que atienden y agendan por tu negocio. Hecho en Costa Rica.</p>
+      <p>Software de gestión para negocios con cita, con WhatsApp IA. Hecho en Costa Rica.</p>
     </div>
-    <div>
-      <div class="pie-titulo-col">Productos</div>
-      <nav class="pie-enlaces">
-        <a href="/#agente">Recepcionista IA</a>
-        <span class="pie-enlace-proximamente" title="Todavía no disponible">Menú Digital IA (en desarrollo)</span>
-        <a href="/#precios">Precios</a>
-      </nav>
-    </div>
-    <div>
-      <div class="pie-titulo-col">Selyon</div>
-      <nav class="pie-enlaces">
-        <a href="/privacidad">Política de privacidad</a>
-        <a href="/terminos">Términos del servicio</a>
-        <a href="/contrato">Contrato para negocios</a>
-        <a href="#contacto">Contacto</a>
-      </nav>
-    </div>
+    <nav class="footer-col" aria-label="Producto">
+      <p class="footer-title">Producto</p>
+      <a href="/#whatsapp">WhatsApp IA</a>
+      <a href="/#gestion">Gestión</a>
+      <a href="/#planes">Planes</a>
+      <a href="/#preguntas">Preguntas frecuentes</a>
+    </nav>
+    <nav class="footer-col" aria-label="Legal">
+      <p class="footer-title">Legal</p>
+      <a href="/privacidad">Política de privacidad</a>
+      <a href="/terminos">Términos del servicio</a>
+      <a href="/contrato">Contrato para negocios</a>
+    </nav>
+    <nav class="footer-col" aria-label="Acceso">
+      <p class="footer-title">Acceso</p>
+      <a href="/panel">Entrar al panel</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
   </div>
-  <div class="pie-bottom">© 2026 Selyon. Todos los derechos reservados.</div>
+  <div class="container footer-bottom">
+    <p>© 2026 Selyon. Todos los derechos reservados.</p>
+  </div>
 </footer>
 
 </body>
