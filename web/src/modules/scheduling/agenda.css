@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   Agenda (día con carriles por profesional, semana), el detalle de la cita en un panel
+   Agenda (mes, semana y día con carriles por profesional), el detalle de la cita en un panel
    lateral y "Nueva cita". Tokens de global.css; responsive desde 320 px: la rejilla del día
    scrollea horizontal DENTRO de su caja (la página nunca), con la columna de horas fija.
    ───────────────────────────────────────────────────────────────────────────── */
@@ -136,9 +136,54 @@
 .quick-client { margin-top: var(--space-md); border: 1px dashed var(--border-strong); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md) var(--space-md); }
 .quick-client-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-xs); margin-top: var(--space-sm); }
 
+/* ── Mes ── */
+.month-view { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
+.month-row { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.month-row + .month-row { border-top: 1px solid var(--border-subtle); }
+.month-head { background: var(--surface-sunken); }
+.month-weekday { padding: 6px 8px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--text-tertiary); }
+.month-day { position: relative; min-width: 0; min-height: 112px; padding: 4px 4px 6px; display: flex; flex-direction: column; gap: 2px; }
+.month-day + .month-day { border-left: 1px solid var(--border-subtle); }
+.month-day-link { position: absolute; inset: 0; display: flex; align-items: flex-start; justify-content: space-between; padding: 6px 8px; text-align: left; border-radius: 0; color: var(--text); }
+.month-day-link:hover { background: var(--surface-sunken); }
+.month-day-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.month-day-num { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 4px; border-radius: 13px; font-size: var(--step--1); font-weight: 600; }
+.month-day-out { background: var(--surface-sunken); }
+.month-day-out .month-day-num { color: var(--text-tertiary); font-weight: 500; }
+.month-day-past .month-day-num { color: var(--text-secondary); }
+.month-day-today .month-day-num { background: var(--accent); color: var(--accent-fg); }
+.month-list { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 2px; margin-top: 30px; pointer-events: none; }
+.month-list button { pointer-events: auto; }
+.month-item { display: flex; align-items: baseline; gap: 4px; width: 100%; padding: 2px 6px; border-radius: var(--radius-sm); border-left: 3px solid var(--staff-color); background: var(--surface-sunken); color: var(--text); font-size: 11.5px; line-height: 1.35; text-align: left; min-height: 22px; }
+.month-item:hover { background: color-mix(in srgb, var(--surface-sunken) 70%, var(--border)); }
+.month-item-time { flex-shrink: 0; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.month-item-time-short { display: none; }
+.month-item-client { min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.month-item.status-pending { background: var(--surface); border-top: 1px dashed var(--status-risk-dot); border-right: 1px dashed var(--status-risk-dot); border-bottom: 1px dashed var(--status-risk-dot); }
+.month-item.status-cancelled, .month-item.status-no_show { opacity: .55; }
+.month-item.status-cancelled .month-item-client { text-decoration: line-through; }
+.month-more { align-self: flex-start; padding: 1px 6px; border-radius: var(--radius-sm); font-size: 11.5px; font-weight: 600; color: var(--text-secondary); }
+.month-more:hover { color: var(--text); background: var(--surface-sunken); }
+
+/* Tablet: la hora arriba y el nombre abajo, para que el nombre no quede cortado. */
+@media (max-width: 1199px) {
+  .month-item { flex-direction: column; align-items: flex-start; gap: 0; }
+  .month-item-client { width: 100%; }
+}
+
 @media (max-width: 767px) {
   .week-view { grid-template-columns: minmax(0, 1fr); }
   .week-day { min-height: 0; }
+  .month-day { min-height: 92px; padding: 2px 2px 4px; }
+  .month-day-link { padding: 4px; }
+  .month-day-num { min-width: 22px; height: 22px; font-size: 12px; }
+  .month-weekday { padding: 6px 4px; font-size: 10px; letter-spacing: 0; }
+  .month-list { margin-top: 26px; gap: 2px; }
+  .month-item { flex-direction: column; align-items: flex-start; gap: 0; padding: 1px 3px; border-left-width: 2px; font-size: 10px; line-height: 1.25; min-height: 0; }
+  .month-item-client { width: 100%; font-weight: 600; }
+  .month-item-time { display: none; }
+  .month-item-time-short { display: inline; color: var(--text-secondary); }
+  .month-more { padding: 0 3px; font-size: 10px; }
   .agenda-toolbar { align-items: stretch; }
   .agenda-date { flex-basis: 100%; order: 5; margin: 4px 0 0; }
   .agenda-options { width: 100%; justify-content: space-between; }

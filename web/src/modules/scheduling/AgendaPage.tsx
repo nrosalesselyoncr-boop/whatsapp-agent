@@ -9,21 +9,23 @@ import ErrorState from "../../ui/ErrorState";
 import Icon from "../../ui/Icons";
 import PageHeader from "../../ui/PageHeader";
 import { isoToZoned } from "../settings/zonedTime";
-import { addDays, weekDates } from "./agendaLayout";
+import { addDays, addMonths, monthDates, weekDates } from "./agendaLayout";
 import AppointmentDrawer from "./AppointmentDrawer";
 import DayView from "./DayView";
-import { dayRange, formatLongDate, formatShortDate, todayIn } from "./format";
+import { dayRange, formatLongDate, formatMonth, formatShortDate, todayIn } from "./format";
+import MonthView from "./MonthView";
 import NewAppointmentDialog, { type NewAppointmentDefaults } from "./NewAppointmentDialog";
 import { useAgendaSetup, useAppointments, type Appointment } from "./schedulingApi";
 import WeekView from "./WeekView";
 import "./agenda.css";
 
-type View = "day" | "week";
+type View = "month" | "week" | "day";
 const RE_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /**
- * Agenda (/agenda): día con carriles por profesional y semana, de la sucursal activa (con
- * "Todas" se elige una acá). URL enlazable: `?date=AAAA-MM-DD&view=day|week&appointment=<id>`;
+ * Agenda (/agenda): mes (la vista por defecto), semana y día con carriles por profesional, de
+ * la sucursal activa (con "Todas" se elige una acá). URL enlazable:
+ * `?date=AAAA-MM-DD&view=week|day&appointment=<id>` (sin `view` = mes);
  * `?new=1` abre "Nueva cita" (lo usa "+ Nuevo → Cita"). El profesional ve solo su carril.
  */
 export default function AgendaPage() {
@@ -39,10 +41,11 @@ export default function AgendaPage() {
   const pinned = selected !== ALL_LOCATIONS ? selected : null;
   const location = locations.find((l) => l.id === (pinned ?? params.get("loc"))) ?? locations[0] ?? null;
   const tz = location?.timezone ?? me.business.timezone;
-  const view: View = params.get("view") === "week" ? "week" : "day";
+  const rawView = params.get("view");
+  const view: View = rawView === "week" || rawView === "day" ? rawView : "month";
   const rawDate = params.get("date");
   const date = rawDate && RE_DATE.test(rawDate) ? rawDate : todayIn(tz);
-  const days = view === "week" ? weekDates(date) : [date];
+  const days = view === "month" ? monthDates(date) : view === "week" ? weekDates(date) : [date];
   const range = useMemo(() => dayRange(days[0], tz, days.length), [days[0], tz, days.length]);
 
   const appointmentsQuery = useAppointments(range.from, range.to, isStaff ? (me.staffId ?? null) : null);
@@ -163,22 +166,29 @@ export default function AgendaPage() {
     );
   }
 
-  const step = view === "week" ? 7 : 1;
-  const label = view === "week" ? `${formatShortDate(days[0])} – ${formatShortDate(days[6])}` : capitalize(formatLongDate(date));
+  const label =
+    view === "month"
+      ? capitalize(formatMonth(date))
+      : view === "week"
+        ? `${formatShortDate(days[0])} – ${formatShortDate(days[6])}`
+        : capitalize(formatLongDate(date));
   const today = todayIn(tz);
+  const move = (n: number) => (view === "month" ? addMonths(date, n) : addDays(date, view === "week" ? 7 * n : n));
+  const unit = view === "month" ? "Mes" : view === "week" ? "Semana" : "Día";
+  const isCurrent = view === "month" ? date.slice(0, 7) === today.slice(0, 7) : view === "week" ? days.includes(today) : date === today;
 
   return (
     <div className="page page-wide">
       {header}
       <div className="agenda-toolbar">
         <div className="agenda-nav" role="group" aria-label="Fecha">
-          <button type="button" className="icon-btn agenda-nav-btn" onClick={() => update({ date: addDays(date, -step) })} aria-label={view === "week" ? "Semana anterior" : "Día anterior"}>
+          <button type="button" className="icon-btn agenda-nav-btn" onClick={() => update({ date: move(-1) })} aria-label={`${unit} anterior`}>
             <Icon id="chevronLeft" size={18} />
           </button>
-          <button type="button" className="btn btn-secondary btn-small" onClick={() => update({ date: null })} disabled={date === today && view === "day"}>
+          <button type="button" className="btn btn-secondary btn-small" onClick={() => update({ date: null })} disabled={isCurrent}>
             Hoy
           </button>
-          <button type="button" className="icon-btn agenda-nav-btn agenda-next" onClick={() => update({ date: addDays(date, step) })} aria-label={view === "week" ? "Semana siguiente" : "Día siguiente"}>
+          <button type="button" className="icon-btn agenda-nav-btn agenda-next" onClick={() => update({ date: move(1) })} aria-label={`${unit} siguiente`}>
             <Icon id="chevronLeft" size={18} />
           </button>
           <h2 className="agenda-date" aria-live="polite">
@@ -203,11 +213,14 @@ export default function AgendaPage() {
             </label>
           )}
           <div className="segmented" role="group" aria-label="Vista">
-            <button type="button" aria-pressed={view === "day"} onClick={() => update({ view: null })}>
-              Día
+            <button type="button" aria-pressed={view === "month"} onClick={() => update({ view: null })}>
+              Mes
             </button>
             <button type="button" aria-pressed={view === "week"} onClick={() => update({ view: "week" })}>
               Semana
+            </button>
+            <button type="button" aria-pressed={view === "day"} onClick={() => update({ view: "day" })}>
+              Día
             </button>
           </div>
           <label className="check-inline">
@@ -221,7 +234,17 @@ export default function AgendaPage() {
         <ErrorState message={errorMessage(appointmentsQuery.error, `No pudimos cargar las ${t.appointments}.`)} onRetry={() => void appointmentsQuery.refetch()} />
       ) : (
         <div className={appointmentsQuery.isFetching && appointmentsQuery.isPlaceholderData ? "agenda-body agenda-loading" : "agenda-body"} aria-busy={appointmentsQuery.isPending}>
-          {view === "day" ? (
+          {view === "month" ? (
+            <MonthView
+              days={days}
+              month={date.slice(0, 7)}
+              timeZone={tz}
+              appointments={visible}
+              staffColors={staffColors}
+              onSelect={(a) => update({ appointment: a.id })}
+              onOpenDay={(d) => update({ date: d, view: "day" })}
+            />
+          ) : view === "day" ? (
             <DayView
               date={date}
               location={location}
@@ -237,7 +260,7 @@ export default function AgendaPage() {
               appointments={visible}
               staffColors={staffColors}
               onSelect={(a) => update({ appointment: a.id })}
-              onOpenDay={(d) => update({ date: d, view: null })}
+              onOpenDay={(d) => update({ date: d, view: "day" })}
             />
           )}
         </div>

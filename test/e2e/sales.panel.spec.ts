@@ -44,7 +44,7 @@ const amount = (digits: string) => new RegExp(digits.replace(/(\d)(?=(\d{3})+$)/
 test("cobrar desde la cita: seña y pago con el saldo a la vista, sin pasarse del saldo", async ({ page }) => {
   await login(page, "duena@demo.test");
   const monday = freeMonday();
-  await page.goto(`/panel/agenda?date=${monday}`);
+  await page.goto(`/panel/agenda?date=${monday}&view=day`);
   await page.getByRole("button", { name: "Nueva cita" }).click();
   const create = page.getByRole("dialog", { name: "Nueva cita" });
   await create.getByLabel("Buscar paciente").fill("María Fernández");
