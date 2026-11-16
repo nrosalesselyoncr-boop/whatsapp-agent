@@ -129,6 +129,7 @@
   --shadow-lg: 0 30px 60px -20px rgba(0,0,0,.7);
 
   /* Panel de marca del acceso y del superadmin (el color de menú del negocio lo pisa) */
+  --topbar-bg: color-mix(in srgb, var(--bg) 86%, transparent);
   --header-bg: var(--brand-header-bg, #0D0F12);
   --header-fg: var(--brand-header-fg, #F2F3F5);
   --header-muted: color-mix(in srgb, var(--header-fg) 66%, transparent);
@@ -186,8 +187,40 @@
   --shadow-md: 0 2px 4px rgba(16,18,24,.04), 0 8px 16px -4px rgba(16,18,24,.12);
   --shadow-lg: 0 24px 48px -12px rgba(16,18,24,.28);
 
+  --topbar-bg: color-mix(in srgb, var(--bg) 86%, transparent);
   --header-bg: var(--brand-header-bg, #16181D);
   --header-fg: var(--brand-header-fg, #F2F3F5);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   TOKENS — marca propia en todo el panel (<html data-brand-tint>, lib/branding.ts)
+   El color del menú (o el principal) tiñe apenas los neutros: fondo, superficies, bordes
+   y barra superior. El tinte trae solo el matiz de la marca, con la luminosidad de las
+   superficies y el croma limitado, así el texto conserva su contraste AA (test en
+   test/unit/branding.test.ts). Texto, estados y sombras no cambian.
+   ══════════════════════════════════════════════════════════════════════════════ */
+[data-brand-tint]:not([data-theme="light"]) {
+  --bg: color-mix(in oklab, var(--brand-tint-dark) 25%, #0A0B0D);
+  --panel: color-mix(in oklab, var(--brand-tint-dark) 28%, #0D0F12);
+  --surface: color-mix(in oklab, var(--brand-tint-dark) 30%, #14161A);
+  --surface-sunken: color-mix(in oklab, var(--brand-tint-dark) 32%, #1A1D22);
+  --surface-overlay: color-mix(in oklab, var(--brand-tint-dark) 30%, #181A1F);
+  --surface-muted: color-mix(in oklab, var(--brand-tint-dark) 28%, #111317);
+  --border: color-mix(in oklab, var(--brand-tint-dark) 40%, #23262D);
+  --border-subtle: color-mix(in oklab, var(--brand-tint-dark) 34%, #1C1F24);
+  --border-strong: color-mix(in oklab, var(--brand-tint-dark) 40%, #30343C);
+  --topbar-bg: color-mix(in srgb, color-mix(in oklab, var(--brand-tint-dark) 32%, #0A0B0D) 88%, transparent);
+}
+[data-theme="light"][data-brand-tint] {
+  --bg: color-mix(in oklab, var(--brand-tint-light) 18%, #F7F6F2);
+  --surface: color-mix(in oklab, var(--brand-tint-light) 8%, #FFFFFF);
+  --surface-sunken: color-mix(in oklab, var(--brand-tint-light) 18%, #F3F2ED);
+  --surface-overlay: color-mix(in oklab, var(--brand-tint-light) 8%, #FFFFFF);
+  --surface-muted: color-mix(in oklab, var(--brand-tint-light) 14%, #FAFAF7);
+  --border: color-mix(in oklab, var(--brand-tint-light) 35%, #E4E2DA);
+  --border-subtle: color-mix(in oklab, var(--brand-tint-light) 28%, #EFEDE7);
+  --border-strong: color-mix(in oklab, var(--brand-tint-light) 35%, #D2CFC5);
+  --topbar-bg: color-mix(in srgb, color-mix(in oklab, var(--brand-tint-light) 24%, #F7F6F2) 88%, transparent);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
@@ -427,7 +460,7 @@ form > .btn { margin-top: var(--space-lg); }
 .user-chip-role { font-size: 12px; line-height: 16px; color: var(--text-tertiary); }
 
 /* ── Encabezado ── */
-.topbar { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: var(--space-xs); min-height: calc(var(--topbar-height) + env(safe-area-inset-top)); padding: env(safe-area-inset-top) var(--space-md) 0; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: saturate(1.4) blur(10px); -webkit-backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--border); }
+.topbar { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: var(--space-xs); min-height: calc(var(--topbar-height) + env(safe-area-inset-top)); padding: env(safe-area-inset-top) var(--space-md) 0; background: var(--topbar-bg); backdrop-filter: saturate(1.4) blur(10px); -webkit-backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--border); }
 .topbar-brand { flex-shrink: 0; }
 /* Sección actual, en mono y mayúsculas (solo escritorio: en el celular va la marca). */
 .topbar-crumb { display: none; font-family: var(--font-mono); font-size: 11.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }

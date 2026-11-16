@@ -8,10 +8,12 @@ import {
   DEFAULT_ACCENT_LIGHT,
   documentTitle,
   initials,
+  mixOklab,
   PRODUCT_NAME,
   safeLogoUrl,
   SURFACE_DARK,
   SURFACE_LIGHT,
+  tintFor,
 } from "../../web/src/lib/branding";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -82,6 +84,47 @@ test("branding: accentFor no toca un color que ya cumple y oscurece/aclara el qu
   assert.notEqual(yellow, "#000000");
   // Un color inválido vuelve tal cual (applyBranding ya lo filtra antes).
   assert.equal(accentFor("fucsia", SURFACE_LIGHT, "#000000"), "fucsia");
+});
+
+// Espejo de [data-brand-tint] en global.css: superficie neutra y % de tinte por tema, y el
+// texto que va encima (secundario y terciario de cada tema).
+const TINTED = {
+  dark: {
+    text: ["#a8adb7", "#80858f"],
+    surfaces: [["#0a0b0d", 0.25], ["#14161a", 0.3], ["#1a1d22", 0.32], ["#181a1f", 0.3], ["#111317", 0.28]] as [string, number][],
+  },
+  light: {
+    text: ["#4f545e", "#686d76"],
+    surfaces: [["#f7f6f2", 0.18], ["#ffffff", 0.08], ["#f3f2ed", 0.18], ["#fafaf7", 0.14]] as [string, number][],
+  },
+} as const;
+
+test("branding: el tinte de marca en los neutros no baja el texto secundario ni el terciario de AA", () => {
+  for (const color of sampleColors()) {
+    for (const theme of ["dark", "light"] as const) {
+      const tint = tintFor(color, theme);
+      assert.match(tint, /^#[0-9a-f]{6}$/, `${color} en ${theme}`);
+      for (const [surface, pct] of TINTED[theme].surfaces) {
+        const tinted = mixOklab(tint, surface, pct);
+        for (const text of TINTED[theme].text) {
+          const ratio = contrastRatio(text, tinted);
+          assert.ok(ratio >= AA, `${color} (${theme}): ${text} sobre ${tinted} = ${ratio.toFixed(2)}`);
+        }
+      }
+    }
+  }
+});
+
+test("branding: el tinte toma el matiz de la marca, no su luminosidad ni todo su croma", () => {
+  // Rojo puro y amarillo puro quedan oscuros en el tema oscuro (no se leen como un estado).
+  assert.ok(contrastRatio(tintFor("#ff0000", "dark"), "#1a1d22") < 1.3);
+  assert.ok(contrastRatio(tintFor("#ffff00", "dark"), "#1a1d22") < 1.3);
+  // Y casi blancos en el claro.
+  assert.ok(contrastRatio(tintFor("#1b1340", "light"), "#f7f6f2") < 1.3);
+  // Un gris queda gris.
+  const grey = tintFor("#777777", "dark");
+  assert.equal(grey.slice(1, 3), grey.slice(3, 5));
+  assert.equal(tintFor("rojo", "dark"), "rojo", "un color inválido vuelve igual");
 });
 
 test("branding: safeLogoUrl rechaza javascript: y data: (va directo a un <img src>)", () => {

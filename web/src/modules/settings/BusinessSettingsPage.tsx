@@ -242,8 +242,8 @@ function BusinessForm({ settings, canEdit }: { settings: BusinessSettings; canEd
         </h3>
         {!settings.brandingEditable && <p className="settings-help">La marca propia es parte del plan Pro.</p>}
         <div className="form-grid">
-          <ColorField label="Color principal" hint="Botones principales, ítem activo del menú, enlaces y gráficos." value={form.accentColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.accentColor")} onChange={(v) => set("accentColor", v)} />
-          <ColorField label="Color del menú" hint="Fondo del menú lateral (y de la barra de abajo en el celular)." value={form.headerColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.headerColor")} onChange={(v) => set("headerColor", v)} />
+          <ColorField label="Color principal" hint="Botones principales, ítem activo del menú, enlaces y gráficos. Sin color del menú, también tiñe apenas el fondo del panel." value={form.accentColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.accentColor")} onChange={(v) => set("accentColor", v)} />
+          <ColorField label="Color del menú" hint="Fondo del menú lateral y de la barra de abajo en el celular; también tiñe apenas el fondo, las tarjetas y los bordes del panel." value={form.headerColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.headerColor")} onChange={(v) => set("headerColor", v)} />
         </div>
         <TextField
           label="Logo (URL https)"
