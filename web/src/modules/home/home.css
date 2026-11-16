@@ -44,7 +44,7 @@
 .home-big { font-size: 30px; line-height: 34px; letter-spacing: -.04em; }
 .home-big-accent { color: var(--accent); }
 .home-big-warn { color: var(--status-pending); }
-.home-live-dot { margin-left: auto; background: var(--status-pending-dot); }
+.pulse-dot.home-live-dot { margin-left: auto; background: var(--status-pending-dot); }
 .home-count { border-radius: var(--radius-pill); }
 .home-item:hover { background: var(--hover); }
 .home-status-list li { padding: 7px 0; border-top: 1px solid var(--border); }
@@ -55,10 +55,10 @@
 @media (min-width: 1100px) {
   .home-layout { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); }
   /* Próximas citas en una fila: hora · cliente y servicio · profesional · estado. */
-  .home-item-wide { grid-template-columns: 54px minmax(0, 1.4fr) minmax(0, 1fr) auto; align-items: center; column-gap: 12px; border-radius: 0; border-top: 1px solid var(--border); padding: 10px 0; }
+  .home-item-wide { grid-template-columns: 78px minmax(0, 1.4fr) minmax(0, 1fr) auto; align-items: center; column-gap: 12px; border-radius: 0; border-top: 1px solid var(--border); padding: 10px 0; }
   .home-list > li:first-child .home-item-wide { border-top: none; }
   .home-item-wide:hover { background: transparent; }
   .home-item-wide:hover .home-item-main { color: var(--accent); }
-  .home-item-wide .home-item-time { grid-row: auto; align-self: center; min-width: 0; color: var(--text-secondary); font-size: 12.5px; }
+  .home-item-wide .home-item-time { grid-row: auto; align-self: center; min-width: 0; white-space: nowrap; color: var(--text-secondary); font-size: 12.5px; }
   .home-item-wide .home-item-status { grid-column: auto; justify-self: end; margin-top: 0; }
 }
