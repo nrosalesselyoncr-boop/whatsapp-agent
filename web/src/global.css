@@ -100,6 +100,9 @@
   --on-ink: #0A0B0D;
   --ink-hover: #E4E5E8;
   --accent: var(--brand-accent-dark, #4FD1B3);
+  /* Defaults de la plataforma sin marca (miniatura "Original" de los temas de marca). */
+  --accent-default: #4FD1B3;
+  --panel-default: #0D0F12;
   --on-accent: var(--brand-on-accent-dark, #06110E);
   --accent-hover: color-mix(in srgb, var(--accent) 80%, #fff);
   --accent-soft: color-mix(in srgb, var(--accent) 13%, transparent);
@@ -163,6 +166,8 @@
   --on-ink: #FFFFFF;
   --ink-hover: #2B2E35;
   --accent: var(--brand-accent-light, #2E7968);
+  --accent-default: #2E7968;
+  --panel-default: #FFFFFF;
   --on-accent: var(--brand-on-accent-light, #FFFFFF);
   --accent-hover: color-mix(in srgb, var(--accent) 86%, #000);
   --accent-soft: color-mix(in srgb, var(--accent) 12%, #FFFFFF);

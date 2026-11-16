@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { errorMessage } from "../../lib/api";
+import { BRAND_PRESETS } from "../../lib/branding";
 import { DEFAULT_TERMINOLOGY, type Terminology } from "../../lib/contract";
 import { ME_QUERY_KEY, useSession } from "../../app/session";
 import ErrorState from "../../ui/ErrorState";
@@ -241,6 +242,13 @@ function BusinessForm({ settings, canEdit }: { settings: BusinessSettings; canEd
           Marca
         </h3>
         {!settings.brandingEditable && <p className="settings-help">La marca propia es parte del plan Pro.</p>}
+        <BrandPresets
+          industry={settings.industry}
+          accentColor={form.accentColor}
+          headerColor={form.headerColor}
+          disabled={disabled || !settings.brandingEditable}
+          onPick={(accentColor, headerColor) => setForm((f) => ({ ...f, accentColor, headerColor }))}
+        />
         <div className="form-grid">
           <ColorField label="Color principal" hint="Botones principales, ítem activo del menú, enlaces y gráficos. Sin color del menú, también tiñe apenas el fondo del panel." value={form.accentColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.accentColor")} onChange={(v) => set("accentColor", v)} />
           <ColorField label="Color del menú" hint="Fondo del menú lateral y de la barra de abajo en el celular; también tiñe apenas el fondo, las tarjetas y los bordes del panel." value={form.headerColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.headerColor")} onChange={(v) => set("headerColor", v)} />
@@ -271,6 +279,71 @@ function BusinessForm({ settings, canEdit }: { settings: BusinessSettings; canEd
         </>
       )}
     </form>
+  );
+}
+
+/**
+ * Temas predeterminados: cada uno llena el color principal y el del menú (se aplica al
+ * guardar). "Original" vacía los dos (la paleta de la plataforma). El del rubro del negocio
+ * lleva la marca "Sugerido". La vista previa es una miniatura: menú, barra y botón.
+ */
+function BrandPresets({
+  industry,
+  accentColor,
+  headerColor,
+  disabled,
+  onPick,
+}: {
+  industry: string;
+  accentColor: string;
+  headerColor: string;
+  disabled: boolean;
+  onPick: (accentColor: string, headerColor: string) => void;
+}) {
+  const same = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
+  const options = [
+    { id: "original", name: "Original", description: "Menta de Selyon", accentColor: "", headerColor: "", suggested: false },
+    ...BRAND_PRESETS.map((p) => ({ ...p, suggested: p.industries.includes(industry) })),
+  ];
+  return (
+    <fieldset className="brand-presets" disabled={disabled}>
+      <legend className="field-label">Temas</legend>
+      <p className="field-hint">Elegí uno y tocá «Guardar». Después podés ajustar los colores a mano.</p>
+      <div className="brand-preset-grid">
+        {options.map((o) => {
+          const selected = same(accentColor, o.accentColor) && same(headerColor, o.headerColor);
+          return (
+            <button
+              key={o.id}
+              type="button"
+              className="brand-preset"
+              aria-pressed={selected}
+              onClick={() => onPick(o.accentColor, o.headerColor)}
+              style={{ ["--preset-accent" as string]: o.accentColor || "var(--accent-default)", ["--preset-menu" as string]: o.headerColor || "var(--panel-default)" }}
+            >
+              <span className="brand-preset-preview" aria-hidden="true">
+                <span className="brand-preset-menu">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <span className="brand-preset-body">
+                  <i className="brand-preset-bar" />
+                  <i className="brand-preset-button" />
+                </span>
+              </span>
+              <span className="brand-preset-text">
+                <span className="brand-preset-name">
+                  {o.name}
+                  {o.suggested && <span className="brand-preset-tag">Sugerido</span>}
+                </span>
+                <span className="brand-preset-desc">{o.description}</span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
   );
 }
 

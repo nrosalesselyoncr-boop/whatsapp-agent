@@ -3,6 +3,7 @@ import { test } from "node:test";
 import { PRODUCT_NAME as SERVER_PRODUCT_NAME } from "../../src/platform/brand";
 import {
   accentFor,
+  BRAND_PRESETS,
   contrastRatio,
   DEFAULT_ACCENT_DARK,
   DEFAULT_ACCENT_LIGHT,
@@ -125,6 +126,22 @@ test("branding: el tinte toma el matiz de la marca, no su luminosidad ni todo su
   const grey = tintFor("#777777", "dark");
   assert.equal(grey.slice(1, 3), grey.slice(3, 5));
   assert.equal(tintFor("rojo", "dark"), "rojo", "un color inválido vuelve igual");
+});
+
+test("branding: los temas predeterminados (uñas, dental, tecnológico) se ven bien en los dos temas", () => {
+  assert.deepEqual(BRAND_PRESETS.map((p) => p.id), ["nails", "dental", "tech"]);
+  for (const p of BRAND_PRESETS) {
+    assert.match(p.accentColor, /^#[0-9a-f]{6}$/, p.id);
+    assert.match(p.headerColor, /^#[0-9a-f]{6}$/, p.id);
+    // El acento pasa AA tal cual en oscuro (no se deforma) y apenas se oscurece en claro.
+    assert.equal(accentFor(p.accentColor, SURFACE_DARK, "#ffffff"), p.accentColor, `${p.id} en oscuro`);
+    assert.ok(contrastRatio(accentFor(p.accentColor, SURFACE_LIGHT, "#000000"), SURFACE_LIGHT) >= AA, `${p.id} en claro`);
+    // El menú es oscuro: texto blanco con contraste de sobra.
+    assert.ok(contrastRatio(p.headerColor, "#ffffff") >= 12, `${p.id}: texto del menú`);
+  }
+  // Cada rubro tiene a lo sumo un tema sugerido.
+  const industries = BRAND_PRESETS.flatMap((p) => p.industries);
+  assert.equal(new Set(industries).size, industries.length);
 });
 
 test("branding: safeLogoUrl rechaza javascript: y data: (va directo a un <img src>)", () => {

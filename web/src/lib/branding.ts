@@ -25,6 +25,28 @@ export interface Branding {
   logoUrl?: string;
 }
 
+/**
+ * Temas predeterminados de marca (Configuración › Negocio › Marca): un color principal y un
+ * color del menú pensados juntos, que se ven bien en oscuro y en claro (el acento pasa AA
+ * en los dos sin ajuste fuerte; test en test/unit/branding.test.ts). Elegir uno solo llena
+ * los dos campos: se guarda como cualquier marca propia.
+ */
+export interface BrandPreset {
+  id: "nails" | "dental" | "tech";
+  name: string;
+  description: string;
+  accentColor: string;
+  headerColor: string;
+  /** Rubros del negocio para los que se sugiere (`settings.industry`). */
+  industries: string[];
+}
+
+export const BRAND_PRESETS: readonly BrandPreset[] = [
+  { id: "nails", name: "Uñas", description: "Rosa chicle sobre ciruela", accentColor: "#f06ba8", headerColor: "#2b1424", industries: ["nails", "aesthetics"] },
+  { id: "dental", name: "Dental", description: "Celeste clínico sobre azul marino", accentColor: "#3bb2f6", headerColor: "#0c2233", industries: ["dental"] },
+  { id: "tech", name: "Tecnológico", description: "Violeta eléctrico sobre índigo", accentColor: "#8b7cff", headerColor: "#14132b", industries: ["generic"] },
+];
+
 const RE_HEX = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i;
 
 /** Superficies de las tarjetas en claro y oscuro (espejo de --surface en global.css). */

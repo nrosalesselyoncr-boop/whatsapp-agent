@@ -55,9 +55,9 @@ export function OverviewKpis() {
   const o = query.data;
   const by = o.appointmentsToday.byStatus;
   const split = [
-    { n: by.confirmed ?? 0, label: "confirmadas", tone: "" },
-    { n: by.pending ?? 0, label: "sin confirmar", tone: " badge-warning" },
-    { n: by.completed ?? 0, label: "completadas", tone: " badge-info" },
+    { n: by.confirmed ?? 0, one: "confirmada", many: "confirmadas", tone: "" },
+    { n: by.pending ?? 0, one: "sin confirmar", many: "sin confirmar", tone: " badge-warning" },
+    { n: by.completed ?? 0, one: "completada", many: "completadas", tone: " badge-info" },
   ].filter((s) => s.n > 0);
 
   return (
@@ -68,8 +68,8 @@ export function OverviewKpis() {
           {split.length > 0 && (
             <span className="ho-kpi-split">
               {split.map((s) => (
-                <span key={s.label} className={"badge badge-dot tnum" + s.tone}>
-                  {formatInt(s.n)} {s.label}
+                <span key={s.many} className={"badge badge-dot tnum" + s.tone}>
+                  {formatInt(s.n)} {s.n === 1 ? s.one : s.many}
                 </span>
               ))}
             </span>
