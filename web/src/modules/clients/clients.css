@@ -17,12 +17,19 @@
 .clients-loading { display: flex; align-items: center; justify-content: center; gap: var(--space-sm); padding: var(--space-xl) 0; color: var(--text-2); }
 
 .card.clients-table-card { padding: 0; overflow: hidden; }
+/* Persona: avatar con iniciales (tono estable, ui/avatarTone.ts) + nombre, contacto y etiquetas. */
+.clients-person { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.clients-avatar { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 12px; font-weight: 600; }
+.clients-person-text { display: flex; flex-direction: column; min-width: 0; }
 .clients-table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
-.clients-table th { text-align: left; font-size: 12px; font-weight: 500; color: var(--text-3); padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--border); background: var(--surface-muted); }
-.clients-table td { padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--border-2); vertical-align: middle; color: var(--text); }
+.clients-table th { text-align: left; font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); padding: 11px var(--space-md); border-bottom: 1px solid var(--border); white-space: nowrap; }
+.clients-table td { padding: 11px var(--space-md); border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text-secondary); }
 .clients-table tbody tr { position: relative; transition: background .12s; }
 .clients-table tbody tr:last-child td { border-bottom: none; }
-.clients-table tbody tr:hover { background: var(--surface-2); }
+.clients-table tbody tr:hover { background: var(--hover); }
+.clients-table tbody tr:focus-within { background: var(--accent-soft); }
+td.clients-col-spend { font-weight: 600; color: var(--text); }
+@media (max-width: 479px) { .clients-avatar { display: none; } }
 /* El enlace del nombre cubre toda la fila (clic en cualquier parte), sin perder la semántica de tabla. */
 .clients-row-link { font-weight: 600; font-size: var(--step-0); color: var(--text); text-decoration: none; overflow-wrap: anywhere; }
 .clients-row-link::after { content: ""; position: absolute; inset: 0; }
@@ -118,11 +125,11 @@
 
 /* ── CRM del Pro (I3): estados, VIP, chips, filtros, importar ── */
 .client-status { white-space: nowrap; }
-.badge.client-status-new { background: var(--info-soft); color: var(--info); }
+.badge.client-status-new { background: var(--tone-rose-bg); color: var(--tone-rose); }
 .badge.client-status-active { background: var(--success-soft); color: var(--success); }
-.badge.client-status-vip { background: var(--accent-soft); color: var(--accent-strong); }
-.badge.client-status-at_risk { background: var(--warning-soft); color: var(--warning); }
-.badge.client-status-inactive { background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
+.badge.client-status-vip { background: var(--info-soft); color: var(--info); }
+.badge.client-status-at_risk { background: var(--danger-soft); color: var(--danger); }
+.badge.client-status-inactive { background: var(--status-neutral-bg); color: var(--status-neutral); }
 .client-vip { display: inline-grid; place-items: center; color: var(--warning); margin-left: 4px; vertical-align: -2px; }
 .client-vip svg { fill: currentColor; }
 .client-header-status { display: inline-flex; align-items: center; gap: 6px; }
@@ -136,11 +143,17 @@
 .clients-filter-toggle.active { border-color: var(--accent-line); background: var(--accent-soft); color: var(--accent-strong); }
 
 .clients-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--space-md); }
-.clients-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font-size: var(--step--1); font-weight: 500; }
-.clients-chip:hover { color: var(--text); background: var(--surface-sunken); }
-.clients-chip[aria-pressed="true"] { background: var(--accent-soft); border-color: transparent; color: var(--accent-hover); }
-.clients-chip-count { font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--text-tertiary); }
-.clients-chip[aria-pressed="true"] .clients-chip-count { color: inherit; }
+.clients-chip { display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--card-bg); color: var(--text-secondary); font-size: var(--step--1); font-weight: 500; }
+.clients-chip:hover { color: var(--text); border-color: var(--border-strong); }
+.clients-chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent-line); color: var(--text); }
+.clients-chip-count { font-size: var(--step--1); font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text); }
+/* Punto del color de cada estado (el texto del chip ya dice cuál es). */
+.clients-chip-new::before, .clients-chip-active::before, .clients-chip-vip::before, .clients-chip-at_risk::before, .clients-chip-inactive::before { content: ""; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.clients-chip-new::before { background: var(--tone-rose-dot); }
+.clients-chip-active::before { background: var(--status-confirmed-dot); }
+.clients-chip-vip::before { background: var(--status-done-dot); }
+.clients-chip-at_risk::before { background: var(--status-risk-dot); }
+.clients-chip-inactive::before { background: var(--text-tertiary); }
 .clients-crm-teaser { display: inline-flex; align-items: center; gap: 6px; margin-bottom: var(--space-md); font-size: var(--step--1); color: var(--text-2); background: var(--surface-2); border: 1px dashed var(--border-strong); border-radius: var(--radius-pill); padding: 4px 12px; text-align: left; }
 .clients-crm-teaser:hover { color: var(--accent-strong); border-color: var(--accent-line); }
 

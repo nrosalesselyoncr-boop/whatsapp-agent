@@ -2,7 +2,6 @@
    Inicio básico: tarjetas del día. Tokens de global.css; una columna en el celular.
    ───────────────────────────────────────────────────────────────────────────── */
 
-.home-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: var(--space-md); align-items: start; }
 .home-card { display: flex; flex-direction: column; gap: var(--space-sm); }
 .home-card .card-title { margin-bottom: 0; }
 .home-card-head { display: flex; align-items: center; gap: var(--space-xs); }
@@ -34,3 +33,32 @@
 .onboarding-step.done .onboarding-title { color: var(--text-secondary); text-decoration: line-through; }
 .onboarding-step .onboarding-cta { flex: none; min-height: 36px; padding: 6px 12px; }
 @media (prefers-reduced-motion: reduce) { .onboarding-progress span { transition: none; } }
+
+/* ── Dirección oscura (diseño «Panel»): dos columnas en escritorio ──
+   Columna principal (ingresos, próximas citas, citas de hoy) y lateral (agente, alertas,
+   sin confirmar, no asistieron, agendadas por el agente). En el celular, una columna. */
+.home-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
+.home-col { display: grid; gap: 14px; min-width: 0; }
+.home-layout .card { padding: 18px 20px; }
+.home-card .card-title { font-size: var(--step-1); }
+.home-big { font-size: 30px; line-height: 34px; letter-spacing: -.04em; }
+.home-big-accent { color: var(--accent); }
+.home-big-warn { color: var(--status-pending); }
+.home-live-dot { margin-left: auto; background: var(--status-pending-dot); }
+.home-count { border-radius: var(--radius-pill); }
+.home-item:hover { background: var(--hover); }
+.home-status-list li { padding: 7px 0; border-top: 1px solid var(--border); }
+.home-status-list li:first-child { border-top: none; padding-top: 0; }
+.wa-home-stats li { padding: 9px 0; border-top: 1px solid var(--border); }
+.home-item-status { grid-column: 2; justify-self: start; margin-top: 2px; }
+
+@media (min-width: 1100px) {
+  .home-layout { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); }
+  /* Próximas citas en una fila: hora · cliente y servicio · profesional · estado. */
+  .home-item-wide { grid-template-columns: 54px minmax(0, 1.4fr) minmax(0, 1fr) auto; align-items: center; column-gap: 12px; border-radius: 0; border-top: 1px solid var(--border); padding: 10px 0; }
+  .home-list > li:first-child .home-item-wide { border-top: none; }
+  .home-item-wide:hover { background: transparent; }
+  .home-item-wide:hover .home-item-main { color: var(--accent); }
+  .home-item-wide .home-item-time { grid-row: auto; align-self: center; min-width: 0; color: var(--text-secondary); font-size: 12.5px; }
+  .home-item-wide .home-item-status { grid-column: auto; justify-self: end; margin-top: 0; }
+}

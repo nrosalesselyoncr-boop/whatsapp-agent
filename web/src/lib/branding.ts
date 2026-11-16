@@ -26,10 +26,16 @@ export interface Branding {
 const RE_HEX = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i;
 
 /** Superficies de las tarjetas en claro y oscuro (espejo de --surface en global.css). */
-const SURFACE_LIGHT = "#ffffff";
-const SURFACE_DARK = "#16181c";
+export const SURFACE_LIGHT = "#ffffff";
+export const SURFACE_DARK = "#14161a";
 const INK_LIGHT = "#16181d";
-const INK_DARK = "#0e0f12";
+const INK_DARK = "#0a0b0d";
+/**
+ * Acento de la plataforma (sin marca propia): menta en oscuro y su versión oscurecida en
+ * claro (espejo de los defaults de --accent en global.css). Ambos pasan AA sin ajuste.
+ */
+export const DEFAULT_ACCENT_DARK = "#4fd1b3";
+export const DEFAULT_ACCENT_LIGHT = "#2e7968";
 /** Contraste mínimo del acento contra la superficie (WCAG AA, texto normal). */
 const MIN_CONTRAST = 4.5;
 

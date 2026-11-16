@@ -103,11 +103,14 @@ test("dueña: la marca propia pinta el menú lateral, los botones principales y 
   // Color del menú → fondo del menú lateral (antes no pintaba nada visible del panel).
   await expect(html).toHaveAttribute("data-brand-header", "");
   await expect.poll(() => bg(sidebar)).toBe("rgb(59, 31, 74)");
-  // Color principal → botón principal e ítem activo del menú (ajustado a contraste AA).
+  // Color principal → botón principal e ítem activo del menú (ajustado a contraste AA). El
+  // panel abre en oscuro (default): ahí el rosa se aclara; en claro queda tal cual.
   await expect(html).toHaveAttribute("data-brand-accent", "");
   await expect.poll(() => bg(newButton)).not.toBe(defaultButton);
-  const accent = await html.evaluate((n) => getComputedStyle(n).getPropertyValue("--accent").trim());
-  expect(accent.toLowerCase()).toBe("#d6336c");
+  const prop = (name: string) => html.evaluate((n, p) => getComputedStyle(n).getPropertyValue(p).trim().toLowerCase(), name);
+  expect(await prop("--brand-accent-light")).toBe("#d6336c");
+  expect(await prop("--brand-accent-dark")).toBe("#dc5282");
+  expect(await prop("--accent")).toBe("#dc5282");
 
   // Campos vacíos = la paleta de la plataforma otra vez.
   await page.getByLabel("Color principal", { exact: true }).fill("");

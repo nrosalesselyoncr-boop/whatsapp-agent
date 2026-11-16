@@ -1,7 +1,18 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { PRODUCT_NAME as SERVER_PRODUCT_NAME } from "../../src/platform/brand";
-import { accentFor, contrastRatio, documentTitle, initials, PRODUCT_NAME, safeLogoUrl } from "../../web/src/lib/branding";
+import {
+  accentFor,
+  contrastRatio,
+  DEFAULT_ACCENT_DARK,
+  DEFAULT_ACCENT_LIGHT,
+  documentTitle,
+  initials,
+  PRODUCT_NAME,
+  safeLogoUrl,
+  SURFACE_DARK,
+  SURFACE_LIGHT,
+} from "../../web/src/lib/branding";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Marca white-label del panel (web/src/lib/branding.ts): el acento del negocio ajustado a
@@ -9,10 +20,27 @@ import { accentFor, contrastRatio, documentTitle, initials, PRODUCT_NAME, safeLo
 // y los textos de marca. Sin DOM (applyBranding/resetBranding tocan el documento).
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Espejo de SURFACE_LIGHT / SURFACE_DARK de branding.ts (y de --surface en global.css). */
-const SURFACE_LIGHT = "#ffffff";
-const SURFACE_DARK = "#16181c";
 const AA = 4.5;
+
+test("branding: las superficies de referencia son las de global.css (--surface de cada tema)", () => {
+  assert.equal(SURFACE_LIGHT, "#ffffff");
+  assert.equal(SURFACE_DARK, "#14161a");
+});
+
+test("branding: el acento de la plataforma (menta) pasa AA en los dos temas sin ajuste", () => {
+  assert.equal(accentFor(DEFAULT_ACCENT_DARK, SURFACE_DARK, "#ffffff"), DEFAULT_ACCENT_DARK);
+  assert.equal(accentFor(DEFAULT_ACCENT_LIGHT, SURFACE_LIGHT, "#000000"), DEFAULT_ACCENT_LIGHT);
+  // El claro es el menta mezclado ~58 % con negro (como en el diseño aprobado).
+  assert.ok(contrastRatio(DEFAULT_ACCENT_LIGHT, SURFACE_LIGHT) >= AA);
+  assert.ok(contrastRatio(DEFAULT_ACCENT_DARK, SURFACE_DARK) >= AA);
+});
+
+test("branding: un color de marca que no llega a AA en oscuro se aclara (rosa → más claro)", () => {
+  assert.ok(contrastRatio("#d6336c", SURFACE_DARK) < AA, "sin ajuste no cumple");
+  const dark = accentFor("#d6336c", SURFACE_DARK, "#ffffff");
+  assert.equal(dark, "#dc5282");
+  assert.equal(accentFor("#d6336c", SURFACE_LIGHT, "#000000"), "#d6336c", "en claro ya cumple");
+});
 
 test("branding: contrastRatio sigue la fórmula WCAG (1 a 21, simétrica)", () => {
   assert.equal(Math.round(contrastRatio("#000000", "#ffffff") * 100) / 100, 21);

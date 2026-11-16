@@ -275,7 +275,7 @@ function BusinessForm({ settings, canEdit }: { settings: BusinessSettings; canEd
 }
 
 /** Valor inicial de la paleta cuando el campo está vacío (el acento default de global.css). */
-const DEFAULT_PICKER_COLOR = "#0b7a68";
+const DEFAULT_PICKER_COLOR = "#4fd1b3";
 
 function ColorField({ label, hint, value, disabled, error, onChange }: { label: string; hint: string; value: string; disabled: boolean; error?: string; onChange: (v: string) => void }) {
   return (

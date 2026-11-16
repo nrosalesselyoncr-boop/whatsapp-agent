@@ -55,6 +55,8 @@ export default function DayView({ date, location, lanes, appointments, onSelect,
     return () => window.clearInterval(timer);
   }, [tz]);
   const isToday = todayIn(tz) === date;
+  const showNow = isToday && nowMin >= grid.startMin && nowMin <= grid.endMin;
+  const nowTop = (nowMin - grid.startMin) * PX_PER_MIN;
 
   function clickLane(e: MouseEvent<HTMLDivElement>, staffId: string) {
     if (!onCreateAt || e.target !== e.currentTarget) return;
@@ -84,9 +86,14 @@ export default function DayView({ date, location, lanes, appointments, onSelect,
                 {hhmm(m)}
               </span>
             ))}
+            {showNow && (
+              <span className="now-label tnum" style={{ top: nowTop }}>
+                {hhmm(nowMin)}
+              </span>
+            )}
           </div>
 
-          {lanes.map((s) => {
+          {lanes.map((s, laneIndex) => {
             const windows = workingWindows(location.hours, s.hours.filter((h) => h.locationId === location.id), weekday);
             const mine = layoutColumns(placed.filter((p) => p.appointment.staffId === s.id));
             return (
@@ -115,11 +122,12 @@ export default function DayView({ date, location, lanes, appointments, onSelect,
                   const top = (p.startMin - grid.startMin) * PX_PER_MIN;
                   const blockHeight = Math.max(24, (p.endMin - p.startMin) * PX_PER_MIN - 2);
                   const services = a.services.map((l) => l.name).join(" + ");
+                  const byAgent = a.channel === "whatsapp_ai";
                   return (
                     <button
                       key={a.id}
                       type="button"
-                      className={`appt-block status-${a.status}`}
+                      className={`appt-block status-${a.status}` + (byAgent ? " by-agent" : "")}
                       style={{
                         top,
                         height: blockHeight,
@@ -128,7 +136,7 @@ export default function DayView({ date, location, lanes, appointments, onSelect,
                         ["--staff-color" as string]: s.color ?? "var(--accent)",
                       }}
                       onClick={() => onSelect(a)}
-                      aria-label={`${formatTime(a.startsAt, tz)}, ${a.client?.name ?? capitalize(t.client)}, ${services}, ${STATUS_LABEL[a.status]}`}
+                      aria-label={`${formatTime(a.startsAt, tz)}, ${a.client?.name ?? capitalize(t.client)}, ${services}, ${STATUS_LABEL[a.status]}${byAgent ? ", agendada por el agente" : ""}`}
                     >
                       <span className="appt-block-time">
                         {formatTime(a.startsAt, tz)}
@@ -136,12 +144,11 @@ export default function DayView({ date, location, lanes, appointments, onSelect,
                       </span>
                       <span className="appt-block-client">{a.client?.name ?? "—"}</span>
                       {blockHeight > 48 && <span className="appt-block-services">{services}</span>}
+                      {byAgent && blockHeight > 66 && <span className="appt-block-tag">Agendó el agente</span>}
                     </button>
                   );
                 })}
-                {isToday && nowMin >= grid.startMin && nowMin <= grid.endMin && (
-                  <div className="now-line" style={{ top: (nowMin - grid.startMin) * PX_PER_MIN }} aria-hidden="true" />
-                )}
+                {showNow && <div className={"now-line" + (laneIndex === 0 ? " now-line-first" : "")} style={{ top: nowTop }} aria-hidden="true" />}
               </div>
             );
           })}
