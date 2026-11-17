@@ -6,6 +6,7 @@ import { useSession } from "../../app/session";
 import { errorMessage, isApiError } from "../../lib/api";
 import EmptyState from "../../ui/EmptyState";
 import ErrorState from "../../ui/ErrorState";
+import { avatarToneClass } from "../../ui/avatarTone";
 import Icon from "../../ui/Icons";
 import { useToast } from "../../ui/Toast";
 import { formatPhone } from "../clients/format";
@@ -190,7 +191,7 @@ export default function ChatPane({ id, search }: Props) {
     <div className="wa-chat">
       <header className="wa-chat-head">
         <BackLink search={search} />
-        <span className="wa-avatar wa-avatar-sm" aria-hidden="true">
+        <span className={`wa-avatar wa-avatar-sm ${avatarToneClass(conversation.client.id)}`} aria-hidden="true">
           {avatarText(conversation.client)}
         </span>
         <div className="wa-chat-title">
@@ -200,7 +201,8 @@ export default function ChatPane({ id, search }: Props) {
           <p className="wa-chat-meta">
             {conversation.client.name && conversation.client.phone && <span className="tnum">{formatPhone(conversation.client.phone)}</span>}
             <span className={`wa-mode wa-mode-${conversation.mode}`}>
-              <Icon id={human ? "user" : "bot"} size={12} />
+              {/* El agente está atendiendo ahora: punto que pulsa (quieto con reduced-motion). */}
+              {human ? <Icon id="user" size={12} /> : <span className="pulse-dot" aria-hidden="true" />}
               {human ? "Lo atiende una persona" : "Lo atiende el agente"}
             </span>
             {!conversation.windowOpen && <span className="wa-chip wa-chip-danger">Ventana de 24 h cerrada</span>}

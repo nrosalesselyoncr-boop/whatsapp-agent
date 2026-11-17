@@ -16,6 +16,8 @@ export default function WaitingCard() {
         <h2 id="home-conv-title" className="card-title">
           Conversaciones esperando
         </h2>
+        {/* Alguien espera a una persona: el punto pulsa (quieto con reduced-motion). */}
+        {s && s.conversationsWaiting > 0 && <span className="pulse-dot home-live-dot" aria-hidden="true" />}
       </div>
       {query.isPending ? (
         <p className="muted">Cargando…</p>
@@ -28,7 +30,7 @@ export default function WaitingCard() {
         </p>
       ) : (
         <>
-          <p className="home-big tnum">{formatInt(s.conversationsWaiting)}</p>
+          <p className={"home-big tnum" + (s.conversationsWaiting > 0 ? " home-big-warn" : "")}>{formatInt(s.conversationsWaiting)}</p>
           <p className="muted">
             {s.conversationsWaiting === 0
               ? "Nadie está esperando a una persona."

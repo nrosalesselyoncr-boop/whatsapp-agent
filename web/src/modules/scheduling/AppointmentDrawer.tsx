@@ -6,6 +6,7 @@ import { useSession } from "../../app/session";
 import { errorMessage, isApiError } from "../../lib/api";
 import { formatCents } from "../../lib/money";
 import Drawer from "../../ui/Drawer";
+import Icon from "../../ui/Icons";
 import { FormError, SelectField, TextField } from "../../ui/Field";
 import { useToast } from "../../ui/Toast";
 import { formatPhone } from "../clients/format";
@@ -138,7 +139,14 @@ function AppointmentDetail({
     <div className="appt-detail">
       <div className="appt-detail-status">
         <span className={`status-badge status-${appointment.status}`}>{STATUS_LABEL[appointment.status]}</span>
-        <span className="muted">{CHANNEL_LABEL[appointment.channel]}</span>
+        {appointment.channel === "whatsapp_ai" ? (
+          <span className="appt-channel appt-channel-ai">
+            <Icon id="bot" size={14} />
+            Agendó el agente · WhatsApp
+          </span>
+        ) : (
+          <span className="muted">{CHANNEL_LABEL[appointment.channel]}</span>
+        )}
       </div>
 
       <dl className="appt-facts">
