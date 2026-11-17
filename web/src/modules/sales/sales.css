@@ -15,11 +15,17 @@
 .sales-toolbar-actions { margin-left: auto; display: flex; gap: var(--space-xs); }
 .sales-toolbar-inline { margin-bottom: var(--space-sm); }
 
-.sales-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 1px; background: var(--border-subtle); border: 1px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; }
+.sales-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; }
 /* Franja de indicadores (dirección «Mostrador»): una sola pieza, celdas separadas por
-   filetes; cada indicador deja de ser una tarjeta propia. El filete es el fondo de la
-   franja asomando por el `gap` de 1px, así se reacomoda al ancho sin reglas por columnas. */
-.card.sales-kpi { display: flex; flex-direction: column; gap: 6px; padding: var(--space-md) var(--space-card); border: none; border-radius: 0; background: var(--card-bg); }
+   filetes; cada indicador deja de ser una tarjeta propia. Cada celda dibuja su filete a la
+   derecha y abajo (sombra sin desenfoque); los del borde exterior los recorta el
+   `overflow: hidden`, así se reacomoda al ancho sin reglas por columnas y una celda vacía
+   al final de la grilla queda del color de la franja. */
+.card.sales-kpi { display: flex; flex-direction: column; gap: 6px; padding: var(--space-md) var(--space-card); border: none; border-radius: 0; background: var(--card-bg); box-shadow: 1px 0 0 var(--border-subtle), 0 1px 0 var(--border-subtle); }
+/* Cuatro indicadores en una pantalla mediana (tablet, ventana angosta): 2×2 en vez de 3+1. */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .sales-kpis:has(> :last-child:nth-child(4)) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 .sales-kpi-label { font-size: var(--step--1); font-weight: 600; color: var(--text-secondary); }
 .sales-kpi-value { font-size: var(--step-4); line-height: 30px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 /* El indicador principal (cobrado): la cifra en la pluma. */
