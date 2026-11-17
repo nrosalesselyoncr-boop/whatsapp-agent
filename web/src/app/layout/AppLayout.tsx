@@ -6,6 +6,7 @@ import { navItemsFor } from "../navigation";
 import { PushProvider } from "../push";
 import { useSession } from "../session";
 import BillingBanner from "./BillingBanner";
+import DemoBanner from "./DemoBanner";
 import BottomNav from "./BottomNav";
 import LegalBanner from "./LegalBanner";
 import Sidebar from "./Sidebar";
@@ -54,6 +55,7 @@ function Shell() {
       <Sidebar items={items} />
       <div className="app-column">
         <Topbar />
+        <DemoBanner />
         <LegalBanner />
         <BillingBanner />
         <main id="main" ref={mainRef} tabIndex={-1} className="app-main">

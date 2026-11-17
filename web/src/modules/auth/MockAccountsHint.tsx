@@ -6,9 +6,12 @@ import {
   MOCK_PASSWORD,
   MOCK_TOTP_CODE,
 } from "../../lib/mockApi";
+import { IS_DEMO } from "../../lib/mockMode";
 
 /** Ayuda del modo mock (VITE_MOCK_API=1): cuentas ficticias para recorrer el panel. */
 export default function MockAccountsHint() {
+  // La demo pública no muestra el login, pero por si acaso: las cuentas de prueba no se exponen.
+  if (IS_DEMO) return null;
   return (
     <details className="mock-hint">
       <summary>Modo demo: cuentas de prueba</summary>

@@ -8,6 +8,7 @@ import Icon from "../../ui/Icons";
 import { useToast } from "../../ui/Toast";
 import { BILLING_STATUS_QUERY_KEY, getBillingStatus } from "./billingApi";
 import OnlineBilling from "./OnlineBilling";
+import { IS_DEMO } from "../../lib/mockMode";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Configuración › Plan (solo el dueño): el plan del negocio con sus módulos, el nivel de
@@ -124,7 +125,22 @@ export default function PlanPage() {
         </ul>
       </section>
 
-      {online && <OnlineBilling status={online} />}
+      {/* Demo pública: sin cobro en línea (un clic bajaría la demo de plan y la llenaría de candados). */}
+      {IS_DEMO ? (
+        <section className="card" aria-labelledby="plan-demo-billing">
+          <h3 id="plan-demo-billing" className="card-title">
+            Pago
+          </h3>
+          <p className="muted">
+            En la demo no se cobra nada.{" "}
+            <a className="link" href="/planes">
+              Ver planes
+            </a>
+          </p>
+        </section>
+      ) : (
+        online && <OnlineBilling status={online} />
+      )}
 
       <section className="card" aria-labelledby="plan-modules">
         <h3 id="plan-modules" className="card-title">

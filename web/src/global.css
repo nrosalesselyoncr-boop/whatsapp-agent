@@ -774,3 +774,22 @@ form > .btn { margin-top: var(--space-lg); }
    oscuro; el anillo toma el color del texto del menú (blanco o tinta, el de más contraste). */
 [data-brand-header] .sidebar :focus-visible,
 [data-brand-header] .bottom-nav :focus-visible { outline-color: var(--header-fg); }
+
+/* ── Demo pública (/demo, app/layout/DemoBanner.tsx) ──
+   Franja de tinta arriba del contenido: se distingue del panel real y del aviso de cobro. */
+.demo-banner { display: flex; align-items: center; gap: var(--space-xs) var(--space-md); flex-wrap: wrap; padding: var(--space-xs) var(--space-lg); background: var(--ink); color: var(--on-ink); font-size: var(--step--1); }
+.demo-banner-text { flex: 1 1 280px; min-width: 0; line-height: 1.45; }
+.demo-banner-text strong { font-weight: 700; }
+.demo-banner-actions { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
+.demo-banner .btn { min-height: var(--tap-h); }
+.demo-banner .demo-banner-reset { color: var(--on-ink); }
+.demo-banner .demo-banner-reset:hover:not(:disabled) { background: color-mix(in srgb, var(--on-ink) 14%, transparent); color: var(--on-ink); }
+.demo-banner-short { display: none; }
+@media (max-width: 767px) { .demo-banner { padding: var(--space-xs) var(--space-md); } }
+@media (max-width: 639px) {
+  .demo-banner-long { display: none; }
+  .demo-banner-short { display: block; }
+  .demo-banner-actions { width: 100%; flex-wrap: nowrap; }
+  .demo-banner-actions .btn { flex: 1 1 auto; padding: 0 10px; }
+  .demo-banner-actions .demo-banner-reset { flex: 0 0 auto; }
+}

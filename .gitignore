@@ -11,6 +11,9 @@ node_modules/
 
 # Build / salida
 dist/
+# Build de la demo pública (/demo) y su swap atómico en el deploy
+web/dist-demo/
+web/dist-demo.*/
 # Swap atómico del panel en el deploy (ci-cd.yml): web/dist.nuevo / web/dist.viejo
 web/dist.*/
 build/

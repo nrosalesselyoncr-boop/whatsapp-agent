@@ -632,3 +632,8 @@ h3 { font-size: 1.125rem; font-weight: 600; line-height: 1.3; letter-spacing: -0
   .site-header, .site-footer, .skip-link, .fx { display: none; }
   body { background: #FFFFFF; color: #000000; font-size: 12pt; }
 }
+
+/* Nota corta debajo de los botones (demo pública: «Sin registrarte…»). */
+.cta-note { margin-top: 14px; font-size: .9375rem; color: var(--text-2); }
+.cta-note-center { text-align: center; margin-top: 28px; }
+.cta-note .text-link { font-weight: 600; }

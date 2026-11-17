@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, type ReactNode } from "react";
-import { documentTitle } from "../lib/branding";
+import { documentTitle, PRODUCT_NAME } from "../lib/branding";
+import { IS_DEMO } from "../lib/mockMode";
 
 interface Props {
   title: string;
@@ -19,7 +20,8 @@ interface Props {
 export default function PageHeader({ title, subtitle, level = 1, tabTitle, children }: Props) {
   // La página (h1) fija el título en un layout effect y la subpágina (h2) en un effect
   // común, que corre después: así en Configuración gana "Negocio · Configuración".
-  const fullTitle = documentTitle(tabTitle ?? title);
+  // En la demo pública la pestaña dice «… · Demo de Selyon CRM».
+  const fullTitle = documentTitle(tabTitle ?? title, IS_DEMO ? `Demo de ${PRODUCT_NAME}` : PRODUCT_NAME);
   useLayoutEffect(() => {
     if (level === 1) document.title = fullTitle;
   }, [level, fullTitle]);

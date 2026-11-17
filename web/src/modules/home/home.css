@@ -80,3 +80,11 @@
 @media (min-width: 1100px) {
   .home-col + .home-col > .card:not(.home-waiting) { background: transparent; border: none; border-top: 1px solid var(--border-strong); border-radius: 0; padding: var(--space-md) 2px 0; }
 }
+
+/* Recorrido de la demo pública (DemoTour): los pasos van numerados (sí son una secuencia). */
+.demo-tour .demo-tour-num { color: var(--text); font-size: var(--step--1); font-weight: 700; border-color: var(--border-control); }
+@media (max-width: 639px) {
+  .demo-tour .onboarding-step { flex-wrap: wrap; row-gap: var(--space-xs); }
+  .demo-tour .onboarding-text { flex: 1 1 calc(100% - 40px); }
+  .demo-tour .onboarding-step .onboarding-cta { margin-left: 34px; }
+}

@@ -51,19 +51,54 @@ function devServerHelpers(): Plugin {
   };
 }
 
+/**
+ * Index de la demo pública: título propio, fuera de los buscadores y con la vista previa
+ * para cuando se comparte el enlace (WhatsApp, redes). Solo en `--mode demo`.
+ */
+function demoIndexHtml(): Plugin {
+  const title = "Demo de Selyon CRM";
+  const description =
+    "Recorré el panel con una clínica de ejemplo: agenda, pacientes, cobros y el agente de WhatsApp. Sin registrarte.";
+  const tags = [
+    `<meta name="robots" content="noindex">`,
+    `<meta name="description" content="${description}">`,
+    `<meta property="og:type" content="website">`,
+    `<meta property="og:title" content="${title}">`,
+    `<meta property="og:description" content="${description}">`,
+    `<meta property="og:image" content="https://crm.selyon.app/landing/og.png">`,
+    `<meta property="og:url" content="https://crm.selyon.app/demo">`,
+  ].join("\n    ");
+  return {
+    name: "selyon-demo-index",
+    transformIndexHtml(html) {
+      return html.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>\n    ${tags}`);
+    },
+  };
+}
+
 export default defineConfig(({ mode }) => {
+  // Demo pública (`vite build --mode demo`, `npm run build:demo`): el MISMO panel con la API
+  // simulada (lib/mockApi.ts) y entrada directa como la dueña de una clínica ficticia,
+  // servido en /demo (web/dist-demo). Sin backend, sin service worker ni manifest (no es
+  // instalable ni pide notificaciones). Ver lib/mockMode.ts y app/layout/DemoBanner.tsx.
+  const demo = mode === "demo";
   // loadEnv también trae las VITE_* del entorno del proceso (VITE_MOCK_API=1 npm run dev).
-  const mock = loadEnv(mode, ".", "VITE_").VITE_MOCK_API === "1";
+  const mock = demo || loadEnv(mode, ".", "VITE_").VITE_MOCK_API === "1";
 
   return {
+    define: demo
+      ? { "import.meta.env.VITE_MOCK_API": JSON.stringify("1"), "import.meta.env.VITE_DEMO": JSON.stringify("1") }
+      : undefined,
     plugins: [
       react(),
       devServerHelpers(),
+      demo && demoIndexHtml(),
       // ── PWA (instalable + push) ──
       // injectManifest: NUESTRO service worker (src/sw.ts) con los handlers de push;
       // `injectionPoint: undefined` => sin precache (passthrough). El plugin inyecta el
       // <link rel=manifest>. `injectRegister: false`: el registro lo hace la app (main.tsx
       // con lib/push.ts). devOptions off: el SW se prueba en el build.
+      !demo &&
       VitePWA({
         strategies: "injectManifest",
         srcDir: "src",
@@ -94,9 +129,9 @@ export default defineConfig(({ mode }) => {
         devOptions: { enabled: false },
       }),
     ],
-    base: "/panel/",
+    base: demo ? "/demo/" : "/panel/",
     build: {
-      outDir: "dist",
+      outDir: demo ? "dist-demo" : "dist",
       emptyOutDir: true,
     },
     server: {

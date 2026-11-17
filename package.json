@@ -24,7 +24,7 @@
     "ci:audit": "node scripts/ci/checkAudit.mjs",
     "ci:audit:report": "node scripts/ci/checkAudit.mjs --report",
     "web:dev": "npm --prefix web run dev",
-    "web:build": "npm --prefix web install --include=dev && npm --prefix web run build"
+    "web:build": "npm --prefix web install --include=dev && npm --prefix web run build && npm --prefix web run build:demo"
   },
   "dependencies": {
     "@sentry/node": "10.54.0",
