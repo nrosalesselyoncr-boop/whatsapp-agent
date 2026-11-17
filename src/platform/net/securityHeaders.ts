@@ -96,8 +96,10 @@ export function inlineScriptHashes(html: string): string[] {
   return out;
 }
 
+/** El panel y la demo pública (/demo, el mismo build con la API simulada): la CSP del panel. */
 function isPanelPath(pathname: string): boolean {
-  return pathname === "/panel" || pathname.startsWith("/panel/");
+  const under = (prefix: string) => pathname === prefix || pathname.startsWith(`${prefix}/`);
+  return under("/panel") || under("/demo");
 }
 
 /** Rutas del panel que cargan el SDK de Facebook (Embedded Signup): superadmin y configuración del número. */

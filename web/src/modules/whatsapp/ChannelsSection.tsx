@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { capitalize, terminologyOf } from "../../app/navigation";
 import { useSession } from "../../app/session";
 import { errorMessage, isApiError } from "../../lib/api";
-import { IS_MOCK_API } from "../../lib/mockMode";
+import { IS_DEMO, IS_MOCK_API } from "../../lib/mockMode";
 import ErrorState from "../../ui/ErrorState";
 import { FormError, SelectField, TextField } from "../../ui/Field";
 import Icon from "../../ui/Icons";
@@ -85,10 +85,13 @@ export default function ChannelsSection() {
             Business; el número deja de funcionar en la app de WhatsApp del celular.
           </p>
         </div>
-        <button type="button" className="btn btn-secondary" onClick={() => connect.mutate()} disabled={connect.isPending}>
-          <Icon id="plus" size={16} />
-          {connect.isPending ? "Conectando…" : "Conectar un número"}
-        </button>
+        {/* En la demo pública no se conecta nada: abriría el flujo real de Meta. */}
+        {!IS_DEMO && (
+          <button type="button" className="btn btn-secondary" onClick={() => connect.mutate()} disabled={connect.isPending}>
+            <Icon id="plus" size={16} />
+            {connect.isPending ? "Conectando…" : "Conectar un número"}
+          </button>
+        )}
       </div>
 
       {query.isPending ? (

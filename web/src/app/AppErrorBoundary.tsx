@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { reportRenderError } from "../lib/errorTracking";
+import { IS_DEMO, resetDemo } from "../lib/mockMode";
 import Icon from "../ui/Icons";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -37,6 +38,11 @@ export function AppErrorScreen() {
         <Icon id="refresh" size={16} />
         Recargar la página
       </button>
+      {IS_DEMO && (
+        <button type="button" className="btn btn-primary" onClick={resetDemo}>
+          Reiniciar demo
+        </button>
+      )}
     </main>
   );
 }

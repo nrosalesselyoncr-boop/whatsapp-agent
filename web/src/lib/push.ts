@@ -1,4 +1,5 @@
 import { api, ApiError, isApiError } from "./api";
+import { IS_DEMO } from "./mockMode";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Notificaciones push (Web Push) del panel, sin React. Portado de legacy/web/src/hooks/
@@ -23,6 +24,9 @@ export type PushState = "unsupported" | "denied" | "off" | "on";
 
 /** El navegador soporta Web Push (y la página es un contexto seguro). */
 export function pushSupported(): boolean {
+  // Demo pública (/demo): comparte origen con el panel real; activar o desactivar acá
+  // tocaría el service worker y la suscripción REAL de quien usa el panel en este equipo.
+  if (IS_DEMO) return false;
   try {
     return (
       typeof window !== "undefined" &&

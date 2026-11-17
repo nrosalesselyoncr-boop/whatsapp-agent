@@ -8,7 +8,7 @@ import { ME_QUERY_KEY } from "./app/session";
 import { ADMIN_ME_QUERY_KEY } from "./modules/admin/adminApi";
 import { onBusinessPaused, onUnauthorized, setTransport } from "./lib/api";
 import { initErrorTracking } from "./lib/errorTracking";
-import { IS_MOCK_API } from "./lib/mockMode";
+import { APP_BASE, IS_DEMO, IS_MOCK_API } from "./lib/mockMode";
 import { registerServiceWorker } from "./lib/push";
 import { initTheme } from "./lib/theme";
 import { ToastProvider } from "./ui/Toast";
@@ -28,7 +28,8 @@ initTheme();
 
 // Service worker del panel (PWA + push, src/sw.ts): solo en el build, que es donde existe
 // /panel/sw.js (en desarrollo Vite no lo sirve). Si falla, el panel sigue igual.
-if (import.meta.env.PROD) {
+// La demo (/demo) no registra el service worker: no es instalable ni manda notificaciones.
+if (import.meta.env.PROD && !IS_DEMO) {
   window.addEventListener("load", () => void registerServiceWorker());
 }
 
@@ -58,8 +59,8 @@ createRoot(document.getElementById("root")!).render(
     {/* Un error de render en cualquier parte muestra "Algo salió mal" y se reporta. */}
     <AppErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        {/* basename "/panel": el panel se sirve bajo /panel (mismo base que Vite). */}
-        <BrowserRouter basename="/panel">
+        {/* basename "/panel" (o "/demo" en la demo pública): el mismo base que Vite. */}
+        <BrowserRouter basename={APP_BASE}>
           <ToastProvider>
             <App />
           </ToastProvider>

@@ -1,4 +1,5 @@
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import { IS_DEMO } from "../lib/mockMode";
 import AdminBusinessPage from "../modules/admin/AdminBusinessPage";
 import AdminHomePage from "../modules/admin/AdminHomePage";
 import AdminLoginPage from "../modules/admin/AdminLoginPage";
@@ -53,45 +54,65 @@ import { PublicOnly, RequireAuth } from "./session";
 //   Superadmin:  /admin/login · /admin · /admin/businesses/:id (plan, cobro, pausa y uso) · /admin/metrics
 // ─────────────────────────────────────────────────────────────────────────────
 
+/** Rutas de acceso que no existen en la demo pública (vuelven al Inicio). */
+const DEMO_BLOCKED_PATHS = [
+  "/login",
+  "/forgot-password",
+  "/signup",
+  "/verify-email",
+  "/reset-password",
+  "/accept-invitation",
+  "/invite/:token",
+  "/admin/*",
+];
+
 export default function App() {
   return (
     <Routes>
-      <Route
-        path="/login"
-        element={
-          <PublicOnly>
-            <LoginPage />
-          </PublicOnly>
-        }
-      />
-      <Route
-        path="/forgot-password"
-        element={
-          <PublicOnly>
-            <ForgotPasswordPage />
-          </PublicOnly>
-        }
-      />
-      <Route
-        path="/signup"
-        element={
-          <PublicOnly>
-            <SignupPage />
-          </PublicOnly>
-        }
-      />
-      <Route path="/verify-email" element={<VerifyEmailPage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="/accept-invitation" element={<AcceptInvitationPage />} />
-      <Route path="/invite/:token" element={<InviteRedirect />} />
+      {/* Demo pública (/demo): sin login, alta ni superadmin. Entra directo como la dueña de
+          la clínica de ejemplo; cualquier ruta de acceso vuelve al Inicio. */}
+      {IS_DEMO ? (
+        DEMO_BLOCKED_PATHS.map((path) => <Route key={path} path={path} element={<Navigate to="/" replace />} />)
+      ) : (
+        <>
+        <Route
+          path="/login"
+          element={
+            <PublicOnly>
+              <LoginPage />
+            </PublicOnly>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicOnly>
+              <ForgotPasswordPage />
+            </PublicOnly>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PublicOnly>
+              <SignupPage />
+            </PublicOnly>
+          }
+        />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/accept-invitation" element={<AcceptInvitationPage />} />
+        <Route path="/invite/:token" element={<InviteRedirect />} />
 
-      <Route path="/admin/login" element={<AdminLoginPage />} />
-      <Route path="/admin" element={<RequireAdmin />}>
-        <Route index element={<AdminHomePage />} />
-        <Route path="businesses/:id" element={<AdminBusinessPage />} />
-        <Route path="metrics" element={<AdminMetricsPage />} />
-        <Route path="*" element={<Navigate to="/admin" replace />} />
-      </Route>
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route path="/admin" element={<RequireAdmin />}>
+          <Route index element={<AdminHomePage />} />
+          <Route path="businesses/:id" element={<AdminBusinessPage />} />
+          <Route path="metrics" element={<AdminMetricsPage />} />
+          <Route path="*" element={<Navigate to="/admin" replace />} />
+        </Route>
+        </>
+      )}
 
       <Route element={<RequireAuth />}>
         <Route path="/change-password" element={<ChangePasswordPage />} />

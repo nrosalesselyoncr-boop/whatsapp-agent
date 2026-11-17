@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { initials } from "../../lib/branding";
+import { DEMO_WHATSAPP_URL, IS_DEMO } from "../../lib/mockMode";
 import { useTheme } from "../../lib/theme";
 import TwoFactorDialog from "../../modules/auth/TwoFactorDialog";
 import Menu, { type MenuItem } from "../../ui/Menu";
@@ -70,7 +71,17 @@ export default function UserMenu({ variant }: { variant: "sidebar" | "compact" }
             </span>
           </div>
         }
-        items={[
+        items={IS_DEMO ? [
+          // Demo pública: sin clave, 2FA, notificaciones ni logout (no hay cuenta real).
+          { key: "whatsapp", label: "Hablar por WhatsApp", icon: "chat", onSelect: () => window.open(DEMO_WHATSAPP_URL, "_blank", "noopener") },
+          {
+            key: "theme",
+            label: theme === "dark" ? "Tema claro" : "Tema oscuro",
+            icon: theme === "dark" ? "sun" : "moon",
+            onSelect: toggle,
+          },
+          { key: "exit", label: "Salir de la demo", icon: "logout", onSelect: () => window.location.assign("/") },
+        ] : [
           ...pushItems(push),
           { key: "password", label: "Cambiar clave", icon: "key", onSelect: () => navigate("/change-password") },
           {

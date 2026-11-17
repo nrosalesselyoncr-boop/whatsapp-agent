@@ -312,6 +312,6 @@ export function initials(name: string): string {
 }
 
 /** Título del documento: "Agenda · Selyon CRM" (o solo el producto). */
-export function documentTitle(page?: string): string {
-  return page ? `${page} · ${PRODUCT_NAME}` : PRODUCT_NAME;
+export function documentTitle(page?: string, product: string = PRODUCT_NAME): string {
+  return page ? `${page} · ${product}` : product;
 }

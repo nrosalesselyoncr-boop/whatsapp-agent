@@ -21,6 +21,7 @@ import type {
   Plan,
   Role,
 } from "./contract";
+import { APP_BASE, DEMO_EMAIL, IS_DEMO } from "./mockMode";
 import { readStorage, writeStorage } from "./storage";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -411,14 +412,38 @@ function emptyState(): MockState {
   };
 }
 
+/**
+ * Estado inicial. En la demo pública (/demo) el visitante entra directo, sin login, como la
+ * dueña del negocio ficticio (`DEMO_EMAIL`), en su primer negocio.
+ */
+function initialState(): MockState {
+  const state = emptyState();
+  if (IS_DEMO) {
+    const owner = BASE_USERS.find((u) => u.email === DEMO_EMAIL);
+    if (owner) {
+      state.sessionEmail = owner.email;
+      state.businessId = owner.memberships[0]?.businessId ?? null;
+    }
+  }
+  return state;
+}
+
 function loadState(): MockState {
   const raw = readStorage(STATE_KEY, "session");
-  if (!raw) return emptyState();
+  if (!raw) return initialState();
+  let state: MockState;
   try {
-    return { ...emptyState(), ...(JSON.parse(raw) as Partial<MockState>) };
+    state = { ...emptyState(), ...(JSON.parse(raw) as Partial<MockState>) };
   } catch {
-    return emptyState();
+    return initialState();
   }
+  // Demo pública: nunca sin sesión (sin login al que volver, un 401 dejaría un ciclo).
+  if (IS_DEMO && !state.sessionEmail) {
+    const fresh = initialState();
+    state.sessionEmail = fresh.sessionEmail;
+    state.businessId = fresh.businessId;
+  }
+  return state;
 }
 
 function saveState(state: MockState): void {
@@ -430,7 +455,11 @@ function findUser(state: MockState, email: string): MockUser | null {
   const base = [...BASE_USERS, ...state.extraUsers].find((u) => u.email === normalized);
   if (!base) return null;
   const { password: _password, ...flags } = state.overrides[base.email] ?? {};
-  return { ...base, ...flags, memberships: [...base.memberships, ...(state.addedMemberships[base.email] ?? [])] };
+  const memberships = [...base.memberships, ...(state.addedMemberships[base.email] ?? [])];
+  // Demo pública: la dueña muestra SOLO la clínica dental (Pro con agente, CRC, dos
+  // sucursales); su segundo negocio (Básico, con candados) confundiría al visitante.
+  const visible = IS_DEMO && base.email === DEMO_EMAIL ? memberships.filter((m) => m.businessId === DENTAL) : memberships;
+  return { ...base, ...flags, memberships: visible };
 }
 
 function setOverride(state: MockState, email: string, change: MockState["overrides"][string]): void {
@@ -819,7 +848,7 @@ function mockBilling(state: MockState, businessId: string, key: string, body: un
   if (b.status === "paused" && !pausedForBilling) return businessPaused();
   if (key === "POST /billing/portal") {
     if (!stripe.customer) return fail(409, "not_subscribed", "Todavía no te suscribiste en línea.");
-    return ok({ url: "/panel/settings/plan" });
+    return ok({ url: `${APP_BASE}/settings/plan` });
   }
   const option = str(body, "option");
   if (!BILLING_OPTION_LABELS[option]) return invalid({ "body.option": "Opción inválida." });
@@ -836,7 +865,7 @@ function mockBilling(state: MockState, businessId: string, key: string, body: un
     ...(pausedForBilling ? { status: "active", billingPausedAt: null } : {}),
   };
   state.stripe[businessId] = { subscribed: true, customer: true };
-  return ok({ url: "/panel/settings/plan?billing=ok" });
+  return ok({ url: `${APP_BASE}/settings/plan?billing=ok` });
 }
 
 /** Invitación vigente del token, o null. */
