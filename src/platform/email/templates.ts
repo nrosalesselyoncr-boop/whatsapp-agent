@@ -405,6 +405,53 @@ export function signupAttemptEmail(data: SignupAttemptEmailData): EmailContent {
   });
 }
 
+// ── Consumo de WhatsApp que cobra Meta ──
+
+export interface MetaFreeTierEmailData {
+  /** Negocio cuyo WhatsApp se mide (va en el texto; el correo es de la plataforma). */
+  businessName: string;
+  userName?: string | null;
+  /** false = cerca del fin del tramo gratis; true = Meta ya cobra las respuestas. */
+  exhausted: boolean;
+  /** Respuestas del mes hasta ahora. */
+  serviceMessages: number;
+  /** Respuestas gratis por mes (tramo de Meta). */
+  freeServiceMessages: number;
+  /** Tarifa de Meta por respuesta fuera del tramo, en dólares. */
+  serviceUsd: number;
+  /** Link a la pantalla del panel con el consumo. */
+  panelUrl: string;
+}
+
+const usdFormat = new Intl.NumberFormat(LOCALE, { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 4 });
+const countFormat = new Intl.NumberFormat(LOCALE);
+
+/**
+ * Aviso al dueño: su WhatsApp está por pasar (o pasó) las respuestas gratis del mes y Meta
+ * empieza a cobrarle cada una a SU método de pago (la plataforma no factura ese consumo).
+ */
+export function metaFreeTierEmail(data: MetaFreeTierEmailData): EmailContent {
+  const business = oneLine(data.businessName) || "tu negocio";
+  const used = countFormat.format(data.serviceMessages);
+  const free = countFormat.format(data.freeServiceMessages);
+  const rate = usdFormat.format(data.serviceUsd);
+  return render({
+    subject: data.exhausted ? `WhatsApp de ${business}: Meta ya cobra las respuestas de este mes` : `WhatsApp de ${business}: se acaban las respuestas gratis del mes`,
+    brand: { businessName: PRODUCT_NAME },
+    preheader: data.exhausted ? `Pasaste las ${free} respuestas gratis del mes.` : `Van ${used} de ${free} respuestas gratis del mes.`,
+    heading: greeting(data.userName),
+    paragraphs: [
+      data.exhausted
+        ? `El WhatsApp de ${business} ya pasó las ${free} respuestas gratis que da Meta cada mes (van ${used}). Desde ahora, Meta cobra cada respuesta, unos ${rate}, a tu método de pago.`
+        : `El WhatsApp de ${business} lleva ${used} de las ${free} respuestas gratis que da Meta cada mes. Cuando se acaben, Meta cobra cada respuesta, unos ${rate}, a tu método de pago.`,
+      `Ese cargo lo hace Meta directamente, no ${PRODUCT_NAME}. Los recordatorios y las campañas se cobran aparte, desde el primero.`,
+      "En el panel ves el consumo estimado del mes.",
+    ],
+    actions: [{ label: "Ver el consumo", url: safeUrl(data.panelUrl, "panelUrl"), primary: true }],
+    footnote: "El conteo es una estimación: la cifra que vale es la de tu cuenta de Meta. El tramo gratis se renueva el primer día de cada mes.",
+  });
+}
+
 // ── Cliente final ──
 
 export interface AppointmentEmailData extends BrandOptions {

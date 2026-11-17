@@ -818,6 +818,22 @@ function handle(req: TransportRequest, url: URL, path: string, session: MockWhat
 
   // ── Números conectados ──
   if (method === "GET" && path === "/whatsapp/channels") return ok(b.channels);
+  // Consumo de Meta del mes (estimado): un negocio que ya se acerca al fin del tramo gratis.
+  if (method === "GET" && path === "/whatsapp/meta-usage") {
+    if (!MANAGERS.includes(session.role)) return forbiddenRole();
+    const now = new Date();
+    return ok({
+      month: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`,
+      serviceMessages: 842,
+      freeServiceMessages: 1000,
+      chargedServiceMessages: 0,
+      utilityTemplates: 118,
+      marketingTemplates: 0,
+      estimatedUsd: 1.33,
+      rates: { serviceUsd: 0.0113, utilityUsd: 0.0113, marketingUsd: 0.074 },
+      level: 1,
+    });
+  }
   if (method === "GET" && path === "/whatsapp/channels/signup-config") {
     if (!MANAGERS.includes(session.role)) return forbiddenRole();
     return ok({ appId: "100000000000001", configId: "200000000000002", graphVersion: "v21.0" });

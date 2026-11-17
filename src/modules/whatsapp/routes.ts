@@ -21,6 +21,7 @@ import {
   sendHumanMessage,
   visibleLocations,
 } from "./inbox";
+import { getMetaConsumption } from "./metaCost";
 import { AUTH_PATTERN, isAllowedPushEndpoint, P256DH_PATTERN, removePushSubscription, savePushSubscription, sendPushToBusiness, vapidPublicKey } from "./push";
 import { reprocessForPhoneNumber } from "./webhook";
 
@@ -33,6 +34,7 @@ import { reprocessForPhoneNumber } from "./webhook";
 //     POST  /whatsapp/channels/connect          { code, phoneNumberId?, wabaId?, locationId? }
 //     POST  /whatsapp/channels/:id/test         prueba el token contra Meta
 //     PATCH /whatsapp/channels/:id              { locationId?, templates? }
+//     GET   /whatsapp/meta-usage                consumo estimado del mes que cobra Meta (./metaCost.ts)
 //   Superadmin
 //     POST  /admin/businesses/:id/whatsapp      alta manual { phoneNumberId, accessToken?, … }
 //   Bandeja (dueño, admin, recepción; X-Location-Id opcional)
@@ -158,6 +160,10 @@ export function whatsappRoutes({ db, deps }: WhatsAppRouteDeps): Route[] {
       ({ session, params, body }) => updateChannel(db, session.businessId, params.id, body),
     ),
 
+    // Lo que Meta le cobra al negocio este mes (estimado): decisión del dueño, no del equipo.
+    route({ method: "GET", path: "/whatsapp/meta-usage", auth: "user", roles: ADMINS, module: MODULE }, ({ session }) =>
+      getMetaConsumption(db, session.businessId, deps.now()),
+    ),
     route(
       { method: "POST", path: "/admin/businesses/:id/whatsapp", auth: "superadmin", params: IdParams, body: AdminChannelBody },
       async ({ session, params, body }) => {

@@ -8,7 +8,9 @@ import type { GrowthResolver } from "./growth";
 import { handleQuoteTouchJob, startQuoteRecoveryLoop, WHATSAPP_QUOTE_TOUCH_JOB } from "./quotes";
 import { startInboundWatchLoop } from "./inboundWatch";
 import { WHATSAPP_INBOUND_JOB } from "./ingest";
+import { startMetaFreeTierLoop } from "./metaCost";
 import { handleInboundJob } from "./pipeline";
+import { webPushTransport } from "./push";
 import { startRawWebhookLoop } from "./rawWebhooks";
 import { handleWhatsAppReminderJob, WHATSAPP_REMINDER_JOB } from "./reminders";
 import { reingestRawPayload } from "./webhook";
@@ -82,7 +84,8 @@ export function whatsappJobHandlers(deps: WhatsAppDeps | ((db: Executor) => What
 
 /**
  * Loops del módulo (procesos `ROLE=worker|all`): reproceso y purga de `raw_webhooks`, el
- * vigilante «sin entrantes» (apagable con ALERTS_INBOUND_SILENCE_HOURS=0) y, con lo de
+ * vigilante «sin entrantes» (apagable con ALERTS_INBOUND_SILENCE_HOURS=0), el aviso al
+ * dueño del tramo gratis de Meta (./metaCost.ts; apagable con META_FREE_SERVICE_MESSAGES=0) y, con lo de
  * crecimiento del plan (`getGrowth`, I6), los barridos del seguimiento post-servicio y del
  * rescate de cotizaciones.
  */
@@ -90,6 +93,8 @@ export function startWhatsAppSchedulers(db: Executor, options: { getGrowth?: Gro
   const loops = [startRawWebhookLoop({ db, ingest: reingestRawPayload(db) })];
   const inboundWatch = startInboundWatchLoop(db);
   if (inboundWatch) loops.push(inboundWatch);
+  const metaFreeTier = startMetaFreeTierLoop(db, { push: webPushTransport });
+  if (metaFreeTier) loops.push(metaFreeTier);
   if (options.getGrowth) {
     loops.push(startFollowUpLoop({ db, getGrowth: options.getGrowth }), startQuoteRecoveryLoop({ db, getGrowth: options.getGrowth }));
   }

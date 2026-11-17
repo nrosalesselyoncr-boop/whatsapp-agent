@@ -167,6 +167,25 @@
 .wa-settings-card .card-title { margin-bottom: var(--space-2xs); }
 .wa-card-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--space-sm); margin-bottom: var(--space-sm); }
 .wa-card-head > div { flex: 1 1 320px; min-width: 0; }
+/* Consumo de Meta del mes (MetaUsageCard) */
+.wa-meta-usage { display: flex; flex-direction: column; gap: var(--space-md); margin-top: var(--space-sm); }
+.wa-meta-row { display: flex; flex-direction: column; gap: 6px; }
+.wa-meta-head { display: flex; justify-content: space-between; gap: var(--space-sm); flex-wrap: wrap; font-size: var(--step--1); }
+.wa-meta-label { font-weight: 600; }
+.wa-meta-value { color: var(--text-2); }
+.wa-meta-value.warn { color: var(--warning); font-weight: 600; }
+.wa-meta-bar { height: 8px; border-radius: var(--radius-pill); background: var(--surface-2); overflow: hidden; }
+.wa-meta-bar > span { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+.wa-meta-bar.warn > span { background: var(--warning); }
+.wa-meta-note { font-size: 12px; color: var(--text-2); }
+.wa-meta-note.warn { color: var(--warning); font-weight: 600; }
+.wa-meta-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-sm); margin: 0; }
+.wa-meta-facts > div { min-width: 0; }
+.wa-meta-facts dt { font-size: 12px; color: var(--text-2); }
+.wa-meta-facts dd { margin: 2px 0 0; font-weight: 600; }
+.wa-meta-total dd { font-size: var(--step-2); }
+.wa-meta-footnote { margin: 0; }
+
 .wa-textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
 .wa-textarea-sm { min-height: 60px; resize: vertical; line-height: 1.45; }
 .wa-mono { font-family: var(--font-mono); font-size: .92rem; }

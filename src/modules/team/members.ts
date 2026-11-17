@@ -177,6 +177,28 @@ export function countActiveMembers(executor: Executor, businessId: string): Prom
   return withTenant(executor, businessId, (tx) => countActiveMembersIn(tx, businessId));
 }
 
+/** Un dueño del negocio que hoy puede entrar (para avisos que solo le tocan a él). */
+export interface ActiveOwner {
+  userId: string;
+  email: string;
+  name: string;
+}
+
+/**
+ * Dueños activos del negocio (cuenta y membresía activas, rol `owner`). Lo usan los
+ * avisos que son decisión del dueño y no del equipo, p. ej. el consumo que Meta le cobra.
+ */
+export function listActiveOwners(executor: Executor, businessId: string): Promise<ActiveOwner[]> {
+  return withTenant(executor, businessId, (tx) =>
+    tx
+      .select({ userId: users.id, email: users.email, name: users.name })
+      .from(memberships)
+      .innerJoin(users, eq(users.id, memberships.userId))
+      .where(and(eq(memberships.businessId, businessId), eq(memberships.role, "owner"), eq(memberships.active, true), eq(users.active, true)))
+      .orderBy(asc(users.email)),
+  );
+}
+
 export function listMembers(db: Executor, businessId: string): Promise<Member[]> {
   return withTenant(db, businessId, (tx) => readMembers(tx, businessId));
 }
