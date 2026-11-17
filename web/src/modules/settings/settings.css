@@ -135,4 +135,4 @@ fieldset.field > legend { font-size: var(--step--1); font-weight: 600; color: va
 .brand-preset-text { display: flex; flex-direction: column; gap: 1px; padding: 0 2px 2px; }
 .brand-preset-name { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: var(--step--1); }
 .brand-preset-desc { font-size: 12px; color: var(--text-tertiary); }
-.brand-preset-tag { padding: 0 6px; border-radius: var(--radius-pill); background: var(--accent-soft); color: var(--accent); font-size: 10.5px; font-weight: 600; line-height: 16px; }
+.brand-preset-tag { padding: 0 6px; border-radius: var(--radius-pill); background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 600; line-height: 16px; }

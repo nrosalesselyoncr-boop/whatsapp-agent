@@ -22,7 +22,7 @@
 .clients-avatar { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 12px; font-weight: 600; }
 .clients-person-text { display: flex; flex-direction: column; min-width: 0; }
 .clients-table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
-.clients-table th { text-align: left; font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); padding: 11px var(--space-md); border-bottom: 1px solid var(--border); white-space: nowrap; }
+.clients-table th { text-align: left; font-size: var(--step--1); font-weight: 600; color: var(--text-secondary); padding: 11px var(--space-md); border-bottom: 1px solid var(--border); white-space: nowrap; }
 .clients-table td { padding: 11px var(--space-md); border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text-secondary); }
 .clients-table tbody tr { position: relative; transition: background .12s; }
 .clients-table tbody tr:last-child td { border-bottom: none; }
@@ -136,7 +136,7 @@ td.clients-col-spend { font-weight: 600; color: var(--text); }
 
 .clients-row-name { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 2px; max-width: 100%; }
 .clients-row-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
-.clients-row-tag { font-size: 11px; font-weight: 600; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-pill); padding: 0 8px; }
+.clients-row-tag { font-size: 12px; font-weight: 600; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-pill); padding: 0 8px; }
 .clients-col-status { width: 1%; white-space: nowrap; }
 
 .clients-filter-toggle { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }

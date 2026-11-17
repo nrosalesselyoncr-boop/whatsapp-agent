@@ -51,15 +51,16 @@ const RE_HEX = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i;
 
 /** Superficies de las tarjetas en claro y oscuro (espejo de --surface en global.css). */
 export const SURFACE_LIGHT = "#ffffff";
-export const SURFACE_DARK = "#14161a";
-const INK_LIGHT = "#16181d";
-const INK_DARK = "#0a0b0d";
+export const SURFACE_DARK = "#161e2e";
+const INK_LIGHT = "#172033";
+const INK_DARK = "#0f1522";
 /**
- * Acento de la plataforma (sin marca propia): menta en oscuro y su versión oscurecida en
- * claro (espejo de los defaults de --accent en global.css). Ambos pasan AA sin ajuste.
+ * Acento de la plataforma (sin marca propia): la «pluma» cobalto en claro y su versión
+ * aclarada en oscuro (espejo de los defaults de --accent en global.css). Ambos pasan AA
+ * sin ajuste.
  */
-export const DEFAULT_ACCENT_DARK = "#4fd1b3";
-export const DEFAULT_ACCENT_LIGHT = "#2e7968";
+export const DEFAULT_ACCENT_DARK = "#8ea2ff";
+export const DEFAULT_ACCENT_LIGHT = "#2747d1";
 /** Contraste mínimo del acento contra la superficie (WCAG AA, texto normal). */
 const MIN_CONTRAST = 4.5;
 
@@ -152,7 +153,7 @@ function oklabToRgb([L, a, b]: Lab): Rgb {
 
 /** Croma máximo del tinte (OKLCH). */
 const TINT_MAX_CHROMA = 0.12;
-/** Luminosidad OKLab del tinte por tema: apenas bajo --surface-sunken (oscuro) y la de --bg (claro). */
+/** Luminosidad OKLab del tinte por tema: cerca de --surface-sunken (oscuro) y apenas sobre --bg (claro). */
 export const TINT_LIGHTNESS = { dark: 0.2, light: 0.985 } as const;
 
 /** Tinte de `hex` para un tema: su matiz con luminosidad fija y croma limitado. */

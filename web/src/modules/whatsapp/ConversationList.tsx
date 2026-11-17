@@ -177,7 +177,7 @@ function ConversationRow({ conversation: c, active, search, timeZone }: { conver
             <Icon id={c.mode === "bot" ? "bot" : "user"} size={12} />
             {MODE_LABEL[c.mode]}
           </span>
-          {waiting && <span className="wa-chip wa-chip-warning">Espera respuesta</span>}
+          {waiting && <span className="wa-chip wa-chip-waiting">Espera respuesta</span>}
           {c.status === "attended" && <span className="wa-chip">Atendida</span>}
           {c.nextAppointment && (
             <span className="wa-chip wa-chip-info">

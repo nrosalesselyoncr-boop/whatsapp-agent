@@ -15,12 +15,15 @@
 .sales-toolbar-actions { margin-left: auto; display: flex; gap: var(--space-xs); }
 .sales-toolbar-inline { margin-bottom: var(--space-sm); }
 
-.sales-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: var(--space-md); }
-.card.sales-kpi { display: flex; flex-direction: column; gap: 8px; padding: var(--space-card); }
-.sales-kpi-label { font-size: var(--step--1); font-weight: 500; color: var(--text-secondary); }
-.sales-kpi-value { font-size: var(--step-4); line-height: 32px; font-weight: 600; letter-spacing: -.015em; color: var(--text); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-/* El indicador principal (cobrado): borde y brillo de acento, cifra en el acento (ver .card-strong). */
-.card.sales-kpi-strong { border-color: var(--accent-line); background: var(--card-bg); box-shadow: var(--accent-glow); }
+.sales-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 1px; background: var(--border-subtle); border: 1px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; }
+/* Franja de indicadores (dirección «Mostrador»): una sola pieza, celdas separadas por
+   filetes; cada indicador deja de ser una tarjeta propia. El filete es el fondo de la
+   franja asomando por el `gap` de 1px, así se reacomoda al ancho sin reglas por columnas. */
+.card.sales-kpi { display: flex; flex-direction: column; gap: 6px; padding: var(--space-md) var(--space-card); border: none; border-radius: 0; background: var(--card-bg); }
+.sales-kpi-label { font-size: var(--step--1); font-weight: 600; color: var(--text-secondary); }
+.sales-kpi-value { font-size: var(--step-4); line-height: 30px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+/* El indicador principal (cobrado): la cifra en la pluma. */
+.card.sales-kpi-strong { border: none; background: var(--card-bg); }
 .sales-kpi-strong .sales-kpi-value { color: var(--accent); }
 
 /* `position: relative`: lo absoluto de adentro (textos solo para lectores de pantalla) queda
@@ -43,7 +46,7 @@
 .sales-strong { font-weight: 600; color: var(--text); }
 .sales-negative { color: var(--danger); }
 
-.sales-kind-badge { display: inline-flex; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: var(--radius-pill); background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
+.sales-kind-badge { display: inline-flex; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: var(--radius-pill); background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
 .sales-kind-badge.kind-payment { background: var(--success-soft); color: var(--success); border-color: transparent; }
 .sales-kind-badge.kind-deposit { background: var(--info-soft); color: var(--info); border-color: transparent; }
 .sales-kind-badge.kind-refund { background: var(--danger-soft); color: var(--danger); border-color: transparent; }
@@ -92,7 +95,7 @@
   .sales-toolbar-actions { margin-left: 0; width: 100%; }
   .sales-toolbar-actions .btn { flex: 1; }
   .card.sales-pending-item { grid-template-columns: minmax(0, 1fr); }
-  .sales-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-sm); } /* KPIs en 2x2 */
+  .sales-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } /* KPIs en 2x2 */
   .card.sales-kpi { padding: var(--space-sm) 14px; gap: 4px; }
   .sales-kpi-value { font-size: 22px; line-height: 28px; }
 }

@@ -17,6 +17,8 @@
 
 .wa-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; padding: 1px 9px; border-radius: var(--radius-pill); background: var(--status-neutral-bg); color: var(--status-neutral); border: 1px solid transparent; white-space: nowrap; }
 .wa-chip-warning { background: var(--warning-soft); color: var(--warning); border-color: transparent; }
+/* «Espera respuesta»: te espera una persona → resaltador. */
+.wa-chip-waiting { background: var(--highlight); color: var(--on-highlight); border-color: transparent; font-weight: 600; }
 .wa-chip-info { background: var(--status-confirmed-bg); color: var(--status-confirmed); border-color: transparent; }
 .wa-chip-danger { background: var(--danger-soft); color: var(--danger); border-color: transparent; }
 .wa-mode { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; padding: 1px 0; white-space: nowrap; color: var(--text-tertiary); }
@@ -42,12 +44,13 @@
 
 .wa-row { position: relative; display: flex; gap: var(--space-sm); padding: 13px var(--space-md); border-bottom: 1px solid var(--border); color: var(--text); text-decoration: none; min-height: 72px; transition: background .12s; }
 .wa-row:hover { background: var(--hover); }
-/* Espera a una persona: filete ámbar a la izquierda que late (quieto con reduced-motion). */
-.wa-row.waiting::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--status-pending-dot); animation: blink 1.8s ease-in-out infinite; }
+/* Espera a una persona: el trazo del resaltador a la izquierda (quieto: el resaltador ya
+   llama la atención; nada parpadea). */
+.wa-row.waiting::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--highlight); box-shadow: 1px 0 0 color-mix(in srgb, var(--on-highlight) 25%, transparent); }
 .wa-row.active { background: var(--accent-soft); }
 @media (prefers-reduced-motion: reduce) { .wa-row.waiting::before { animation: none; } }
 .wa-row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.wa-avatar { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-family: var(--font-display); font-size: 13px; font-weight: 600; }
+.wa-avatar { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-family: var(--font-display); font-size: 13px; font-weight: 700; }
 .wa-avatar-sm { width: 40px; height: 40px; }
 .wa-row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .wa-row-line { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-xs); min-width: 0; }
@@ -57,7 +60,7 @@
 .wa-row-preview { display: flex; align-items: center; gap: 4px; min-width: 0; font-size: var(--step--1); color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wa-row-preview svg { flex-shrink: 0; color: var(--text-3); }
 .wa-row.unread .wa-row-preview { color: var(--text); font-weight: 600; }
-.wa-unread { display: inline-grid; place-items: center; flex-shrink: 0; min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--radius-pill); background: var(--accent); color: var(--accent-fg); font-size: 11px; font-weight: 600; }
+.wa-unread { display: inline-grid; place-items: center; flex-shrink: 0; min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--radius-pill); background: var(--accent); color: var(--accent-fg); font-size: 12px; font-weight: 600; }
 .wa-row-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
 .wa-more { display: flex; justify-content: center; padding: var(--space-md); }
 
@@ -94,11 +97,11 @@
 .wa-msg-bot .wa-bubble { background: var(--accent-soft); border-color: var(--accent-line); border-top-right-radius: 5px; }
 .wa-msg-human .wa-bubble { background: var(--status-pending-bg); border-color: color-mix(in srgb, var(--status-pending-dot) 35%, transparent); border-top-right-radius: 5px; }
 /* Quién escribió (agente o persona): etiqueta en mono y mayúsculas. */
-.wa-bubble-author { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; }
+.wa-bubble-author { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; }
 .wa-msg-bot .wa-bubble-author { color: var(--bot); }
 .wa-msg-human .wa-bubble-author { color: var(--human); }
 .wa-bubble-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; }
-.wa-bubble-time { align-self: flex-end; font-size: 11px; color: var(--text-tertiary); }
+.wa-bubble-time { align-self: flex-end; font-size: 12px; color: var(--text-tertiary); }
 /* Texto que acompaña a un audio: debajo, separado por una línea fina. */
 .wa-media-audio + .wa-bubble-text { margin-top: 2px; padding-top: 6px; border-top: 1px solid var(--border); font-size: var(--step--1); color: var(--text-secondary); }
 .wa-media-link { display: block; }
@@ -140,7 +143,7 @@
 .wa-chart-frame svg:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
 .wa-chart-grid { stroke: var(--border); stroke-width: 1; }
 .wa-chart-baseline { stroke: var(--border-strong); stroke-width: 1; }
-.wa-chart-axis { fill: var(--text-2); font-size: 11px; font-family: var(--font-body); font-variant-numeric: tabular-nums; }
+.wa-chart-axis { fill: var(--text-2); font-size: 12px; font-family: var(--font-body); font-variant-numeric: tabular-nums; }
 .wa-chart-conversations { fill: var(--text-3); }
 .wa-chart-bookings { fill: var(--accent); stroke: var(--surface); stroke-width: 1; }
 .wa-chart-hover { fill: var(--surface-2); }

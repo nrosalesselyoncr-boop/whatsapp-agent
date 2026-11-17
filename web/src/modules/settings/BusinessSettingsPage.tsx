@@ -302,7 +302,7 @@ function BrandPresets({
 }) {
   const same = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
   const options = [
-    { id: "original", name: "Original", description: "Menta de Selyon", accentColor: "", headerColor: "", suggested: false },
+    { id: "original", name: "Original", description: "Pluma cobalto de Selyon", accentColor: "", headerColor: "", suggested: false },
     ...BRAND_PRESETS.map((p) => ({ ...p, suggested: p.industries.includes(industry) })),
   ];
   return (
@@ -348,7 +348,7 @@ function BrandPresets({
 }
 
 /** Valor inicial de la paleta cuando el campo está vacío (el acento default de global.css). */
-const DEFAULT_PICKER_COLOR = "#4fd1b3";
+const DEFAULT_PICKER_COLOR = "#2747d1";
 
 function ColorField({ label, hint, value, disabled, error, onChange }: { label: string; hint: string; value: string; disabled: boolean; error?: string; onChange: (v: string) => void }) {
   return (

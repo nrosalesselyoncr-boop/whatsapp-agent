@@ -17,7 +17,7 @@
 .cp-item-meta { color: var(--text-2); font-size: var(--step--1); overflow-wrap: anywhere; }
 .cp-item-counts { color: var(--text-2); font-size: var(--step--1); white-space: nowrap; }
 
-.cp-status { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: var(--radius-pill); white-space: nowrap; background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
+.cp-status { display: inline-flex; align-items: center; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: var(--radius-pill); white-space: nowrap; background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
 .cp-status-scheduled, .cp-status-sending { background: var(--info-soft); color: var(--info); border-color: transparent; }
 .cp-status-completed { background: var(--accent-soft, var(--info-soft)); color: var(--accent-strong); border-color: transparent; }
 .cp-status-cancelled { background: var(--warning-soft); color: var(--warning); border-color: transparent; }
@@ -39,7 +39,7 @@
 .cp-kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: var(--space-md); margin-bottom: var(--space-md); }
 .cp-kpi { display: flex; flex-direction: column; gap: 8px; padding: var(--space-card); }
 .cp-kpi-label { font-size: var(--step--1); font-weight: 500; color: var(--text-secondary); }
-.cp-kpi-value { font-size: var(--step-4); line-height: 32px; font-weight: 600; letter-spacing: -.015em; color: var(--text); font-variant-numeric: tabular-nums; }
+.cp-kpi-value { font-size: var(--step-4); line-height: 30px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
 .cp-message-box { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface-2); border-radius: var(--radius-sm); padding: var(--space-sm) var(--space-md); }
 .cp-recipients { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
 .cp-recipients th, .cp-recipients td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border-2); overflow-wrap: anywhere; }

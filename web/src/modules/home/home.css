@@ -13,7 +13,7 @@
 .home-row { display: flex; align-items: center; gap: var(--space-xs); }
 .home-item { flex: 1; min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--space-sm); row-gap: 2px; padding: 8px 10px; border-radius: var(--radius-md); text-decoration: none; color: var(--text); font-size: var(--step-0); min-height: 44px; transition: background var(--dur-fast) var(--ease); }
 .home-item:hover { background: var(--surface-sunken); }
-.home-item-time { font-family: var(--font-mono); font-size: 13px; grid-row: span 2; align-self: start; min-width: 64px; }
+.home-item-time { font-size: var(--step--1); font-weight: 700; font-variant-numeric: tabular-nums; grid-row: span 2; align-self: start; min-width: 64px; }
 .home-item-main { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .home-item-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .home-item-simple { grid-template-columns: minmax(0, 1fr); }
@@ -34,16 +34,17 @@
 .onboarding-step .onboarding-cta { flex: none; min-height: 36px; padding: 6px 12px; }
 @media (prefers-reduced-motion: reduce) { .onboarding-progress span { transition: none; } }
 
-/* ── Dirección oscura (diseño «Panel»): dos columnas en escritorio ──
+/* ── Dos columnas en escritorio ──
    Columna principal (ingresos, próximas citas, citas de hoy) y lateral (agente, alertas,
    sin confirmar, no asistieron, agendadas por el agente). En el celular, una columna. */
 .home-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
 .home-col { display: grid; gap: 14px; min-width: 0; }
 .home-layout .card { padding: 18px 20px; }
 .home-card .card-title { font-size: var(--step-1); }
-.home-big { font-size: 30px; line-height: 34px; letter-spacing: -.04em; }
+.home-big { font-size: 28px; line-height: 34px; font-weight: 700; }
 .home-big-accent { color: var(--accent); }
-.home-big-warn { color: var(--status-pending); }
+/* Conversaciones que esperan a una persona: el número va resaltado (te esperan). */
+.home-big-warn { color: var(--on-highlight); background: var(--highlight); border-radius: var(--radius-sm); padding: 0 8px; justify-self: start; width: max-content; }
 .pulse-dot.home-live-dot { margin-left: auto; background: var(--status-pending-dot); }
 .home-count { border-radius: var(--radius-pill); }
 .home-item:hover { background: var(--hover); }
@@ -59,6 +60,6 @@
   .home-list > li:first-child .home-item-wide { border-top: none; }
   .home-item-wide:hover { background: transparent; }
   .home-item-wide:hover .home-item-main { color: var(--accent); }
-  .home-item-wide .home-item-time { grid-row: auto; align-self: center; min-width: 0; white-space: nowrap; color: var(--text-secondary); font-size: 12.5px; }
+  .home-item-wide .home-item-time { grid-row: auto; align-self: center; min-width: 0; white-space: nowrap; color: var(--text); font-size: var(--step--1); font-weight: 700; }
   .home-item-wide .home-item-status { grid-column: auto; justify-self: end; margin-top: 0; }
 }
