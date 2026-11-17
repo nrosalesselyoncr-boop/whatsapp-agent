@@ -9,6 +9,7 @@
 # Cada chequeo falla si se rompe una capa distinta, sin credenciales reales ni datos:
 #   1. GET  /health                → 200 "…: ok" (proceso + ping a la base).
 #   2. GET  /panel                 → 200 con <div id="root"> (el bundle de React está).
+#   2b. GET /demo                  → 200 con <div id="root"> (la demo pública está).
 #   3. GET  /api/panel/<inexistente> → 404 JSON `not_found` (el router de la API está montado).
 #   4. GET  /api/panel/auth/me     → 401 JSON `unauthorized` (la sesión se valida; un 404
 #                                    delata que la ruta desapareció, un 500 que algo se rompió).
@@ -81,6 +82,14 @@ if [ "$code" = "200" ] && grep -qi '<div id="root"' "$tmp/body"; then
   ok "/panel sirve el bundle de React (200 + #root)"
 else
   err "/panel no sirvió el bundle (HTTP $code); ¿falta web:build?"
+fi
+
+# 2b) Demo pública (/demo, web/dist-demo): el botón principal del sitio apunta acá
+request GET /demo
+if [ "$code" = "200" ] && grep -qi '<div id="root"' "$tmp/body"; then
+  ok "/demo sirve la demo pública (200 + #root)"
+else
+  err "/demo no sirvió la demo (HTTP $code); ¿falta npm run web:build (build:demo)?"
 fi
 
 # 3) Router de la API montado
