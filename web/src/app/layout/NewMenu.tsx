@@ -32,7 +32,7 @@ export default function NewMenu() {
   return (
     <Menu
       ariaLabel="Nuevo"
-      buttonClassName="btn btn-primary new-button"
+      buttonClassName="btn btn-secondary new-button"
       buttonContent={
         <>
           <Icon id="plus" size={18} strokeWidth={2.2} />

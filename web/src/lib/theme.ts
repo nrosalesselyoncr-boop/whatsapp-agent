@@ -19,8 +19,12 @@ export function getTheme(): Theme {
   return saved === "dark" || saved === "light" ? saved : DEFAULT_THEME;
 }
 
+/** Color de la barra del sistema (PWA, Safari/Chrome del celular): el fondo de cada tema. */
+const THEME_COLOR: Record<Theme, string> = { light: "#eef1f0", dark: "#0f1522" };
+
 function applyTheme(theme: Theme): void {
   document.documentElement.dataset.theme = theme;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLOR[theme]);
 }
 
 /** Llamar ANTES del primer render (main.tsx) para que no parpadee el tema equivocado. */

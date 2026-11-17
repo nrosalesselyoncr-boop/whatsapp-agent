@@ -11,13 +11,11 @@ export default function WaitingCard() {
   const query = useWhatsappSummary();
   const s = query.data;
   return (
-    <section className="card home-card" aria-labelledby="home-conv-title">
+    <section className="card home-card home-waiting" aria-labelledby="home-conv-title">
       <div className="home-card-head">
         <h2 id="home-conv-title" className="card-title">
           Conversaciones esperando
         </h2>
-        {/* Alguien espera a una persona: el punto pulsa (quieto con reduced-motion). */}
-        {s && s.conversationsWaiting > 0 && <span className="pulse-dot home-live-dot" aria-hidden="true" />}
       </div>
       {query.isPending ? (
         <p className="muted">Cargando…</p>

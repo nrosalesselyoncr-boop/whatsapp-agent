@@ -63,7 +63,7 @@ export function OverviewKpis() {
   return (
     <section className="ho" aria-label="Indicadores del día">
       <div className="sales-kpis ho-kpis">
-        <Kpi label="Cobrado hoy" value={money(o.collectedToday.netCents)} hint={`${formatInt(o.collectedToday.count)} movimientos`} strong />
+        <Kpi label="Cobrado hoy" value={money(o.collectedToday.netCents)} hint={`${formatInt(o.collectedToday.count)} movimientos`} strong={o.collectedToday.netCents !== 0} />
         <Kpi label={`${capitalize(t.appointments)} de hoy`} value={formatInt(o.appointmentsToday.total)}>
           {split.length > 0 && (
             <span className="ho-kpi-split">

@@ -2,8 +2,9 @@ import { useState } from "react";
 import { matchPath, useLocation } from "react-router-dom";
 import Dialog from "../../ui/Dialog";
 import Icon from "../../ui/Icons";
-import type { NavItem } from "../navigation";
+import type { NavItem, SectionId } from "../navigation";
 import NavList from "./NavList";
+import { WaitingDot, WhatsappCount } from "./WaitingCount";
 
 /** Con hasta este número de ítems entran todos en la barra; si hay más, 4 + "Más". */
 const MAX_DIRECT = 5;
@@ -31,6 +32,10 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
     { key: "modules", title: "Módulos", items: overflow.filter((i) => i.section.group === "modules") },
     { key: "settings", title: null, items: overflow.filter((i) => i.section.group === "settings") },
   ].filter((g) => g.items.length > 0);
+  // WhatsApp IA en la hoja "Más": lo que espera a una persona se ve igual en el botón.
+  const whatsappInOverflow = overflow.some((i) => i.section.id === "whatsapp" && i.access === "open");
+  const barBadge = (id: SectionId) => (id === "whatsapp" ? <WhatsappCount idPrefix="bottom-count" /> : null);
+  const sheetBadge = (id: SectionId) => (id === "whatsapp" ? <WhatsappCount idPrefix="sheet-count" /> : null);
 
   return (
     <>
@@ -38,6 +43,8 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
         <NavList
           items={primary}
           itemClassName="bottom-nav-item"
+          badge={barBadge}
+          badgeIdPrefix="bottom-count"
           trailing={
             overflow.length > 0 && (
               <button
@@ -49,6 +56,7 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
               >
                 <Icon id="grid" size={20} />
                 <span className="nav-label">Más</span>
+                {whatsappInOverflow && <WaitingDot />}
               </button>
             )
           }
@@ -68,6 +76,8 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
                 itemClassName="sheet-item"
                 labelledBy={g.title ? `more-${g.key}` : undefined}
                 onNavigate={() => setMoreOpen(false)}
+                badge={sheetBadge}
+                badgeIdPrefix="sheet-count"
               />
             </div>
           ))}

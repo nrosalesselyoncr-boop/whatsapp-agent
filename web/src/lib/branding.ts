@@ -26,25 +26,28 @@ export interface Branding {
 }
 
 /**
- * Temas predeterminados de marca (Configuración › Negocio › Marca): un color principal y un
- * color del menú pensados juntos, que se ven bien en oscuro y en claro (el acento pasa AA
- * en los dos sin ajuste fuerte; test en test/unit/branding.test.ts). Elegir uno solo llena
- * los dos campos: se guarda como cualquier marca propia.
+ * Temas predeterminados de marca (Configuración › Negocio › Marca), pensados para el claro
+ * «Porcelana» (el default): el color principal pasa AA sobre blanco y sobre su relleno suave
+ * TAL CUAL (no se apaga al ajustarlo) y en oscuro se aclara solo. El menú queda en el papel
+ * del panel, teñido apenas por la marca (`headerColor` vacío): un menú oscuro sobre contenido
+ * claro rompe la «agenda de papel»; quien lo quiera lo elige a mano en «Color del menú».
+ * Test en test/unit/branding.test.ts. Elegir uno llena los dos campos.
  */
 export interface BrandPreset {
   id: "nails" | "dental" | "tech";
   name: string;
   description: string;
   accentColor: string;
+  /** Vacío: menú claro de la plataforma, teñido por el color principal. */
   headerColor: string;
   /** Rubros del negocio para los que se sugiere (`settings.industry`). */
   industries: string[];
 }
 
 export const BRAND_PRESETS: readonly BrandPreset[] = [
-  { id: "nails", name: "Uñas", description: "Rosa chicle sobre ciruela", accentColor: "#f06ba8", headerColor: "#2b1424", industries: ["nails", "aesthetics"] },
-  { id: "dental", name: "Dental", description: "Celeste clínico sobre azul marino", accentColor: "#3bb2f6", headerColor: "#0c2233", industries: ["dental"] },
-  { id: "tech", name: "Tecnológico", description: "Violeta eléctrico sobre índigo", accentColor: "#8b7cff", headerColor: "#14132b", industries: ["generic"] },
+  { id: "nails", name: "Uñas", description: "Frambuesa, menú claro", accentColor: "#c2185b", headerColor: "", industries: ["nails", "aesthetics"] },
+  { id: "dental", name: "Dental", description: "Azul clínico, menú claro", accentColor: "#0b6fa4", headerColor: "", industries: ["dental"] },
+  { id: "tech", name: "Tecnológico", description: "Violeta, menú claro", accentColor: "#5b47d6", headerColor: "", industries: ["generic"] },
 ];
 
 const RE_HEX = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i;
@@ -63,6 +66,13 @@ export const DEFAULT_ACCENT_DARK = "#8ea2ff";
 export const DEFAULT_ACCENT_LIGHT = "#2747d1";
 /** Contraste mínimo del acento contra la superficie (WCAG AA, texto normal). */
 const MIN_CONTRAST = 4.5;
+/** Margen para el acento de marca contra su PEOR superficie (redondeos del navegador). */
+const BRAND_MIN_CONTRAST = 4.6;
+/** Fondos neutros de cada tema (espejo de global.css) donde el acento va como texto. */
+const NEUTRALS = {
+  light: { bg: "#eef1f0", surface: "#ffffff", sunken: "#f4f6f5" },
+  dark: { bg: "#0f1522", surface: "#161e2e", sunken: "#1c2537" },
+} as const;
 
 type Rgb = [number, number, number];
 
@@ -107,6 +117,46 @@ export function accentFor(hex: string, surface: string, toward: "#000000" | "#ff
     if (contrastRatio(mixed, surface) >= MIN_CONTRAST) return mixed;
   }
   return toward;
+}
+
+/** `color-mix(in srgb, a p, b)` (p de 0 a 1). */
+export function mixSrgb(a: string, b: string, p: number): string {
+  const ra = toRgb(a);
+  const rb = toRgb(b);
+  if (!ra || !rb) return b;
+  return toHex([0, 1, 2].map((i) => ra[i] * p + rb[i] * (1 - p)) as Rgb);
+}
+
+/**
+ * Superficies donde el acento de marca va como TEXTO en cada tema: la tarjeta, el relleno
+ * suave del propio acento (--accent-soft: insignias, avatares, chips) y, con tinte de marca,
+ * el fondo y la superficie hundida teñidos. Espejo de global.css.
+ */
+export function accentSurfaces(accent: string, theme: "light" | "dark", tint?: string): string[] {
+  const n = NEUTRALS[theme];
+  const tinted = (base: string, pct: number) => (tint ? mixOklab(tint, base, pct) : base);
+  if (theme === "light") {
+    return [n.surface, mixSrgb(accent, "#ffffff", 0.1), tinted(n.bg, 0.18), tinted(n.sunken, 0.18), tinted(n.surface, 0.08)];
+  }
+  const surface = tinted(n.surface, 0.3);
+  return [surface, tinted(n.sunken, 0.32), tinted(n.bg, 0.25), mixSrgb(accent, surface, 0.14)];
+}
+
+/**
+ * Acento de marca para un tema: `hex` mezclado de a poco hacia negro (claro) o blanco
+ * (oscuro) hasta pasar `BRAND_MIN_CONTRAST` contra TODAS sus superficies (no solo el blanco:
+ * también el relleno suave y el fondo teñido). Si ya cumple, vuelve igual.
+ */
+export function brandAccentFor(hex: string, theme: "light" | "dark", tint?: string): string {
+  const base = toRgb(hex);
+  if (!base) return hex;
+  const target: Rgb = theme === "light" ? [0, 0, 0] : [255, 255, 255];
+  for (let step = 0; step <= 40; step++) {
+    const t = step / 40;
+    const mixed = toHex([0, 1, 2].map((i) => base[i] + (target[i] - base[i]) * t) as Rgb);
+    if (accentSurfaces(mixed, theme, tint).every((s) => contrastRatio(mixed, s) >= BRAND_MIN_CONTRAST)) return mixed;
+  }
+  return toHex(target);
 }
 
 // ── Tinte de marca para los neutros (fondo, superficies, bordes, barra superior) ──
@@ -200,10 +250,12 @@ export function applyBranding(branding: Branding | null | undefined): void {
   resetBranding();
   const html = document.documentElement;
   const root = html.style;
+  // Tinte de los neutros: del color del menú (la identidad) o, si no hay, del principal.
+  const tintSource = [branding?.headerColor, branding?.accentColor].find((c) => c && RE_HEX.test(c));
   if (branding?.accentColor && RE_HEX.test(branding.accentColor)) {
     html.dataset.brandAccent = "";
-    const light = accentFor(branding.accentColor, SURFACE_LIGHT, "#000000");
-    const dark = accentFor(branding.accentColor, SURFACE_DARK, "#ffffff");
+    const light = brandAccentFor(branding.accentColor, "light", tintSource && tintFor(tintSource, "light"));
+    const dark = brandAccentFor(branding.accentColor, "dark", tintSource && tintFor(tintSource, "dark"));
     root.setProperty("--brand-accent-light", light);
     root.setProperty("--brand-on-accent-light", textOn(light, INK_LIGHT));
     root.setProperty("--brand-accent-dark", dark);
@@ -214,8 +266,6 @@ export function applyBranding(branding: Branding | null | undefined): void {
     root.setProperty("--brand-header-bg", branding.headerColor);
     root.setProperty("--brand-header-fg", textOn(branding.headerColor, INK_LIGHT));
   }
-  // Tinte de los neutros: del color del menú (la identidad) o, si no hay, del principal.
-  const tintSource = [branding?.headerColor, branding?.accentColor].find((c) => c && RE_HEX.test(c));
   if (tintSource) {
     html.dataset.brandTint = "";
     root.setProperty("--brand-tint-dark", tintFor(tintSource, "dark"));

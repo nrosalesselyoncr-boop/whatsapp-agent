@@ -3,7 +3,9 @@ import { test } from "node:test";
 import { PRODUCT_NAME as SERVER_PRODUCT_NAME } from "../../src/platform/brand";
 import {
   accentFor,
+  accentSurfaces,
   BRAND_PRESETS,
+  brandAccentFor,
   contrastRatio,
   DEFAULT_ACCENT_DARK,
   DEFAULT_ACCENT_LIGHT,
@@ -127,20 +129,43 @@ test("branding: el tinte toma el matiz de la marca, no su luminosidad ni todo su
   assert.equal(tintFor("rojo", "dark"), "rojo", "un color inválido vuelve igual");
 });
 
-test("branding: los temas predeterminados (uñas, dental, tecnológico) se ven bien en los dos temas", () => {
+test("branding: los temas predeterminados (uñas, dental, tecnológico) están pensados para el claro", () => {
   assert.deepEqual(BRAND_PRESETS.map((p) => p.id), ["nails", "dental", "tech"]);
   for (const p of BRAND_PRESETS) {
     assert.match(p.accentColor, /^#[0-9a-f]{6}$/, p.id);
-    assert.match(p.headerColor, /^#[0-9a-f]{6}$/, p.id);
-    // El acento pasa AA tal cual en oscuro (no se deforma) y apenas se oscurece en claro.
-    assert.equal(accentFor(p.accentColor, SURFACE_DARK, "#ffffff"), p.accentColor, `${p.id} en oscuro`);
-    assert.ok(contrastRatio(accentFor(p.accentColor, SURFACE_LIGHT, "#000000"), SURFACE_LIGHT) >= AA, `${p.id} en claro`);
-    // El menú es oscuro: texto blanco con contraste de sobra.
-    assert.ok(contrastRatio(p.headerColor, "#ffffff") >= 12, `${p.id}: texto del menú`);
+    // Menú claro de la plataforma (teñido por la marca): sin color de menú propio.
+    assert.equal(p.headerColor, "", `${p.id}: el menú queda en el papel del panel`);
+    // En claro el acento pasa tal cual contra todas sus superficies (no se apaga al ajustarlo)…
+    const tintLight = tintFor(p.accentColor, "light");
+    assert.equal(brandAccentFor(p.accentColor, "light", tintLight), p.accentColor, `${p.id} en claro`);
+    // …y en oscuro se aclara hasta pasar AA contra las suyas.
+    const tintDark = tintFor(p.accentColor, "dark");
+    const dark = brandAccentFor(p.accentColor, "dark", tintDark);
+    for (const s of accentSurfaces(dark, "dark", tintDark)) assert.ok(contrastRatio(dark, s) >= AA, `${p.id} en oscuro sobre ${s}`);
   }
   // Cada rubro tiene a lo sumo un tema sugerido.
   const industries = BRAND_PRESETS.flatMap((p) => p.industries);
   assert.equal(new Set(industries).size, industries.length);
+});
+
+test("branding: el acento de marca pasa AA contra su PEOR superficie (relleno suave y fondo teñido incluidos)", () => {
+  for (const color of sampleColors()) {
+    for (const theme of ["light", "dark"] as const) {
+      for (const tint of [undefined, tintFor(color, theme)]) {
+        const accent = brandAccentFor(color, theme, tint);
+        assert.match(accent, /^#[0-9a-f]{6}$/, `${color} ${theme}`);
+        for (const s of accentSurfaces(accent, theme, tint)) {
+          const ratio = contrastRatio(accent, s);
+          assert.ok(ratio >= AA, `${color} → ${accent} (${theme}${tint ? ", teñido" : ""}) sobre ${s}: ${ratio.toFixed(2)}`);
+        }
+      }
+    }
+  }
+});
+
+test("branding: el cobalto de la plataforma ya cumple contra su relleno suave sin ajuste", () => {
+  assert.equal(brandAccentFor(DEFAULT_ACCENT_LIGHT, "light"), DEFAULT_ACCENT_LIGHT);
+  assert.equal(brandAccentFor(DEFAULT_ACCENT_DARK, "dark"), DEFAULT_ACCENT_DARK);
 });
 
 test("branding: safeLogoUrl rechaza javascript: y data: (va directo a un <img src>)", () => {

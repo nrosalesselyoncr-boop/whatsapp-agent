@@ -17,7 +17,7 @@
 .cp-item-meta { color: var(--text-2); font-size: var(--step--1); overflow-wrap: anywhere; }
 .cp-item-counts { color: var(--text-2); font-size: var(--step--1); white-space: nowrap; }
 
-.cp-status { display: inline-flex; align-items: center; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: var(--radius-pill); white-space: nowrap; background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
+.cp-status { display: inline-flex; align-items: center; font-size: var(--step--1); font-weight: 600; padding: 2px 8px; border-radius: var(--radius-pill); white-space: nowrap; background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
 .cp-status-scheduled, .cp-status-sending { background: var(--info-soft); color: var(--info); border-color: transparent; }
 .cp-status-completed { background: var(--accent-soft, var(--info-soft)); color: var(--accent-strong); border-color: transparent; }
 .cp-status-cancelled { background: var(--warning-soft); color: var(--warning); border-color: transparent; }
@@ -30,9 +30,9 @@
 .cp-preview ul { display: flex; flex-direction: column; gap: 2px; font-size: var(--step--1); color: var(--text-2); }
 .cp-preview .refreshing { opacity: .6; }
 .cp-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.cp-chip { min-height: 32px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font-size: var(--step--1); font-weight: 500; }
-.cp-chip[aria-pressed="true"] { background: var(--accent-soft); border-color: transparent; color: var(--accent-hover); }
-.cp-counter { font-size: 12px; color: var(--text-2); text-align: right; }
+.cp-chip { min-height: var(--tap-h); padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border-control); background: var(--surface); color: var(--text-secondary); font-size: var(--step--1); font-weight: 500; }
+.cp-chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--on-ink); font-weight: 600; }
+.cp-counter { font-size: var(--step--1); color: var(--text-2); text-align: right; }
 .cp-message { min-height: 96px; resize: vertical; }
 .cp-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-xs); }
 

@@ -1,38 +1,14 @@
-import { formatInt } from "../../modules/whatsapp/format";
-import { useWhatsappSummary } from "../../modules/whatsapp/whatsappApi";
 import { useActiveLocation } from "../location";
 import type { NavItem, SectionId } from "../navigation";
 import BusinessSwitcher from "./BusinessSwitcher";
 import NavList from "./NavList";
 import UserMenu from "./UserMenu";
+import { WhatsappCount } from "./WaitingCount";
+
+const sidebarBadge = (id: SectionId) => (id === "whatsapp" ? <WhatsappCount /> : null);
 
 /**
- * Contador de conversaciones abiertas al lado de "WhatsApp IA" (`GET /whatsapp/summary`, el
- * mismo resumen de la tarjeta del Inicio; se refresca solo cada minuto). Sin abiertas, nada.
- * Solo se monta si la sección está abierta para la sesión (NavList no pide badge de un ítem
- * con candado), así que no consulta nada en planes sin el módulo.
- */
-function OpenConversationsCount() {
-  const { data } = useWhatsappSummary();
-  const open = data?.openConversations ?? 0;
-  if (open <= 0) return null;
-  return (
-    <>
-      <span className="nav-count" aria-hidden="true">
-        {open > 99 ? "99+" : formatInt(open)}
-      </span>
-      <span id="nav-count-whatsapp" hidden>
-        {open === 1 ? "Una conversación abierta" : `${formatInt(open)} conversaciones abiertas`}
-      </span>
-    </>
-  );
-}
-
-const sidebarBadge = (id: SectionId) => (id === "whatsapp" ? <OpenConversationsCount /> : null);
-
-/**
- * Menú lateral (desktop): negocio y sucursal arriba (tarjeta con borde), núcleo, grupo
- * "Módulos" aparte (etiqueta en mono) y, al pie, Configuración y el usuario (su menú abre
+ * Menú lateral (desktop): negocio y sucursal arriba, núcleo, grupo "Módulos" aparte y, al pie, Configuración y el usuario (su menú abre
  * hacia arriba).
  */
 export default function Sidebar({ items }: { items: NavItem[] }) {

@@ -5,8 +5,7 @@
 .home-card { display: flex; flex-direction: column; gap: var(--space-sm); }
 .home-card .card-title { margin-bottom: 0; }
 .home-card-head { display: flex; align-items: center; gap: var(--space-xs); }
-.home-count { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: var(--radius-sm); background: var(--surface-sunken); color: var(--text-secondary); font-size: 12px; font-weight: 500; }
-.home-big { font-size: var(--step-4); line-height: 32px; font-weight: 600; letter-spacing: -.015em; color: var(--text); font-variant-numeric: tabular-nums; }
+.home-count { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: var(--radius-sm); background: var(--surface-sunken); color: var(--text-secondary); font-size: var(--step--1); font-weight: 500; }
 .home-status-list { display: flex; flex-direction: column; gap: 6px; }
 .home-status-list li { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); font-weight: 500; font-variant-numeric: tabular-nums; }
 .home-list { display: flex; flex-direction: column; gap: 4px; }
@@ -41,11 +40,10 @@
 .home-col { display: grid; gap: 14px; min-width: 0; }
 .home-layout .card { padding: 18px 20px; }
 .home-card .card-title { font-size: var(--step-1); }
-.home-big { font-size: 28px; line-height: 34px; font-weight: 700; }
+.home-big { font-size: var(--step-4); line-height: 30px; font-weight: 700; color: var(--text); }
 .home-big-accent { color: var(--accent); }
 /* Conversaciones que esperan a una persona: el número va resaltado (te esperan). */
 .home-big-warn { color: var(--on-highlight); background: var(--highlight); border-radius: var(--radius-sm); padding: 0 8px; justify-self: start; width: max-content; }
-.pulse-dot.home-live-dot { margin-left: auto; background: var(--status-pending-dot); }
 .home-count { border-radius: var(--radius-pill); }
 .home-item:hover { background: var(--hover); }
 .home-status-list li { padding: 7px 0; border-top: 1px solid var(--border); }
@@ -62,4 +60,23 @@
   .home-item-wide:hover .home-item-main { color: var(--accent); }
   .home-item-wide .home-item-time { grid-row: auto; align-self: center; min-width: 0; white-space: nowrap; color: var(--text); font-size: var(--step--1); font-weight: 700; }
   .home-item-wide .home-item-status { grid-column: auto; justify-self: end; margin-top: 0; }
+}
+
+/* La fecha del subtítulo solo en el celular: en escritorio ya está resaltada arriba. */
+@media (min-width: 768px) { .home-subtitle-date { display: none; } }
+
+/* Una columna (celular, tablet): primero lo que espera a una persona, después las citas que
+   vienen y las de hoy, y el resto. Las columnas se disuelven para poder ordenar las piezas. */
+@media (max-width: 1099px) {
+  .home-col { display: contents; }
+  .home-layout > .home-col > * { order: 3; }
+  .home-layout > .home-col > .home-waiting { order: 0; }
+  .home-layout > .home-col > .home-upcoming { order: 1; }
+  .home-layout > .home-col > .home-today { order: 2; }
+}
+
+/* Escritorio: la columna lateral son listas sobre el papel, con un filete arriba, no cajas;
+   la única caja es "Conversaciones esperando" (lo que espera a alguien). */
+@media (min-width: 1100px) {
+  .home-col + .home-col > .card:not(.home-waiting) { background: transparent; border: none; border-top: 1px solid var(--border-strong); border-radius: 0; padding: var(--space-md) 2px 0; }
 }

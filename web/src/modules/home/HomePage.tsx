@@ -81,7 +81,15 @@ export default function HomePage() {
   const home = query.data;
   const tz = home.timezone;
   const name = firstName(me.user.name);
-  const daySubtitle = `${greeting(tz)}${name ? `, ${name}` : ""} · ${capitalize(formatLongDate(home.date))} · ${subtitle}`;
+  // La fecha ya está resaltada en la barra superior (escritorio); en el celular la barra no
+  // la muestra, así que solo ahí va en el subtítulo.
+  const daySubtitle = (
+    <>
+      {greeting(tz)}
+      {name ? `, ${name}` : ""}
+      <span className="home-subtitle-date"> · {capitalize(formatLongDate(home.date))}</span> · {subtitle}
+    </>
+  );
 
   const todayCard = (
     <section className="card home-card home-today" aria-labelledby="home-today-title">
@@ -141,6 +149,7 @@ export default function HomePage() {
           {hasOverview && <RevenueCard />}
           <AppointmentCard
             id="home-upcoming"
+            className="home-upcoming"
             title={`Próximas ${t.appointments}`}
             empty={`No hay más ${t.appointments} en los próximos días.`}
             items={home.upcoming}
@@ -179,8 +188,11 @@ function AppointmentCard({
   t,
   confirmable = false,
   showStatus = false,
+  className = "",
 }: {
   id: string;
+  /** Clase extra de la sección (orden en el celular, ver home.css). */
+  className?: string;
   title: string;
   empty: string;
   items: Appointment[];
@@ -193,7 +205,7 @@ function AppointmentCard({
   const store = useAppointmentStore();
   const { showToast } = useToast();
   return (
-    <section className="card home-card" aria-labelledby={`${id}-title`}>
+    <section className={"card home-card " + className} aria-labelledby={`${id}-title`}>
       <div className="home-card-head">
         <h2 id={`${id}-title`} className="card-title">
           {title}
