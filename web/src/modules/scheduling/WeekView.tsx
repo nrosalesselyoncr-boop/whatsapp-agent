@@ -27,9 +27,16 @@ export default function WeekView({ days, timeZone, appointments, staffColors, on
         const list = (byDay.get(date) ?? []).sort((x, y) => x.startsAt.localeCompare(y.startsAt));
         const label = capitalize(formatShortDate(date));
         return (
-          <section key={date} className={"week-day" + (date === today ? " week-day-today" : "")} aria-label={label}>
+          <section key={date} className={"week-day" + (date === today ? " week-day-today" : "")} aria-label={date === today ? `Hoy, ${label}` : label}>
             <h3 className="week-day-title">
-              <button type="button" className="week-day-link" onClick={() => onOpenDay(date)} aria-label={`Ver el día ${label}`}>
+              <button
+                type="button"
+                className="week-day-link"
+                onClick={() => onOpenDay(date)}
+                aria-label={`Ver el día ${label}${date === today ? " (hoy)" : ""}`}
+                aria-current={date === today ? "date" : undefined}
+              >
+                {date === today && <span className="today-tag">Hoy</span>}
                 {label}
               </button>
               <span className="muted">{list.length || ""}</span>

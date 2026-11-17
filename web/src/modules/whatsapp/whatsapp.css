@@ -11,15 +11,17 @@
 .wa-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-xs) var(--space-md); margin-bottom: var(--space-md); }
 .wa-head .page-header { margin-bottom: 0; }
 .wa-tabs ul { display: flex; flex-wrap: wrap; gap: 2px; padding: 0; background: transparent; border: none; width: max-content; max-width: 100%; }
-.wa-tab { display: inline-flex; align-items: center; min-height: 34px; padding: 0 12px; border-radius: 8px; color: var(--text-secondary); font-size: var(--step--1); font-weight: 500; text-decoration: none; white-space: nowrap; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
+.wa-tab { display: inline-flex; align-items: center; min-height: var(--tap-h); padding: 0 12px; border-radius: 8px; color: var(--text-secondary); font-size: var(--step--1); font-weight: 500; text-decoration: none; white-space: nowrap; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
 .wa-tab:hover { color: var(--text); }
-.wa-tab.active { background: var(--surface-sunken); color: var(--text); box-shadow: 0 0 0 1px var(--border-strong); }
+.wa-tab.active { background: var(--ink); color: var(--on-ink); font-weight: 600; box-shadow: none; }
 
-.wa-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; padding: 1px 9px; border-radius: var(--radius-pill); background: var(--status-neutral-bg); color: var(--status-neutral); border: 1px solid transparent; white-space: nowrap; }
+.wa-chip { display: inline-flex; align-items: center; gap: 5px; font-size: var(--step--1); font-weight: 500; padding: 1px 9px; border-radius: var(--radius-pill); background: var(--status-neutral-bg); color: var(--status-neutral); border: 1px solid transparent; white-space: nowrap; }
 .wa-chip-warning { background: var(--warning-soft); color: var(--warning); border-color: transparent; }
+/* «Espera respuesta»: te espera una persona → resaltador. */
+.wa-chip-waiting { background: var(--highlight); color: var(--on-highlight); border-color: transparent; font-weight: 600; }
 .wa-chip-info { background: var(--status-confirmed-bg); color: var(--status-confirmed); border-color: transparent; }
 .wa-chip-danger { background: var(--danger-soft); color: var(--danger); border-color: transparent; }
-.wa-mode { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; padding: 1px 0; white-space: nowrap; color: var(--text-tertiary); }
+.wa-mode { display: inline-flex; align-items: center; gap: 5px; font-size: var(--step--1); font-weight: 500; padding: 1px 0; white-space: nowrap; color: var(--text-tertiary); }
 .wa-mode-human { color: var(--status-pending); }
 .wa-chat-meta .wa-mode-bot { color: var(--accent); }
 .wa-empty-note { padding: var(--space-xs) 0; }
@@ -32,32 +34,33 @@
 .wa-search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; }
 .wa-search .input { padding-left: 38px; }
 .wa-filters, .wa-range { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
-.wa-filter { flex-shrink: 0; min-height: 32px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border-strong); background: transparent; color: var(--text-secondary); font-size: var(--step--1); font-weight: 500; }
+.wa-filter { flex-shrink: 0; min-height: var(--tap-h); padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border-control); background: transparent; color: var(--text-secondary); font-size: var(--step--1); font-weight: 500; }
 .wa-filter:hover { color: var(--text); background: var(--hover); }
-/* Filtro elegido: como el botón principal (blanco en oscuro, tinta en claro). */
-.wa-filter.active { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
+/* Filtro elegido: el estado «elegido» único (tinta llena). */
+.wa-filter.active { background: var(--ink); border-color: var(--ink); color: var(--on-ink); font-weight: 600; }
 .wa-push-button { align-self: flex-start; }
 .wa-list-body { position: relative; flex: 1; min-height: 0; overflow-y: auto; }
 .wa-list-body > .empty-state { border: none; border-radius: 0; }
 
 .wa-row { position: relative; display: flex; gap: var(--space-sm); padding: 13px var(--space-md); border-bottom: 1px solid var(--border); color: var(--text); text-decoration: none; min-height: 72px; transition: background .12s; }
 .wa-row:hover { background: var(--hover); }
-/* Espera a una persona: filete ámbar a la izquierda que late (quieto con reduced-motion). */
-.wa-row.waiting::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--status-pending-dot); animation: blink 1.8s ease-in-out infinite; }
+/* Espera a una persona: el trazo del resaltador a la izquierda (quieto: el resaltador ya
+   llama la atención; nada parpadea). */
+.wa-row.waiting::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--highlight); box-shadow: 1px 0 0 color-mix(in srgb, var(--on-highlight) 25%, transparent); }
 .wa-row.active { background: var(--accent-soft); }
 @media (prefers-reduced-motion: reduce) { .wa-row.waiting::before { animation: none; } }
 .wa-row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.wa-avatar { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-family: var(--font-display); font-size: 13px; font-weight: 600; }
+.wa-avatar { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-family: var(--font-display); font-size: 13px; font-weight: 700; }
 .wa-avatar-sm { width: 40px; height: 40px; }
 .wa-row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .wa-row-line { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-xs); min-width: 0; }
 .wa-row-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wa-row-time { flex-shrink: 0; font-size: 12px; color: var(--text-3); }
+.wa-row-time { flex-shrink: 0; font-size: var(--step--1); color: var(--text-3); }
 .wa-row.unread .wa-row-time { color: var(--accent); font-weight: 600; }
 .wa-row-preview { display: flex; align-items: center; gap: 4px; min-width: 0; font-size: var(--step--1); color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wa-row-preview svg { flex-shrink: 0; color: var(--text-3); }
 .wa-row.unread .wa-row-preview { color: var(--text); font-weight: 600; }
-.wa-unread { display: inline-grid; place-items: center; flex-shrink: 0; min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--radius-pill); background: var(--accent); color: var(--accent-fg); font-size: 11px; font-weight: 600; }
+.wa-unread { display: inline-grid; place-items: center; flex-shrink: 0; min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--radius-pill); background: var(--accent); color: var(--accent-fg); font-size: var(--step--1); font-weight: 600; }
 .wa-row-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
 .wa-more { display: flex; justify-content: center; padding: var(--space-md); }
 
@@ -80,25 +83,25 @@
 .wa-chat-actions { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-left: auto; }
 .wa-chat-actions .btn { min-height: 40px; }
 
-.wa-chat-scroll { position: relative; flex: 1; min-height: 0; overflow-y: auto; padding: 22px var(--space-lg); display: flex; flex-direction: column; background: radial-gradient(60% 50% at 80% 0%, var(--accent-soft), transparent 70%); }
+.wa-chat-scroll { position: relative; flex: 1; min-height: 0; overflow-y: auto; padding: 22px var(--space-lg); display: flex; flex-direction: column; background: var(--surface-muted); }
 .wa-chat-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .wa-older { display: flex; justify-content: center; margin-bottom: var(--space-sm); }
 .wa-chat-empty { margin: auto; text-align: center; }
 .wa-messages { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
 .wa-day { display: flex; justify-content: center; margin: var(--space-sm) 0 4px; }
-.wa-day span { font-size: 12px; font-weight: 500; color: var(--text-tertiary); background: var(--surface-sunken); border: 1px solid var(--border); border-radius: var(--radius-pill); padding: 2px 10px; }
+.wa-day span { font-size: var(--step--1); font-weight: 500; color: var(--text-tertiary); background: var(--surface-sunken); border: 1px solid var(--border); border-radius: var(--radius-pill); padding: 2px 10px; }
 .wa-msg { display: flex; }
 .wa-msg-bot, .wa-msg-human { justify-content: flex-end; }
 .wa-bubble { max-width: min(62%, 560px); display: flex; flex-direction: column; gap: 4px; padding: 9px 13px 8px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface-sunken); color: var(--text); }
 .wa-msg-client .wa-bubble { border-top-left-radius: 5px; }
 .wa-msg-bot .wa-bubble { background: var(--accent-soft); border-color: var(--accent-line); border-top-right-radius: 5px; }
-.wa-msg-human .wa-bubble { background: var(--status-pending-bg); border-color: color-mix(in srgb, var(--status-pending-dot) 35%, transparent); border-top-right-radius: 5px; }
-/* Quién escribió (agente o persona): etiqueta en mono y mayúsculas. */
-.wa-bubble-author { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; }
+.wa-msg-human .wa-bubble { background: var(--surface-sunken); border-color: var(--border-strong); border-top-right-radius: 5px; }
+/* Quién escribió (agente o persona): etiqueta chica en 600, en la letra del cuerpo. */
+.wa-bubble-author { display: inline-flex; align-items: center; gap: 5px; font-size: var(--step--1); font-weight: 600; }
 .wa-msg-bot .wa-bubble-author { color: var(--bot); }
-.wa-msg-human .wa-bubble-author { color: var(--human); }
+.wa-msg-human .wa-bubble-author { color: var(--text); }
 .wa-bubble-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; }
-.wa-bubble-time { align-self: flex-end; font-size: 11px; color: var(--text-tertiary); }
+.wa-bubble-time { align-self: flex-end; font-size: var(--step--1); color: var(--text-tertiary); }
 /* Texto que acompaña a un audio: debajo, separado por una línea fina. */
 .wa-media-audio + .wa-bubble-text { margin-top: 2px; padding-top: 6px; border-top: 1px solid var(--border); font-size: var(--step--1); color: var(--text-secondary); }
 .wa-media-link { display: block; }
@@ -140,7 +143,7 @@
 .wa-chart-frame svg:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
 .wa-chart-grid { stroke: var(--border); stroke-width: 1; }
 .wa-chart-baseline { stroke: var(--border-strong); stroke-width: 1; }
-.wa-chart-axis { fill: var(--text-2); font-size: 11px; font-family: var(--font-body); font-variant-numeric: tabular-nums; }
+.wa-chart-axis { fill: var(--text-2); font-size: 12px; font-family: var(--font-body); font-variant-numeric: tabular-nums; }
 .wa-chart-conversations { fill: var(--text-3); }
 .wa-chart-bookings { fill: var(--accent); stroke: var(--surface); stroke-width: 1; }
 .wa-chart-hover { fill: var(--surface-2); }
@@ -154,7 +157,7 @@
 .wa-chart-table table { width: 100%; border-collapse: collapse; font-size: var(--step--1); margin-top: var(--space-xs); }
 .wa-chart-table th, .wa-chart-table td { padding: 6px 8px; border-bottom: 1px solid var(--border-2); text-align: left; }
 .wa-chart-table td { text-align: right; }
-.wa-chart-table thead th { font-size: 12px; font-weight: 500; color: var(--text-3); }
+.wa-chart-table thead th { font-size: var(--step--1); font-weight: 500; color: var(--text-3); }
 .wa-chart-table thead th:not(:first-child) { text-align: right; }
 .wa-chart-table tbody th { font-weight: 600; color: var(--text); }
 
@@ -166,7 +169,7 @@
 .wa-card-head > div { flex: 1 1 320px; min-width: 0; }
 .wa-textarea { min-height: 88px; resize: vertical; line-height: 1.5; }
 .wa-textarea-sm { min-height: 60px; resize: vertical; line-height: 1.45; }
-.wa-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92rem; }
+.wa-mono { font-family: var(--font-mono); font-size: .92rem; }
 
 .wa-kb, .wa-faq { display: flex; flex-direction: column; gap: var(--space-sm); margin-top: var(--space-sm); }
 .wa-kb-section { border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-sm); min-width: 0; background: var(--surface-2); }

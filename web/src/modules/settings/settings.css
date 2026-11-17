@@ -81,7 +81,7 @@ fieldset.field > legend { font-size: var(--step--1); font-weight: 600; color: va
 .plan-module { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs) var(--space-sm); border: 1px solid var(--border); border-radius: var(--radius-sm); min-width: 0; font-size: var(--step--1); }
 .plan-module svg { flex-shrink: 0; color: var(--accent-strong); }
 .plan-module-name { flex: 1; min-width: 0; font-weight: 600; overflow-wrap: anywhere; }
-.plan-module-state { color: var(--text-2); font-size: 12px; white-space: nowrap; }
+.plan-module-state { color: var(--text-2); font-size: var(--step--1); white-space: nowrap; }
 .plan-module.off { background: var(--surface-2); }
 .plan-module.off svg, .plan-module.off .plan-module-name { color: var(--text-2); }
 .plan-usage { display: flex; flex-direction: column; gap: var(--space-md); }
@@ -93,7 +93,7 @@ fieldset.field > legend { font-size: var(--step--1); font-weight: 600; color: va
 .plan-usage-bar { height: 8px; border-radius: var(--radius-pill); background: var(--surface-2); overflow: hidden; }
 .plan-usage-bar > span { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
 .plan-usage-bar.full > span { background: var(--warning); }
-.plan-usage-note { font-size: 12px; color: var(--text-2); }
+.plan-usage-note { font-size: var(--step--1); color: var(--text-2); }
 .plan-quota-hint { font-size: var(--step--1); color: var(--text-2); margin-right: auto; align-self: center; }
 .plan-quota-hint.full { color: var(--warning); font-weight: 600; }
 .plan-quota-hint a { color: var(--accent-strong); font-weight: 600; }
@@ -127,12 +127,13 @@ fieldset.field > legend { font-size: var(--step--1); font-weight: 600; color: va
 .brand-preset:disabled { opacity: .55; cursor: not-allowed; }
 .brand-preset-preview { display: flex; height: 64px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); background: color-mix(in oklab, var(--preset-menu) 14%, var(--bg)); }
 .brand-preset-menu { display: flex; flex-direction: column; gap: 5px; width: 34%; padding: 8px 6px; background: var(--preset-menu); }
-.brand-preset-menu i { display: block; height: 5px; border-radius: 3px; background: rgba(140,140,150,.4); }
+.brand-preset-menu i { display: block; height: 5px; border-radius: 3px; background: color-mix(in srgb, currentColor 30%, transparent); }
+.brand-preset-menu { color: var(--text-tertiary); border-right: 1px solid var(--border); }
 .brand-preset-menu i:first-child { background: var(--preset-accent); opacity: .9; }
 .brand-preset-body { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 8px; }
-.brand-preset-bar { display: block; height: 18px; border-radius: 4px; background: linear-gradient(90deg, var(--preset-accent) 0 38%, color-mix(in oklab, var(--preset-accent) 30%, transparent) 38%); opacity: .85; }
+.brand-preset-bar { display: block; height: 18px; border-radius: 4px; background: color-mix(in srgb, var(--preset-accent) 12%, #fff); box-shadow: inset 38px 0 0 var(--preset-accent); }
 .brand-preset-button { display: block; align-self: flex-end; width: 42%; height: 12px; border-radius: 4px; background: var(--preset-accent); }
 .brand-preset-text { display: flex; flex-direction: column; gap: 1px; padding: 0 2px 2px; }
 .brand-preset-name { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: var(--step--1); }
-.brand-preset-desc { font-size: 12px; color: var(--text-tertiary); }
-.brand-preset-tag { padding: 0 6px; border-radius: var(--radius-pill); background: var(--accent-soft); color: var(--accent); font-size: 10.5px; font-weight: 600; line-height: 16px; }
+.brand-preset-desc { font-size: var(--step--1); color: var(--text-tertiary); }
+.brand-preset-tag { padding: 0 6px; border-radius: var(--radius-pill); background: var(--accent-soft); color: var(--accent); font-size: var(--step--1); font-weight: 600; line-height: 16px; }

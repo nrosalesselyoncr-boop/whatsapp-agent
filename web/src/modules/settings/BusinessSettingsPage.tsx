@@ -1,7 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useState, type CSSProperties, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { errorMessage } from "../../lib/api";
-import { BRAND_PRESETS } from "../../lib/branding";
+import { BRAND_PRESETS, brandAccentFor, tintFor } from "../../lib/branding";
 import { DEFAULT_TERMINOLOGY, type Terminology } from "../../lib/contract";
 import { ME_QUERY_KEY, useSession } from "../../app/session";
 import ErrorState from "../../ui/ErrorState";
@@ -250,8 +250,8 @@ function BusinessForm({ settings, canEdit }: { settings: BusinessSettings; canEd
           onPick={(accentColor, headerColor) => setForm((f) => ({ ...f, accentColor, headerColor }))}
         />
         <div className="form-grid">
-          <ColorField label="Color principal" hint="Botones principales, ítem activo del menú, enlaces y gráficos. Sin color del menú, también tiñe apenas el fondo del panel." value={form.accentColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.accentColor")} onChange={(v) => set("accentColor", v)} />
-          <ColorField label="Color del menú" hint="Fondo del menú lateral y de la barra de abajo en el celular; también tiñe apenas el fondo, las tarjetas y los bordes del panel." value={form.headerColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.headerColor")} onChange={(v) => set("headerColor", v)} />
+          <ColorField label="Color principal" hint="Botones principales, ítem activo del menú, enlaces y gráficos. Sin color del menú, también tiñe apenas el fondo del panel." value={form.accentColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.accentColor")} pickerDefault={DEFAULT_ACCENT_PICKER} onChange={(v) => set("accentColor", v)} />
+          <ColorField label="Color del menú" hint="Fondo del menú lateral y de la barra de abajo en el celular; también tiñe apenas el fondo, las tarjetas y los bordes del panel." value={form.headerColor} disabled={disabled || !settings.brandingEditable} error={fieldError("branding.headerColor")} pickerDefault={DEFAULT_MENU_PICKER} onChange={(v) => set("headerColor", v)} />
         </div>
         <TextField
           label="Logo (URL https)"
@@ -302,7 +302,7 @@ function BrandPresets({
 }) {
   const same = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
   const options = [
-    { id: "original", name: "Original", description: "Menta de Selyon", accentColor: "", headerColor: "", suggested: false },
+    { id: "original", name: "Original", description: "Pluma cobalto de Selyon", accentColor: "", headerColor: "", suggested: false },
     ...BRAND_PRESETS.map((p) => ({ ...p, suggested: p.industries.includes(industry) })),
   ];
   return (
@@ -319,7 +319,7 @@ function BrandPresets({
               className="brand-preset"
               aria-pressed={selected}
               onClick={() => onPick(o.accentColor, o.headerColor)}
-              style={{ ["--preset-accent" as string]: o.accentColor || "var(--accent-default)", ["--preset-menu" as string]: o.headerColor || "var(--panel-default)" }}
+              style={presetPreviewStyle(o.accentColor, o.headerColor)}
             >
               <span className="brand-preset-preview" aria-hidden="true">
                 <span className="brand-preset-menu">
@@ -347,16 +347,30 @@ function BrandPresets({
   );
 }
 
-/** Valor inicial de la paleta cuando el campo está vacío (el acento default de global.css). */
-const DEFAULT_PICKER_COLOR = "#4fd1b3";
+/**
+ * Miniatura de un tema: el acento YA AJUSTADO como se va a ver en el claro (no el color
+ * crudo) y el menú: el elegido o, si está vacío, el papel del panel teñido por la marca.
+ */
+function presetPreviewStyle(accentColor: string, headerColor: string): CSSProperties {
+  if (!accentColor) return { ["--preset-accent" as string]: "var(--accent-default)", ["--preset-menu" as string]: headerColor || "var(--panel-default)" };
+  const tint = tintFor(headerColor || accentColor, "light");
+  return {
+    ["--preset-accent" as string]: brandAccentFor(accentColor, "light", tint),
+    ["--preset-menu" as string]: headerColor || `color-mix(in oklab, ${tint} 18%, #eef1f0)`,
+  };
+}
 
-function ColorField({ label, hint, value, disabled, error, onChange }: { label: string; hint: string; value: string; disabled: boolean; error?: string; onChange: (v: string) => void }) {
+/** Valor inicial de cada paleta cuando el campo está vacío (los defaults de global.css). */
+const DEFAULT_ACCENT_PICKER = "#2747d1";
+const DEFAULT_MENU_PICKER = "#eef1f0";
+
+function ColorField({ label, hint, value, disabled, error, pickerDefault, onChange }: { label: string; hint: string; value: string; disabled: boolean; error?: string; pickerDefault: string; onChange: (v: string) => void }) {
   return (
     <div className="color-input">
       <div className="color-input-text">
         <TextField label={label} hint={hint} value={value} placeholder="#rrggbb (vacío = el de la plataforma)" disabled={disabled} maxLength={7} error={error} onChange={(e) => onChange(e.target.value.trim())} />
       </div>
-      <input type="color" aria-label={`${label}: elegir en la paleta`} value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : DEFAULT_PICKER_COLOR} disabled={disabled} onChange={(e) => onChange(e.target.value)} />
+      <input type="color" aria-label={`${label}: elegir en la paleta`} value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : pickerDefault} disabled={disabled} onChange={(e) => onChange(e.target.value)} />
     </div>
   );
 }

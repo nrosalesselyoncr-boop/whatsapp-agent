@@ -61,8 +61,15 @@ export default function MonthView({ days, month, timeZone, appointments, staffCo
               (date < today ? " month-day-past" : "");
             return (
               <div key={date} className={cls} role="gridcell">
-                <button type="button" className="month-day-link" onClick={() => onOpenDay(date)} aria-label={`Ver el día ${label}, ${count}`}>
+                <button
+                  type="button"
+                  className="month-day-link"
+                  onClick={() => onOpenDay(date)}
+                  aria-label={`Ver el día ${label}${date === today ? " (hoy)" : ""}, ${count}`}
+                  aria-current={date === today ? "date" : undefined}
+                >
                   <span className="month-day-num tnum">{Number(date.slice(8))}</span>
+                  {date === today && <span className="today-tag">Hoy</span>}
                 </button>
                 {list.length > 0 && (
                   <ul className="month-list">

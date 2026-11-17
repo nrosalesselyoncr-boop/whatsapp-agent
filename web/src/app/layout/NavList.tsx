@@ -16,15 +16,17 @@ interface Props {
   /**
    * Contador al final de un ítem abierto (p. ej. conversaciones abiertas en WhatsApp IA). Lo
    * que devuelve va dentro del enlace; el número es aria-hidden para no cambiar el nombre del
-   * enlace y se anuncia como descripción (`nav-count-<sección>`, ver NavCount).
+   * enlace y se anuncia como descripción (`<badgeIdPrefix>-<sección>`, ver WaitingCount).
    */
   badge?: (id: SectionId) => ReactNode;
   /** Tamaño de los íconos (18 en el menú lateral; 20 en la barra inferior y la hoja "Más"). */
   iconSize?: number;
+  /** Prefijo del id de la descripción del contador (único por lista montada). */
+  badgeIdPrefix?: string;
 }
 
 /** Lista de ítems del menú: enlace si está abierto, botón con candado si es del plan Pro. */
-export default function NavList({ items, itemClassName, onNavigate, labelledBy, trailing, badge, iconSize = 20 }: Props) {
+export default function NavList({ items, itemClassName, onNavigate, labelledBy, trailing, badge, iconSize = 20, badgeIdPrefix = "nav-count" }: Props) {
   const { showUpsell } = useUpsell();
   return (
     <ul className="nav-list" aria-labelledby={labelledBy}>
@@ -37,7 +39,7 @@ export default function NavList({ items, itemClassName, onNavigate, labelledBy, 
                 to={section.path}
                 end={section.path === "/"}
                 className={({ isActive }) => itemClassName + (isActive ? " active" : "")}
-                aria-describedby={count ? `nav-count-${section.id}` : undefined}
+                aria-describedby={count ? `${badgeIdPrefix}-${section.id}` : undefined}
                 onClick={onNavigate}
               >
                 <Icon id={section.icon} size={iconSize} />

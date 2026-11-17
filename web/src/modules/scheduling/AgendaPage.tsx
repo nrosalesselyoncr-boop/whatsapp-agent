@@ -4,6 +4,7 @@ import { ALL_LOCATIONS, useActiveLocation } from "../../app/location";
 import { capitalize, getSection, terminologyOf } from "../../app/navigation";
 import { useSession } from "../../app/session";
 import { errorMessage } from "../../lib/api";
+import { readStorage, writeStorage } from "../../lib/storage";
 import EmptyState from "../../ui/EmptyState";
 import ErrorState from "../../ui/ErrorState";
 import Icon from "../../ui/Icons";
@@ -21,11 +22,24 @@ import "./agenda.css";
 
 type View = "month" | "week" | "day";
 const RE_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const VIEW_KEY = "selyon.agenda.view";
+const isView = (v: string | null): v is View => v === "month" || v === "week" || v === "day";
 
 /**
- * Agenda (/agenda): mes (la vista por defecto), semana y día con carriles por profesional, de
- * la sucursal activa (con "Todas" se elige una acá). URL enlazable:
- * `?date=AAAA-MM-DD&view=week|day&appointment=<id>` (sin `view` = mes);
+ * Vista sin `view` en la URL: la última que se usó en este navegador; la primera vez, mes en
+ * pantallas grandes y DÍA en el celular (la agenda de papel abierta en la página de hoy: en
+ * el mes de 375 px los nombres no entran).
+ */
+function defaultView(): View {
+  const saved = readStorage(VIEW_KEY);
+  if (isView(saved)) return saved;
+  return typeof window !== "undefined" && window.matchMedia?.("(max-width: 767px)").matches ? "day" : "month";
+}
+
+/**
+ * Agenda (/agenda): mes, semana y día con carriles por profesional, de la sucursal activa
+ * (con "Todas" se elige una acá). URL enlazable:
+ * `?date=AAAA-MM-DD&view=month|week|day&appointment=<id>` (sin `view`: ver defaultView);
  * `?new=1` abre "Nueva cita" (lo usa "+ Nuevo → Cita"). El profesional ve solo su carril.
  */
 export default function AgendaPage() {
@@ -42,7 +56,9 @@ export default function AgendaPage() {
   const location = locations.find((l) => l.id === (pinned ?? params.get("loc"))) ?? locations[0] ?? null;
   const tz = location?.timezone ?? me.business.timezone;
   const rawView = params.get("view");
-  const view: View = rawView === "week" || rawView === "day" ? rawView : "month";
+  const [fallbackView] = useState(defaultView);
+  const view: View = isView(rawView) ? rawView : fallbackView;
+  useEffect(() => writeStorage(VIEW_KEY, view), [view]);
   const rawDate = params.get("date");
   const date = rawDate && RE_DATE.test(rawDate) ? rawDate : todayIn(tz);
   const days = view === "month" ? monthDates(date) : view === "week" ? weekDates(date) : [date];
@@ -108,7 +124,9 @@ export default function AgendaPage() {
   const header = (
     <PageHeader
       title={title}
-      subtitle={location ? `${capitalize(t.location)}: ${location.name}` : undefined}
+      // Con «Todas» arriba, la agenda igual muestra UNA sucursal: el subtítulo lo dice para que
+      // no parezca que el selector de arriba y el de acá se contradicen.
+      subtitle={location ? (pinned || locations.length < 2 ? `${capitalize(t.location)}: ${location.name}` : `${capitalize(t.location)}: ${location.name}. La agenda muestra una ${t.location} a la vez; elegila acá.`) : undefined}
     >
       {canCreate && location && (
         <button type="button" className="btn btn-primary" onClick={() => openNew()}>
@@ -202,7 +220,7 @@ export default function AgendaPage() {
         <div className="agenda-options">
           {!pinned && locations.length > 1 && (
             <label className="agenda-location">
-              <span className="field-label">{capitalize(t.location)}</span>
+              <span className="field-label">{capitalize(t.location)} de la agenda</span>
               <select className="input select" value={location.id} onChange={(e) => update({ loc: e.target.value })}>
                 {locations.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -213,7 +231,7 @@ export default function AgendaPage() {
             </label>
           )}
           <div className="segmented" role="group" aria-label="Vista">
-            <button type="button" aria-pressed={view === "month"} onClick={() => update({ view: null })}>
+            <button type="button" aria-pressed={view === "month"} onClick={() => update({ view: "month" })}>
               Mes
             </button>
             <button type="button" aria-pressed={view === "week"} onClick={() => update({ view: "week" })}>

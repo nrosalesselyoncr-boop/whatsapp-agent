@@ -148,7 +148,7 @@ export default function PaymentsPage() {
                     {canRefund && (
                       <td className="sales-col-action">
                         {refundable > 0 && (
-                          <button type="button" className="btn btn-secondary btn-small" onClick={() => setRefunding(p)}>
+                          <button type="button" className="btn btn-ghost-danger btn-small" onClick={() => setRefunding(p)}>
                             Devolver<span className="visually-hidden"> el {KIND_LABEL[p.kind].toLowerCase()} de {p.client?.name}</span>
                           </button>
                         )}
