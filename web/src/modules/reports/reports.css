@@ -75,9 +75,19 @@
 .ho-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--space-md); margin-bottom: var(--space-md); align-items: start; }
 .ho-alerts { display: flex; flex-direction: column; margin: 0 calc(-1 * var(--space-card)); }
 .ho-alert { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); padding: 12px var(--space-card); border-top: 1px solid var(--border-subtle); font-size: var(--step-0); font-weight: 500; text-decoration: none; color: var(--text); min-height: 48px; transition: background var(--dur-fast) var(--ease); }
-.ho-alert:hover { background: var(--surface-muted); }
-.ho-alert-count { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: var(--radius-sm); background: var(--status-pending-bg); color: var(--status-pending); font-size: 12px; font-weight: 600; }
+.ho-alert:hover { background: var(--hover); }
+.ho-alert-count { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 9px; border-radius: var(--radius-pill); background: var(--status-pending-bg); color: var(--status-pending); font-size: 12px; font-weight: 600; }
+.ho-alert-count.ho-alert-risk { background: var(--status-risk-bg); color: var(--status-risk); }
 .ho-alert-count.zero { background: var(--status-neutral-bg); color: var(--status-neutral); }
+/* Indicadores del Inicio: cifra grande y apretada; reparto de las citas en chips. */
+.ho .sales-kpi-value { font-size: 30px; line-height: 34px; letter-spacing: -.04em; }
+.ho-kpi-split { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.ho-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-sm); }
+.ho-card-head .card-title { margin-bottom: 0; }
+.ho-total { font-size: 22px; font-weight: 600; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.ho-total .muted { font-size: var(--step--1); font-weight: 400; letter-spacing: 0; }
+/* Las barras de ingresos suben al cargar (quietas con reduced-motion, ver global.css). */
+.ho-revenue .rp-bar { transform-box: fill-box; transform-origin: bottom; animation: rise 1s var(--ease) both; }
 .ho-risk { display: flex; flex-direction: column; gap: 2px; padding: 4px var(--space-card) 8px; }
 .ho-risk li { display: flex; justify-content: space-between; gap: var(--space-sm); font-size: var(--step--1); padding: 6px 0; border-bottom: 1px solid var(--border-subtle); }
 .ho-risk li:last-child { border-bottom: none; }

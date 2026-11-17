@@ -19,8 +19,9 @@
 .card.sales-kpi { display: flex; flex-direction: column; gap: 8px; padding: var(--space-card); }
 .sales-kpi-label { font-size: var(--step--1); font-weight: 500; color: var(--text-secondary); }
 .sales-kpi-value { font-size: var(--step-4); line-height: 32px; font-weight: 600; letter-spacing: -.015em; color: var(--text); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.card.sales-kpi-strong { border-color: var(--border); background: var(--surface); }
-.sales-kpi-strong .sales-kpi-value { color: var(--status-confirmed); }
+/* El indicador principal (cobrado): borde y brillo de acento, cifra en el acento (ver .card-strong). */
+.card.sales-kpi-strong { border-color: var(--accent-line); background: var(--card-bg); box-shadow: var(--accent-glow); }
+.sales-kpi-strong .sales-kpi-value { color: var(--accent); }
 
 /* `position: relative`: lo absoluto de adentro (textos solo para lectores de pantalla) queda
    dentro del scroll de la tarjeta y no agranda la página. */

@@ -4,6 +4,7 @@ import { usePush } from "../../app/push";
 import { errorMessage } from "../../lib/api";
 import EmptyState from "../../ui/EmptyState";
 import ErrorState from "../../ui/ErrorState";
+import { avatarToneClass } from "../../ui/avatarTone";
 import Icon from "../../ui/Icons";
 import { avatarText, clientLabel, formatAppointment, formatListTime, MODE_LABEL } from "./format";
 import { useConversationList, type ConversationFilter, type ConversationSummary } from "./whatsappApi";
@@ -143,7 +144,7 @@ function ConversationRow({ conversation: c, active, search, timeZone }: { conver
       className={"wa-row" + (active ? " active" : "") + (waiting ? " waiting" : "") + (c.unread > 0 ? " unread" : "")}
       aria-current={active ? "page" : undefined}
     >
-      <span className="wa-avatar" aria-hidden="true">
+      <span className={`wa-avatar ${avatarToneClass(c.client.id)}`} aria-hidden="true">
         {avatarText(c.client)}
       </span>
       <span className="wa-row-main">

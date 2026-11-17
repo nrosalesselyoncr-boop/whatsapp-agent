@@ -1,12 +1,14 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   Sistema de diseño del panel (Selyon CRM) — dirección "Banca privada": sobria, exacta,
-   con cifras impecables. Neutrales cálidos (piedra, no azulados), tinta casi negra para
-   la acción principal y el verde de Selyon solo como acento (enlaces, foco, selección).
+   Sistema de diseño del panel (Selyon CRM) — dirección de la landing: oscuro por defecto
+   (fondo casi negro, superficies grafito, bordes finos), un solo acento (menta) y etiquetas
+   chicas en mono y mayúsculas. Tarjetas con un degradado sutil y borde fino; el botón
+   principal es blanco sobre oscuro. Hay un tema claro equivalente (selector en el menú de
+   usuario, lib/theme.ts) con [data-theme="light"] en <html>.
 
    Tokens semánticos: el código usa el nombre (--surface), nunca el hex. Claro, oscuro y
    la marca de cada negocio cambian sin tocar componentes. White-label: el color del
-   negocio reemplaza SOLO --accent (lib/branding.ts lo ajusta a contraste AA); tinta,
-   neutrales y estados nunca cambian. Modo oscuro con [data-theme="dark"] en <html>.
+   negocio reemplaza SOLO --accent (lib/branding.ts lo ajusta a contraste AA en cada tema);
+   tinta, neutrales y estados nunca cambian.
 
    Los nombres viejos (--text-2, --surface-2, --elevated…) quedan como alias de los nuevos
    para que los módulos sigan funcionando; el código nuevo usa los nombres semánticos.
@@ -19,11 +21,9 @@
 @font-face{font-family:'Geist Mono';font-style:normal;font-weight:100 900;font-display:swap;src:url('/panel/fonts/geist-mono.woff2') format('woff2');}
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   TOKENS — modo claro (default)
+   TOKENS — lo que no depende del tema
    ══════════════════════════════════════════════════════════════════════════════ */
-:root, [data-theme="light"] {
-  color-scheme: light;
-
+:root {
   --font-body: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: var(--font-body);
   --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
@@ -32,56 +32,10 @@
   --step--1: 13px; --step-0: 14px; --step-1: 15px; --step-2: 18px;
   --step-3: 24px; --step-4: 28px; --step-5: 32px;
 
-  /* Superficies */
-  --bg: #F6F6F4;
-  --surface: #FFFFFF;
-  --surface-sunken: #F0F0ED;
-  --surface-overlay: #FFFFFF;
-  --surface-muted: #FAFAF8;
-  --border: #E4E4E0;
-  --border-subtle: #F0F0ED;
-  --border-strong: #D2D2CC;
+  /* Radios: xs checkbox · sm badges · md botones/inputs · lg tarjetas chicas · xl tarjetas y modales */
+  --radius-xs: 4px; --radius-sm: 6px; --radius-md: 9px; --radius-lg: 12px; --radius-xl: 16px; --radius-pill: 999px;
 
-  /* Texto */
-  --text: #16181D;
-  --text-secondary: #555A64;
-  --text-tertiary: #646973;
-
-  /* Acción y marca. --brand-accent la pone lib/branding.ts (ya ajustada a contraste). */
-  --ink: #16181D;
-  --on-ink: #FFFFFF;
-  --ink-hover: #2B2E35;
-  --accent: var(--brand-accent-light, #0B7A68);
-  --on-accent: var(--brand-on-accent-light, #FFFFFF);
-  --accent-hover: color-mix(in srgb, var(--accent) 86%, #000);
-  --accent-soft: color-mix(in srgb, var(--accent) 12%, var(--surface));
-  --accent-line: color-mix(in srgb, var(--accent) 30%, var(--surface));
-  --focus-ring: color-mix(in srgb, var(--accent) 55%, transparent);
-
-  /* Estados (texto / fondo / punto): confirmada · pendiente · riesgo · completada · neutro */
-  --status-confirmed: #0B6B5B; --status-confirmed-bg: #E2F3EE; --status-confirmed-dot: #0B7A68;
-  --status-pending: #855600;   --status-pending-bg: #FBF0D9;   --status-pending-dot: #C98A1A;
-  --status-risk: #B0341C;      --status-risk-bg: #FBE6E1;      --status-risk-dot: #C2361F;
-  --status-done: #3A4C7A;      --status-done-bg: #E8ECF6;      --status-done-dot: #5B6FA8;
-  --status-neutral: #5E626B;   --status-neutral-bg: #F0F0ED;   --status-neutral-dot: #A3A7B0;
-
-  /* Gráficos: una serie con color; la comparación, gris punteado */
-  --chart-1: var(--accent);
-  --chart-2: #5B6FA8;
-  --chart-3: #C98A1A;
-  --chart-compare: #A3A7B0;
-  --chart-grid: #F0F0ED;
-
-  /* Radios: xs checkbox · sm badges · md botones/inputs · lg tarjetas · xl modales */
-  --radius-xs: 4px; --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px; --radius-xl: 16px; --radius-pill: 999px;
-
-  /* Sombras: xs inputs · sm tarjetas · md menús · lg modales */
-  --shadow-xs: 0 1px 2px rgba(16,18,24,.05);
-  --shadow-sm: 0 1px 2px rgba(16,18,24,.04), 0 1px 3px rgba(16,18,24,.07);
-  --shadow-md: 0 2px 4px rgba(16,18,24,.04), 0 8px 16px -4px rgba(16,18,24,.12);
-  --shadow-lg: 0 24px 48px -12px rgba(16,18,24,.28);
-
-  /* Movimiento: nada rebota ni gira */
+  /* Movimiento: nada rebota ni gira; con prefers-reduced-motion se apaga (ver BASE) */
   --ease: cubic-bezier(.2, .8, .2, 1);
   --dur-fast: 120ms; --dur: 200ms; --dur-slow: 280ms;
 
@@ -95,12 +49,6 @@
   --sidebar-width: 248px;
   --topbar-height: 60px;
   --bottom-nav-height: 64px;
-
-  /* Panel de marca del acceso y del superadmin (tinta; el color de encabezado del negocio lo pisa) */
-  --header-bg: var(--brand-header-bg, #16181D);
-  --header-fg: var(--brand-header-fg, #ECEDEF);
-  --header-muted: color-mix(in srgb, var(--header-fg) 66%, transparent);
-  --header-hover: color-mix(in srgb, var(--header-fg) 10%, transparent);
 
   /* ── Alias de los nombres anteriores (los módulos los siguen usando) ── */
   --surface-2: var(--surface-sunken);
@@ -122,52 +70,162 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   TOKENS — modo oscuro (intencional, no un claro invertido): la elevación se marca con
-   superficie más clara + borde; sombras solo en lo que flota.
+   TOKENS — tema oscuro (default). La elevación se marca con superficie más clara + borde;
+   sombras solo en lo que flota. Los fondos de estado son opacos (mezcla sobre --surface)
+   para que las líneas de la agenda no se transparenten.
    ══════════════════════════════════════════════════════════════════════════════ */
-[data-theme="dark"] {
+:root, [data-theme="dark"] {
   color-scheme: dark;
 
-  --bg: #0E0F12;
-  --surface: #16181C;
-  --surface-sunken: #1D2025;
-  --surface-overlay: #1F2227;
-  --surface-muted: #1A1C21;
-  --border: #272A30;
-  --border-subtle: #202328;
-  --border-strong: #353942;
+  /* Superficies */
+  --bg: #0A0B0D;
+  --panel: #0D0F12;               /* menú lateral */
+  --surface: #14161A;
+  --surface-sunken: #1A1D22;
+  --surface-overlay: #181A1F;
+  --surface-muted: #111317;
+  --card-bg: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+  --hover: rgba(255,255,255,.05);
+  --border: #23262D;
+  --border-subtle: #1C1F24;
+  --border-strong: #30343C;
 
-  --text: #ECEDEF;
-  --text-secondary: #A4A8B1;
-  --text-tertiary: #858A94;
+  /* Texto (terciario: AA también sobre --surface-sunken) */
+  --text: #F2F3F5;
+  --text-secondary: #A8ADB7;
+  --text-tertiary: #80858F;
 
-  --ink: #ECEDEF;
-  --on-ink: #0E0F12;
-  --ink-hover: #FFFFFF;
-  --accent: var(--brand-accent-dark, #3CC4A8);
-  --on-accent: var(--brand-on-accent-dark, #0E0F12);
-  --accent-hover: color-mix(in srgb, var(--accent) 78%, #fff);
-  --accent-soft: color-mix(in srgb, var(--accent) 14%, var(--surface));
-  --accent-line: color-mix(in srgb, var(--accent) 34%, var(--surface));
+  /* Acción y marca. --brand-accent-* lo pone lib/branding.ts (ya ajustado a contraste). */
+  --ink: #FFFFFF;
+  --on-ink: #0A0B0D;
+  --ink-hover: #E4E5E8;
+  --accent: var(--brand-accent-dark, #4FD1B3);
+  /* Defaults de la plataforma sin marca (miniatura "Original" de los temas de marca). */
+  --accent-default: #4FD1B3;
+  --panel-default: #0D0F12;
+  --on-accent: var(--brand-on-accent-dark, #06110E);
+  --accent-hover: color-mix(in srgb, var(--accent) 80%, #fff);
+  --accent-soft: color-mix(in srgb, var(--accent) 13%, transparent);
+  --accent-line: color-mix(in srgb, var(--accent) 34%, transparent);
+  --accent-glow: 0 0 60px -30px var(--accent-line);
+  --focus-ring: color-mix(in srgb, var(--accent) 60%, transparent);
 
-  --status-confirmed: #5ED6BB; --status-confirmed-bg: #14302A; --status-confirmed-dot: #3CC4A8;
-  --status-pending: #F0C060;   --status-pending-bg: #33280F;   --status-pending-dot: #E0A93E;
-  --status-risk: #FF8A72;      --status-risk-bg: #3A1D17;      --status-risk-dot: #FF8A72;
-  --status-done: #9DB0E8;      --status-done-bg: #1E2438;      --status-done-dot: #8EA0D8;
-  --status-neutral: #A4A8B1;   --status-neutral-bg: #1D2025;   --status-neutral-dot: #5E636D;
+  /* Estados (texto / fondo / punto): confirmada · pendiente · riesgo · completada · neutro */
+  --status-confirmed: #6FD9BF; --status-confirmed-bg: color-mix(in srgb, #4FD1B3 14%, #14161A); --status-confirmed-dot: #4FD1B3;
+  --status-pending: #F0BE62;   --status-pending-bg: color-mix(in srgb, #C98A1A 18%, #14161A);   --status-pending-dot: #E0A33A;
+  --status-risk: #F49A85;      --status-risk-bg: color-mix(in srgb, #C2361F 20%, #14161A);      --status-risk-dot: #F07F67;
+  --status-done: #A9B9EC;      --status-done-bg: color-mix(in srgb, #5B6FA8 24%, #14161A);      --status-done-dot: #8197D6;
+  --status-neutral: #A9AEB7;   --status-neutral-bg: #23262C;                                     --status-neutral-dot: #5E636D;
+  /* Cuarto tono (avatares, clientes nuevos) */
+  --tone-rose: #EDA6C3;        --tone-rose-bg: color-mix(in srgb, #C25A84 22%, #14161A);        --tone-rose-dot: #D77CA1;
 
-  --chart-2: #8EA0D8;
-  --chart-3: #E0A93E;
-  --chart-compare: #5E636D;
-  --chart-grid: #202328;
+  /* Gráficos: una serie con color; la comparación, gris */
+  --chart-1: var(--accent);
+  --chart-2: #8197D6;
+  --chart-3: #E0A33A;
+  --chart-compare: #4A4F58;
+  --chart-grid: #1C1F24;
 
   --shadow-xs: none;
   --shadow-sm: none;
-  --shadow-md: 0 0 0 1px rgba(0,0,0,.2), 0 12px 28px -8px rgba(0,0,0,.6);
-  --shadow-lg: 0 24px 48px -12px rgba(0,0,0,.7);
+  --shadow-md: 0 0 0 1px rgba(0,0,0,.25), 0 16px 32px -12px rgba(0,0,0,.6);
+  --shadow-lg: 0 30px 60px -20px rgba(0,0,0,.7);
 
-  --header-bg: var(--brand-header-bg, #16181C);
-  --header-fg: var(--brand-header-fg, #ECEDEF);
+  /* Panel de marca del acceso y del superadmin (el color de menú del negocio lo pisa) */
+  --topbar-bg: color-mix(in srgb, var(--bg) 86%, transparent);
+  --header-bg: var(--brand-header-bg, #0D0F12);
+  --header-fg: var(--brand-header-fg, #F2F3F5);
+  --header-muted: color-mix(in srgb, var(--header-fg) 66%, transparent);
+  --header-hover: color-mix(in srgb, var(--header-fg) 10%, transparent);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   TOKENS — tema claro: papel cálido, tinta casi negra para la acción principal y el
+   acento oscurecido (≈ 58 % del color con negro) para que pase AA sobre blanco.
+   ══════════════════════════════════════════════════════════════════════════════ */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #F7F6F2;
+  --panel: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-sunken: #F3F2ED;
+  --surface-overlay: #FFFFFF;
+  --surface-muted: #FAFAF7;
+  --card-bg: var(--surface);
+  --hover: rgba(16,18,24,.05);
+  --border: #E4E2DA;
+  --border-subtle: #EFEDE7;
+  --border-strong: #D2CFC5;
+
+  --text: #16181D;
+  --text-secondary: #4F545E;
+  --text-tertiary: #686D76;
+
+  --ink: #16181D;
+  --on-ink: #FFFFFF;
+  --ink-hover: #2B2E35;
+  --accent: var(--brand-accent-light, #2E7968);
+  --accent-default: #2E7968;
+  --panel-default: #FFFFFF;
+  --on-accent: var(--brand-on-accent-light, #FFFFFF);
+  --accent-hover: color-mix(in srgb, var(--accent) 86%, #000);
+  --accent-soft: color-mix(in srgb, var(--accent) 12%, #FFFFFF);
+  --accent-line: color-mix(in srgb, var(--accent) 40%, #FFFFFF);
+  --accent-glow: 0 0 0 transparent;
+  --focus-ring: color-mix(in srgb, var(--accent) 55%, transparent);
+
+  --status-confirmed: #0B6B5B; --status-confirmed-bg: #E2F3EE; --status-confirmed-dot: #0B7A68;
+  --status-pending: #855600;   --status-pending-bg: #FBF0D9;   --status-pending-dot: #C98A1A;
+  --status-risk: #B0341C;      --status-risk-bg: #FBE6E1;      --status-risk-dot: #C2361F;
+  --status-done: #3A4C7A;      --status-done-bg: #E8ECF6;      --status-done-dot: #5B6FA8;
+  --status-neutral: #5E626B;   --status-neutral-bg: #F0F0ED;   --status-neutral-dot: #A3A7B0;
+  --tone-rose: #8E3A5C;        --tone-rose-bg: #F8E7EE;        --tone-rose-dot: #C25A84;
+
+  --chart-2: #5B6FA8;
+  --chart-3: #C98A1A;
+  --chart-compare: #A3A7B0;
+  --chart-grid: #EFEDE7;
+
+  --shadow-xs: 0 1px 2px rgba(16,18,24,.05);
+  --shadow-sm: 0 1px 2px rgba(16,18,24,.04), 0 1px 3px rgba(16,18,24,.06);
+  --shadow-md: 0 2px 4px rgba(16,18,24,.04), 0 8px 16px -4px rgba(16,18,24,.12);
+  --shadow-lg: 0 24px 48px -12px rgba(16,18,24,.28);
+
+  --topbar-bg: color-mix(in srgb, var(--bg) 86%, transparent);
+  --header-bg: var(--brand-header-bg, #16181D);
+  --header-fg: var(--brand-header-fg, #F2F3F5);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   TOKENS — marca propia en todo el panel (<html data-brand-tint>, lib/branding.ts)
+   El color del menú (o el principal) tiñe apenas los neutros: fondo, superficies, bordes
+   y barra superior. El tinte trae solo el matiz de la marca, con la luminosidad de las
+   superficies y el croma limitado, así el texto conserva su contraste AA (test en
+   test/unit/branding.test.ts). Texto, estados y sombras no cambian.
+   ══════════════════════════════════════════════════════════════════════════════ */
+[data-brand-tint]:not([data-theme="light"]) {
+  --bg: color-mix(in oklab, var(--brand-tint-dark) 25%, #0A0B0D);
+  --panel: color-mix(in oklab, var(--brand-tint-dark) 28%, #0D0F12);
+  --surface: color-mix(in oklab, var(--brand-tint-dark) 30%, #14161A);
+  --surface-sunken: color-mix(in oklab, var(--brand-tint-dark) 32%, #1A1D22);
+  --surface-overlay: color-mix(in oklab, var(--brand-tint-dark) 30%, #181A1F);
+  --surface-muted: color-mix(in oklab, var(--brand-tint-dark) 28%, #111317);
+  --border: color-mix(in oklab, var(--brand-tint-dark) 40%, #23262D);
+  --border-subtle: color-mix(in oklab, var(--brand-tint-dark) 34%, #1C1F24);
+  --border-strong: color-mix(in oklab, var(--brand-tint-dark) 40%, #30343C);
+  --topbar-bg: color-mix(in srgb, color-mix(in oklab, var(--brand-tint-dark) 32%, #0A0B0D) 88%, transparent);
+}
+[data-theme="light"][data-brand-tint] {
+  --bg: color-mix(in oklab, var(--brand-tint-light) 18%, #F7F6F2);
+  --surface: color-mix(in oklab, var(--brand-tint-light) 8%, #FFFFFF);
+  --surface-sunken: color-mix(in oklab, var(--brand-tint-light) 18%, #F3F2ED);
+  --surface-overlay: color-mix(in oklab, var(--brand-tint-light) 8%, #FFFFFF);
+  --surface-muted: color-mix(in oklab, var(--brand-tint-light) 14%, #FAFAF7);
+  --border: color-mix(in oklab, var(--brand-tint-light) 35%, #E4E2DA);
+  --border-subtle: color-mix(in oklab, var(--brand-tint-light) 28%, #EFEDE7);
+  --border-strong: color-mix(in oklab, var(--brand-tint-light) 35%, #D2CFC5);
+  --topbar-bg: color-mix(in srgb, color-mix(in oklab, var(--brand-tint-light) 24%, #F7F6F2) 88%, transparent);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
@@ -190,15 +248,23 @@ img { max-width: 100%; }
 .skip-link { position: absolute; left: var(--space-sm); top: -100px; z-index: 300; background: var(--surface); color: var(--text); padding: var(--space-xs) var(--space-md); border-radius: var(--radius-md); box-shadow: var(--shadow-md); font-weight: 500; text-decoration: none; }
 .skip-link:focus { top: var(--space-sm); }
 .stack { display: flex; flex-direction: column; gap: var(--space-md); }
+/* Etiqueta chica en mono y mayúsculas (grupos del menú, encabezados de tabla, secciones). */
+.eyebrow { font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--text-tertiary); }
+/* Punto que pulsa: algo está vivo (agente activo, hora actual). Quieto con reduced-motion. */
+.pulse-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; animation: pulse-ring 2s ease-out infinite; }
+@keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 var(--accent-line); } 100% { box-shadow: 0 0 0 9px transparent; } }
+@keyframes rise { from { transform: scaleY(.2); opacity: .3; } to { transform: none; opacity: 1; } }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+  .pulse-dot, .pulse-dot::before { animation: none !important; }
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
    CONTROLES
-   Primario en tinta (no cambia con el white-label); el acento solo para la acción de
-   dinero de la pantalla (.btn-accent).
+   Primario en tinta (blanco en oscuro, casi negro en claro); con marca propia toma el
+   acento del negocio. .btn-accent: la acción de dinero de la pantalla.
    ══════════════════════════════════════════════════════════════════════════════ */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs); min-height: var(--control-h); padding: 0 14px; border-radius: var(--radius-md); border: 1px solid transparent; font-weight: 500; font-size: var(--step-0); line-height: 1; text-decoration: none; white-space: nowrap; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease); }
 .btn:disabled { opacity: .5; cursor: not-allowed; }
@@ -206,11 +272,11 @@ img { max-width: 100%; }
 .btn-primary:hover:not(:disabled) { background: var(--ink-hover); }
 .btn-accent { background: var(--accent); color: var(--on-accent); }
 .btn-accent:hover:not(:disabled) { background: var(--accent-hover); }
-.btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border-strong); box-shadow: var(--shadow-xs); }
-.btn-secondary:hover:not(:disabled) { background: var(--surface-sunken); }
+.btn-secondary { background: transparent; color: var(--text); border-color: var(--border-strong); }
+.btn-secondary:hover:not(:disabled) { background: var(--hover); }
 .btn-ghost { background: transparent; color: var(--text-secondary); }
 .btn-ghost:hover:not(:disabled) { background: var(--surface-sunken); color: var(--text); }
-.btn-danger { background: var(--surface); color: var(--status-risk); border-color: color-mix(in srgb, var(--status-risk) 35%, var(--surface)); }
+.btn-danger { background: transparent; color: var(--status-risk); border-color: color-mix(in srgb, var(--status-risk) 35%, var(--surface)); }
 .btn-danger:hover:not(:disabled) { background: var(--status-risk-bg); }
 .btn-ghost-inverse { color: var(--header-muted); background: transparent; padding: 0 12px; }
 .btn-ghost-inverse:hover:not(:disabled) { background: var(--header-hover); color: var(--header-fg); }
@@ -226,7 +292,7 @@ img { max-width: 100%; }
 .back-link:hover { color: var(--text); }
 
 /* Badges: punto + texto, nunca solo color. .badge (acento) y los de estado (.badge-*). */
-.badge { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; line-height: 1; white-space: nowrap; width: max-content; background: var(--status-confirmed-bg); color: var(--status-confirmed); }
+.badge { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 9px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 500; line-height: 1; white-space: nowrap; width: max-content; background: var(--status-confirmed-bg); color: var(--status-confirmed); }
 .badge-warning { background: var(--status-pending-bg); color: var(--status-pending); }
 .badge-danger { background: var(--status-risk-bg); color: var(--status-risk); }
 .badge-info { background: var(--status-done-bg); color: var(--status-done); }
@@ -239,7 +305,7 @@ img { max-width: 100%; }
 .field-label { font-size: var(--step--1); font-weight: 500; color: var(--text-secondary); }
 .field-hint { font-size: 12px; color: var(--text-tertiary); margin-top: var(--space-2xs); }
 .field-error { font-size: 12px; color: var(--status-risk); margin-top: var(--space-2xs); font-weight: 500; }
-.input { width: 100%; min-height: var(--control-h); padding: 8px 10px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--surface); color: var(--text); font-size: var(--step-0); box-shadow: var(--shadow-xs); transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease); }
+.input { width: 100%; min-height: var(--control-h); padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--surface); color: var(--text); font-size: var(--step-0); box-shadow: var(--shadow-xs); transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease); }
 .input::placeholder { color: var(--text-tertiary); }
 .input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
 .input[aria-invalid="true"] { border-color: var(--status-risk); }
@@ -258,7 +324,7 @@ form > .btn { margin-top: var(--space-lg); }
 /* ══════════════════════════════════════════════════════════════════════════════
    ESTADOS (vacío, error, carga)
    ══════════════════════════════════════════════════════════════════════════════ */
-.empty-state { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-2xl) var(--space-lg); }
+.empty-state { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-2xl) var(--space-lg); }
 .empty-state-icon { color: var(--text-tertiary); display: grid; place-items: center; margin-bottom: var(--space-xs); flex-shrink: 0; }
 .empty-state-icon-danger { color: var(--status-risk); }
 .empty-state-title { font-weight: 600; font-size: var(--step-1); line-height: 22px; color: var(--text); }
@@ -288,7 +354,7 @@ form > .btn { margin-top: var(--space-lg); }
    DIÁLOGO (<dialog> nativo) Y MENÚ DESPLEGABLE
    ══════════════════════════════════════════════════════════════════════════════ */
 .dialog { border: none; padding: 0; margin: auto; background: transparent; color: var(--text); width: min(440px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: visible; }
-.dialog::backdrop { background: rgba(14,15,18,.45); }
+.dialog::backdrop { background: rgba(6,7,9,.6); }
 .dialog-box { background: var(--surface-overlay); border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); max-height: calc(100dvh - 32px); overflow-y: auto; }
 .dialog-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); padding: var(--space-card) var(--space-sm) var(--space-sm) var(--space-lg); }
 .dialog-title { font-size: var(--step-2); line-height: 26px; font-weight: 600; letter-spacing: -.01em; }
@@ -363,7 +429,7 @@ form > .btn { margin-top: var(--space-lg); }
 .app-main:focus { outline: none; }
 
 /* ── Marca del negocio / selector de negocio ── */
-.brand-chip { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: var(--radius-md); background: var(--accent); color: var(--on-accent); font-size: var(--step-1); font-weight: 600; }
+.brand-chip { display: grid; place-items: center; width: 34px; height: 34px; flex-shrink: 0; border-radius: 10px; background: var(--accent); color: var(--on-accent); font-size: 12.5px; font-weight: 600; }
 .brand-logo { object-fit: cover; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); }
 .brand { display: flex; align-items: center; gap: 10px; min-width: 0; text-align: left; }
 .brand-button { border-radius: var(--radius-md); transition: background var(--dur-fast) var(--ease); }
@@ -373,38 +439,50 @@ form > .btn { margin-top: var(--space-lg); }
 /* ── Menú lateral ── */
 .sidebar { display: none; }
 .nav-list { display: flex; flex-direction: column; gap: 2px; }
-.nav-link { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 36px; padding: 0 10px; border-radius: var(--radius-md); color: var(--text-secondary); font-size: var(--step-0); font-weight: 400; text-decoration: none; text-align: left; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
-.nav-link:hover { background: var(--surface-sunken); color: var(--text); }
-.nav-link.active { background: var(--surface-sunken); color: var(--text); font-weight: 500; }
+.nav-link { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 38px; padding: 0 10px; border-radius: var(--radius-md); color: var(--text-secondary); font-size: var(--step-0); font-weight: 500; text-decoration: none; text-align: left; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
+.nav-link:hover { background: var(--hover); color: var(--text); }
+/* Ítem activo: fondo de acento suave, texto pleno e ícono en el acento. */
+.nav-link.active { background: var(--accent-soft); color: var(--text); }
+.nav-link.active svg { color: var(--accent); }
 .nav-link svg { flex-shrink: 0; }
+/* Contador (conversaciones abiertas en WhatsApp IA). */
+.nav-count { margin-left: auto; min-width: 20px; padding: 1px 6px; border-radius: var(--radius-pill); background: var(--accent); color: var(--on-accent); font-size: 11px; font-weight: 600; line-height: 16px; text-align: center; font-variant-numeric: tabular-nums; }
 .nav-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .nav-lock { display: grid; place-items: center; flex-shrink: 0; color: var(--text-tertiary); }
 .nav-link.locked { color: var(--text-tertiary); }
-.nav-group-label { font-size: 12px; font-weight: 500; color: var(--text-tertiary); padding: var(--space-md) 10px 6px; }
+.nav-group-label { font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--text-tertiary); padding: var(--space-md) 10px 6px; }
 .sidebar .nav-group-label { color: var(--text-tertiary); }
 .nav-separator { border: none; border-top: 1px solid var(--border-subtle); margin: var(--space-sm) 0; }
 .sidebar-product { padding: var(--space-xs) 10px 0; font-size: 12px; color: var(--text-tertiary); }
-.sidebar-nav-end { margin-top: auto; padding-top: var(--space-sm); border-top: 1px solid var(--border-subtle); }
-.sidebar-footer { display: flex; flex-direction: column; gap: 2px; }
+.sidebar-nav-end { margin-top: auto; padding-top: var(--space-sm); }
+.sidebar-footer { display: flex; flex-direction: column; gap: 2px; padding-top: var(--space-xs); border-top: 1px solid var(--border); }
 .brand-name-main { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .brand-name-sub { font-size: 12px; line-height: 16px; font-weight: 400; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .user-chip { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 6px 10px; border-radius: var(--radius-md); text-align: left; color: var(--text); transition: background var(--dur-fast) var(--ease); }
-.user-chip:hover, .user-chip[aria-expanded="true"] { background: var(--surface-sunken); }
+.user-chip:hover, .user-chip[aria-expanded="true"] { background: var(--hover); }
 .user-chip-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
-.user-chip-name { font-size: var(--step--1); font-weight: 500; line-height: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-chip-name { font-size: var(--step--1); font-weight: 600; line-height: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .user-chip-role { font-size: 12px; line-height: 16px; color: var(--text-tertiary); }
 
 /* ── Encabezado ── */
-.topbar { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: var(--space-xs); min-height: calc(var(--topbar-height) + env(safe-area-inset-top)); padding: env(safe-area-inset-top) var(--space-md) 0; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: saturate(1.4) blur(10px); -webkit-backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--border); }
+.topbar { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: var(--space-xs); min-height: calc(var(--topbar-height) + env(safe-area-inset-top)); padding: env(safe-area-inset-top) var(--space-md) 0; background: var(--topbar-bg); backdrop-filter: saturate(1.4) blur(10px); -webkit-backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--border); }
 .topbar-brand { flex-shrink: 0; }
+/* Sección actual, en mono y mayúsculas (solo escritorio: en el celular va la marca). */
+.topbar-crumb { display: none; font-family: var(--font-mono); font-size: 11.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .topbar-brand .brand-button { padding: 4px; margin-left: -4px; }
 .topbar-brand .brand-button:hover { background: var(--surface-sunken); }
 .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: var(--space-xs); flex-shrink: 0; }
 .new-button { min-height: 36px; padding: 0 12px; }
 .new-button-label { display: none; }
 .avatar-button { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; }
-.avatar { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--status-done-bg); color: var(--status-done); font-size: 12px; font-weight: 600; flex-shrink: 0; }
+.avatar { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--status-done-bg); color: var(--status-done); font-size: 12px; font-weight: 600; flex-shrink: 0; }
 .avatar-button:hover .avatar, .avatar-button[aria-expanded="true"] .avatar { box-shadow: 0 0 0 2px var(--border-strong); }
+/* Tonos de los avatares con iniciales (ui/avatarTone.ts). */
+.avatar-tone-1 { background: var(--status-confirmed-bg); color: var(--status-confirmed); }
+.avatar-tone-2 { background: var(--status-done-bg); color: var(--status-done); }
+.avatar-tone-3 { background: var(--tone-rose-bg); color: var(--tone-rose); }
+.avatar-tone-4 { background: var(--status-pending-bg); color: var(--status-pending); }
+.avatar-tone-5 { background: var(--status-neutral-bg); color: var(--status-neutral); }
 
 /* ── Selector de sucursal ── */
 .location-select, .location-static { position: relative; display: flex; align-items: center; gap: 6px; min-width: 0; color: var(--text-tertiary); }
@@ -412,8 +490,9 @@ form > .btn { margin-top: var(--space-lg); }
 .location-select > svg { position: absolute; pointer-events: none; }
 .location-select > svg:first-of-type { left: 10px; }
 .location-select > svg:last-of-type { right: 10px; }
-.location-select select { appearance: none; min-height: 36px; width: 100%; max-width: 260px; min-width: 0; padding: 0 30px 0 32px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--surface); color: var(--text); font-size: var(--step--1); font-weight: 500; text-overflow: ellipsis; cursor: pointer; box-shadow: var(--shadow-xs); }
-.location-select select:hover { background: var(--surface-sunken); }
+.location-select select { appearance: none; min-height: 36px; width: 100%; max-width: 260px; min-width: 0; padding: 0 30px 0 32px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: transparent; color: var(--text); font-size: var(--step--1); font-weight: 500; text-overflow: ellipsis; cursor: pointer; }
+.location-select select option { background: var(--surface-overlay); color: var(--text); }
+.location-select select:hover { background: var(--hover); }
 .location-select select:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 .location-static { padding: 0 var(--space-xs); font-size: var(--step--1); font-weight: 500; }
 .location-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
@@ -424,7 +503,7 @@ form > .btn { margin-top: var(--space-lg); }
 .bottom-nav .nav-list > li { flex: 1 1 0; min-width: 0; }
 .bottom-nav-item { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 100%; min-height: 54px; padding: 4px 2px; border-radius: var(--radius-md); color: var(--text-tertiary); text-decoration: none; }
 .bottom-nav-item .nav-label { flex: none; max-width: 100%; font-size: 11px; font-weight: 500; line-height: 1.1; text-align: center; }
-.bottom-nav-item.active { color: var(--text); }
+.bottom-nav-item.active { color: var(--accent); }
 .bottom-nav-item.active svg { stroke-width: 2.1; }
 .bottom-nav-item .nav-lock { position: absolute; top: 4px; right: calc(50% - 20px); }
 .bottom-nav-item.locked { color: var(--text-3); }
@@ -444,20 +523,24 @@ form > .btn { margin-top: var(--space-lg); }
 .page { max-width: 1240px; margin: 0 auto; }
 .page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-md); flex-wrap: wrap; margin-bottom: var(--space-lg); }
 .page-header-text { min-width: 0; }
-.page-title { font-size: var(--step-4); line-height: 36px; font-weight: 600; letter-spacing: -.02em; overflow-wrap: anywhere; }
+.page-title { font-size: var(--step-4); line-height: 34px; font-weight: 600; letter-spacing: -.035em; overflow-wrap: anywhere; }
 .page-subtitle-heading { font-size: var(--step-2); line-height: 26px; font-weight: 600; letter-spacing: -.01em; }
 .page-subtitle { margin-top: 4px; color: var(--text-secondary); font-size: var(--step-0); font-weight: 400; }
 .page-title:focus, .page-subtitle-heading:focus { outline: none; }
 .page-title:focus-visible, .page-subtitle-heading:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; border-radius: var(--radius-xs); }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: var(--space-card); min-width: 0; }
-.card-title { font-size: var(--step-1); line-height: 22px; font-weight: 600; color: var(--text); margin-bottom: var(--space-sm); }
+/* Tarjeta: degradado sutil y borde fino (en claro, superficie blanca con sombra leve). */
+.card { position: relative; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); padding: var(--space-card); min-width: 0; }
+.card-title { font-size: var(--step-1); line-height: 22px; font-weight: 600; letter-spacing: -.01em; color: var(--text); margin-bottom: var(--space-sm); }
+/* Tarjeta destacada (el indicador principal): borde y brillo de acento, filete arriba. */
+.card-strong { border-color: var(--accent-line); box-shadow: var(--accent-glow); }
+.card-strong::before { content: ""; position: absolute; left: 20px; right: 20px; top: -1px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
 
 /* ── Configuración ── */
 .settings-layout { display: flex; flex-direction: column; gap: var(--space-lg); }
 .settings-nav ul { display: flex; flex-wrap: wrap; gap: 6px; }
 .settings-link { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font-size: var(--step--1); font-weight: 500; text-decoration: none; }
 .settings-link:hover { color: var(--text); background: var(--surface-sunken); }
-.settings-link.active { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
+.settings-link.active { background: var(--accent-soft); border-color: var(--accent-line); color: var(--text); }
 .settings-link.locked { color: var(--text-tertiary); }
 .settings-content { min-width: 0; }
 .settings-content .page-header { margin-bottom: var(--space-md); }
@@ -533,26 +616,32 @@ form > .btn { margin-top: var(--space-lg); }
 @media (min-width: 768px) {
   .app-shell { display: grid; grid-template-columns: var(--sidebar-width) minmax(0, 1fr); }
   :root { --control-h: 36px; }
-  .sidebar { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-sm); padding: calc(var(--space-sm) + env(safe-area-inset-top)) var(--space-sm) var(--space-sm); background: var(--surface); color: var(--text); border-right: 1px solid var(--border); }
-  .sidebar .brand { padding: 8px; min-height: 48px; width: 100%; }
+  .sidebar { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding: calc(14px + env(safe-area-inset-top)) var(--space-sm) var(--space-sm); background: var(--panel); color: var(--text); border-right: 1px solid var(--border); }
+  /* Negocio y sucursal: tarjeta con borde fino arriba del menú. */
+  .sidebar .brand { padding: 8px; min-height: 52px; width: 100%; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--card-bg); }
   .sidebar .brand-button { color: var(--text); }
-  .sidebar .brand-button:hover, .sidebar .brand-button[aria-expanded="true"] { background: var(--surface-sunken); }
+  .sidebar .brand-button:hover, .sidebar .brand-button[aria-expanded="true"] { background: var(--hover); border-color: var(--border-strong); }
+  .sidebar-nav { margin-top: var(--space-xs); }
+  .topbar-crumb { display: block; }
   .sidebar .menu-root { width: 100%; }
   /* El menú lateral scrollea (overflow-y): el desplegable de negocio entra en su ancho. */
   .sidebar .menu-popover { left: 0; right: 0; min-width: 0; max-width: none; }
   .sidebar-nav { display: flex; flex-direction: column; flex: 1; }
   .topbar-brand { display: none; }
-  .topbar { padding-left: var(--space-xl); padding-right: var(--space-xl); }
+  .topbar { padding-left: 28px; padding-right: 28px; gap: var(--space-xs) 10px; }
+  /* Sección a la izquierda; sucursal y "+ Nuevo" juntos a la derecha. */
+  .topbar > .location-select, .topbar > .location-static { margin-left: auto; }
+  .topbar > .location-select ~ .topbar-actions, .topbar > .location-static ~ .topbar-actions { margin-left: 0; }
   .topbar .user-menu-compact { display: none; }
   .new-button-label { display: inline; }
   .bottom-nav { display: none; }
-  .app-main { padding: 28px var(--space-xl) 40px; }
+  .app-main { padding: 26px 28px 40px; }
   .settings-layout { flex-direction: row; align-items: flex-start; }
   .settings-nav { flex: 0 0 220px; position: sticky; top: calc(var(--topbar-height) + var(--space-lg)); }
   .settings-nav ul { flex-direction: column; flex-wrap: nowrap; gap: 2px; }
   .settings-link { display: flex; width: 100%; border: none; border-radius: var(--radius-md); background: transparent; min-height: 36px; justify-content: space-between; font-size: var(--step-0); font-weight: 400; }
-  .settings-link:hover { background: var(--surface-sunken); }
-  .settings-link.active { background: var(--surface-sunken); color: var(--text); font-weight: 500; }
+  .settings-link:hover { background: var(--hover); }
+  .settings-link.active { background: var(--accent-soft); color: var(--text); font-weight: 500; }
   .settings-content { flex: 1; }
   .admin-main { padding: var(--space-xl) var(--space-lg); }
 }
@@ -574,13 +663,12 @@ form > .btn { margin-top: var(--space-lg); }
 
 /* ── Marca propia del negocio (lib/branding.ts) ──────────────────────────────────────
    Solo con el color elegido por el negocio: <html data-brand-accent> / <html data-brand-header>.
-   Sin marca, el panel queda con la paleta default de arriba. */
+   Sin marca, el panel queda con la paleta default de arriba. El ítem activo del menú, los
+   contadores y los realces ya usan --accent, así que la marca los pinta sin reglas propias. */
 
-/* Color principal: botones principales e ítem activo del menú (además de --accent). */
+/* Color principal: además de --accent, los botones principales. */
 [data-brand-accent] .btn-primary { background: var(--accent); color: var(--on-accent); }
 [data-brand-accent] .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
-[data-brand-accent] .nav-link.active { background: var(--accent-soft); color: var(--accent); }
-[data-brand-accent] .bottom-nav-item.active { color: var(--accent); }
 
 /* Color del menú: menú lateral (desktop) y barra de abajo (celular). El texto usa
    --header-fg (blanco o tinta, el que más contraste da sobre el color elegido). Los menús
@@ -595,6 +683,9 @@ form > .btn { margin-top: var(--space-lg); }
 [data-brand-header] .sidebar .brand-button:hover,
 [data-brand-header] .sidebar .brand-button[aria-expanded="true"] { background: var(--header-hover); color: var(--header-fg); }
 [data-brand-header] .sidebar .nav-link.active { background: color-mix(in srgb, var(--header-fg) 16%, transparent); color: var(--header-fg); }
+[data-brand-header] .sidebar .nav-link.active svg { color: var(--header-fg); }
+[data-brand-header] .sidebar .brand { background: color-mix(in srgb, var(--header-fg) 6%, transparent); border-color: color-mix(in srgb, var(--header-fg) 18%, transparent); }
+[data-brand-header] .sidebar .sidebar-footer { border-color: color-mix(in srgb, var(--header-fg) 18%, transparent); }
 [data-brand-header] .sidebar .nav-group-label,
 [data-brand-header] .sidebar .nav-lock,
 [data-brand-header] .sidebar .nav-link.locked,

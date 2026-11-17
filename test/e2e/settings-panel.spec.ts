@@ -93,6 +93,7 @@ test("dueña: la marca propia pinta el menú lateral, los botones principales y 
   const bg = (el: typeof sidebar) => el.evaluate((n) => getComputedStyle(n).backgroundColor);
   const defaultSidebar = await bg(sidebar);
   const defaultButton = await bg(newButton);
+  const defaultBody = await page.locator("body").evaluate((n) => getComputedStyle(n).backgroundColor);
 
   await openSettings(page, "Negocio");
   await page.getByLabel("Color principal", { exact: true }).fill("#d6336c");
@@ -103,11 +104,17 @@ test("dueña: la marca propia pinta el menú lateral, los botones principales y 
   // Color del menú → fondo del menú lateral (antes no pintaba nada visible del panel).
   await expect(html).toHaveAttribute("data-brand-header", "");
   await expect.poll(() => bg(sidebar)).toBe("rgb(59, 31, 74)");
-  // Color principal → botón principal e ítem activo del menú (ajustado a contraste AA).
+  // Color principal → botón principal e ítem activo del menú (ajustado a contraste AA). El
+  // panel abre en oscuro (default): ahí el rosa se aclara; en claro queda tal cual.
   await expect(html).toHaveAttribute("data-brand-accent", "");
   await expect.poll(() => bg(newButton)).not.toBe(defaultButton);
-  const accent = await html.evaluate((n) => getComputedStyle(n).getPropertyValue("--accent").trim());
-  expect(accent.toLowerCase()).toBe("#d6336c");
+  const prop = (name: string) => html.evaluate((n, p) => getComputedStyle(n).getPropertyValue(p).trim().toLowerCase(), name);
+  expect(await prop("--brand-accent-light")).toBe("#d6336c");
+  expect(await prop("--brand-accent-dark")).toBe("#dc5282");
+  expect(await prop("--accent")).toBe("#dc5282");
+  // La marca se siente en todo el panel: el color del menú tiñe apenas el fondo y las superficies.
+  await expect(html).toHaveAttribute("data-brand-tint", "");
+  expect(await page.locator("body").evaluate((n) => getComputedStyle(n).backgroundColor)).not.toBe(defaultBody);
 
   // Campos vacíos = la paleta de la plataforma otra vez.
   await page.getByLabel("Color principal", { exact: true }).fill("");
@@ -115,6 +122,8 @@ test("dueña: la marca propia pinta el menú lateral, los botones principales y 
   await page.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(html).not.toHaveAttribute("data-brand-header");
   await expect(html).not.toHaveAttribute("data-brand-accent");
+  await expect(html).not.toHaveAttribute("data-brand-tint");
+  await expect.poll(() => page.locator("body").evaluate((n) => getComputedStyle(n).backgroundColor)).toBe(defaultBody);
   await expect.poll(() => bg(sidebar)).toBe(defaultSidebar);
   await expect.poll(() => bg(newButton)).toBe(defaultButton);
 });

@@ -3,23 +3,19 @@ import { readStorage, writeStorage } from "./storage";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Tema claro/oscuro del panel. Se aplica con `data-theme` en <html> (ver los tokens de
-// global.css). Sin preferencia guardada se sigue la del sistema operativo.
+// global.css). El oscuro es la identidad del producto y el default: sin preferencia
+// guardada el panel abre en oscuro, sin importar el sistema operativo. El claro se elige
+// desde el menú de usuario y queda guardado en este navegador.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const STORAGE_KEY = "selyon.theme";
 export type Theme = "light" | "dark";
 
-function systemTheme(): Theme {
-  try {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  } catch {
-    return "light";
-  }
-}
+const DEFAULT_THEME: Theme = "dark";
 
 export function getTheme(): Theme {
   const saved = readStorage(STORAGE_KEY);
-  return saved === "dark" || saved === "light" ? saved : systemTheme();
+  return saved === "dark" || saved === "light" ? saved : DEFAULT_THEME;
 }
 
 function applyTheme(theme: Theme): void {

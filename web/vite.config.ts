@@ -81,8 +81,8 @@ export default defineConfig(({ mode }) => {
           orientation: "any",
           lang: "es",
           dir: "ltr",
-          background_color: "#F6F8F9",
-          theme_color: "#0B6B5E",
+          background_color: "#0A0B0D",
+          theme_color: "#0A0B0D",
           categories: ["business", "productivity"],
           icons: [
             { src: "/panel/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },

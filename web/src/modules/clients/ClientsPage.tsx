@@ -4,7 +4,9 @@ import { useUpsell } from "../../app/layout/upsell";
 import { capitalize, getSection, terminologyOf } from "../../app/navigation";
 import { useSession } from "../../app/session";
 import { errorMessage } from "../../lib/api";
+import { initials } from "../../lib/branding";
 import { formatCents } from "../../lib/money";
+import { avatarToneClass } from "../../ui/avatarTone";
 import EmptyState from "../../ui/EmptyState";
 import ErrorState from "../../ui/ErrorState";
 import Icon from "../../ui/Icons";
@@ -320,6 +322,11 @@ export default function ClientsPage() {
                 {items.map((c) => (
                   <tr key={c.id}>
                     <td>
+                      <span className="clients-person">
+                      <span className={`clients-avatar ${avatarToneClass(c.id)}`} aria-hidden="true">
+                        {initials(c.name)}
+                      </span>
+                      <span className="clients-person-text">
                       <span className="clients-row-name">
                         <Link to={`/clients/${c.id}`} state={listState} className="clients-row-link">
                           {c.name}
@@ -339,6 +346,8 @@ export default function ClientsPage() {
                           {c.tags.length > 3 && <span className="clients-row-tag">+{c.tags.length - 3}</span>}
                         </span>
                       )}
+                      </span>
+                      </span>
                     </td>
                     <td className="clients-col-phone tnum">{formatPhone(c.phone) || <span className="muted">—</span>}</td>
                     {crm && <td className="clients-col-status">{c.status && <StatusBadge status={c.status} />}</td>}
