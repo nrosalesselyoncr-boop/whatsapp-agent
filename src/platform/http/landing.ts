@@ -5,7 +5,8 @@ import { fileURLToPath } from "node:url";
 import { inlineScriptHashes, landingCsp } from "../net/securityHeaders";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Landing pública de venta. Sirve `/`, `/privacidad`, `/terminos`, `/contrato`, los
+// Landing pública de venta. Sirve `/`, las páginas de producto (`/whatsapp-ia`, `/gestion`,
+// `/planes`), `/privacidad`, `/terminos`, `/contrato`, los
 // assets estáticos bajo `/landing/*`, `/robots.txt` y `/favicon.svg`. Las URLs públicas
 // quedan en español: son texto de cara al cliente (y las enlaza el HTML de landing/), no
 // rutas de la API. Mismo patrón de caché/allowlist que los estáticos del panel. Devuelve
@@ -106,6 +107,13 @@ function notFound(res: ServerResponse): true {
 
 const PAGES: Record<string, string> = {
   "/": "index.html",
+  // Páginas de producto (el inicio es corto; el detalle vive acá).
+  "/whatsapp-ia": "whatsapp-ia.html",
+  "/whatsapp-ia.html": "whatsapp-ia.html",
+  "/gestion": "gestion.html",
+  "/gestion.html": "gestion.html",
+  "/planes": "planes.html",
+  "/planes.html": "planes.html",
   "/privacidad": "privacidad.html",
   "/privacidad.html": "privacidad.html",
   "/terminos": "terminos.html",
