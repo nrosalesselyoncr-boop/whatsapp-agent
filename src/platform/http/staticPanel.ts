@@ -1,6 +1,8 @@
 import type { ServerResponse } from "node:http";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { escapeHtml } from "../email/templates";
+import { panelSentryConfig } from "../observability/sentry";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Archivos estáticos del panel: build de Vite (web/dist), fuentes self-hosted, PWA
@@ -9,6 +11,16 @@ import { fileURLToPath } from "node:url";
 // En desarrollo (NODE_ENV distinto de "production") el index y los archivos de la raíz
 // del build se releen en cada request, por si se reconstruyó; igual lo normal en dev es
 // el server de Vite (puerto 5173) con HMR, no este build servido por Node.
+//
+// Demo pública (/demo): el MISMO panel compilado con la API simulada (web/dist-demo,
+// `npm --prefix web run build:demo`): assets propios en /demo/assets/* y fallback SPA en
+// /demo/*. No tiene backend ni PWA (sin sw.js ni manifest) y su index va sin Sentry. Las
+// fuentes e íconos los sigue sirviendo /panel/fonts y /panel/icons.
+//
+// Al servir el index se le agregan las `<meta name="sentry-*">` con la configuración de
+// Sentry del panel (DSN, release, environment) si el server tiene SENTRY_DSN: el panel
+// activa su reporte de errores con el `.env` del servidor, sin recompilar (ver
+// web/src/lib/errorTracking.ts y panelSentryConfig en observability/sentry.ts).
 // ─────────────────────────────────────────────────────────────────────────────
 
 const IS_DEV = process.env.NODE_ENV !== "production";
@@ -30,20 +42,40 @@ function readFont(file: string): { buf: Buffer; mime: string } | null {
   }
 }
 
-function distPath(rel: string): string {
-  return fileURLToPath(new URL(`../../../web/dist/${rel}`, import.meta.url));
+/** Carpeta del build: el panel (web/dist) o la demo pública (web/dist-demo). */
+type BuildDir = "dist" | "dist-demo";
+
+function distPath(rel: string, dir: BuildDir = "dist"): string {
+  return fileURLToPath(new URL(`../../../web/${dir}/${rel}`, import.meta.url));
 }
 
-let cachedIndex: string | null | undefined; // undefined = sin leer; null = no hay build
-function readIndex(): string | null {
-  if (IS_DEV || cachedIndex === undefined) {
+const cachedIndex = new Map<BuildDir, string | null>(); // sin entrada = sin leer; null = no hay build
+function readIndex(dir: BuildDir = "dist"): string | null {
+  if (IS_DEV || !cachedIndex.has(dir)) {
     try {
-      cachedIndex = readFileSync(distPath("index.html"), "utf8");
+      cachedIndex.set(dir, readFileSync(distPath("index.html", dir), "utf8"));
     } catch {
-      cachedIndex = null;
+      cachedIndex.set(dir, null);
     }
   }
-  return cachedIndex;
+  return cachedIndex.get(dir) ?? null;
+}
+
+/** El index con la configuración de Sentry del panel como `<meta>` (sin DSN, tal cual). */
+export function withPanelConfig(index: string, env: Record<string, string | undefined> = process.env): string {
+  const sentry = panelSentryConfig(env);
+  if (!sentry) return index;
+  const metas: [string, string | undefined][] = [
+    ["sentry-dsn", sentry.dsn],
+    ["sentry-environment", sentry.environment],
+    ["sentry-release", sentry.release],
+  ];
+  const tags = metas
+    .filter((m): m is [string, string] => Boolean(m[1]))
+    .map(([name, value]) => `<meta name="${name}" content="${escapeHtml(value)}">`)
+    .join("");
+  const head = index.indexOf("</head>");
+  return head === -1 ? index : `${index.slice(0, head)}${tags}${index.slice(head)}`;
 }
 
 // Assets hasheados del build (/panel/assets/*). Allowlist estricta (un solo segmento,
@@ -63,19 +95,20 @@ const ASSET_TYPES: Record<string, string> = {
   ttf: "font/ttf",
 };
 const assetCache = new Map<string, Buffer>();
-function readAsset(file: string): { buf: Buffer; type: string } | null {
+function readAsset(file: string, dir: BuildDir = "dist"): { buf: Buffer; type: string } | null {
   const m = /^([a-zA-Z0-9._-]+)\.([a-z0-9]+)$/.exec(file);
   if (!m || file.includes("..")) return null;
   const type = ASSET_TYPES[m[2]];
   if (!type) return null;
-  let buf = assetCache.get(file);
+  const key = `${dir}/${file}`;
+  let buf = assetCache.get(key);
   if (!buf) {
     try {
-      buf = readFileSync(distPath(`assets/${file}`));
+      buf = readFileSync(distPath(`assets/${file}`, dir));
     } catch {
       return null;
     }
-    assetCache.set(file, buf);
+    assetCache.set(key, buf);
   }
   return { buf, type };
 }
@@ -100,6 +133,26 @@ function readRootFile(rel: string): Buffer | null {
   }
 }
 
+/**
+ * Headers del index de la demo: fuera de los buscadores (son datos ficticios; la que tiene
+ * que posicionar es la landing). robots.txt NO bloquea /demo: si lo hiciera, el buscador
+ * no llegaría a ver este noindex.
+ */
+const DEMO_INDEX_HEADERS: Record<string, string> = { "cache-control": "no-cache", "x-robots-tag": "noindex, nofollow" };
+
+/**
+ * El index de la demo con `<meta name="selyon-signup" content="open">` si el alta real está
+ * abierta: el aviso de la demo ofrece «Crear mi cuenta gratis» en vez de WhatsApp.
+ */
+export function withDemoConfig(index: string, env: Record<string, string | undefined> = process.env): string {
+  // Misma lectura que signupEnabled (src/signup.ts; platform/ no importa módulos de
+  // negocio): test/unit/demo.test.ts verifica que coinciden.
+  const open = ["1", "true", "yes", "on"].includes(env.SIGNUP_ENABLED?.trim().toLowerCase() ?? "");
+  if (!open) return index;
+  const head = index.indexOf("</head>");
+  return head === -1 ? index : `${index.slice(0, head)}<meta name="selyon-signup" content="open">${index.slice(head)}`;
+}
+
 function notFound(res: ServerResponse): true {
   res.writeHead(404);
   res.end("Not found");
@@ -117,6 +170,31 @@ export function serveStaticPanel(res: ServerResponse, pathname: string, method: 
     if (!asset) return notFound(res);
     res.writeHead(200, { "content-type": asset.type, "cache-control": "public, max-age=31536000, immutable" });
     res.end(asset.buf);
+    return true;
+  }
+
+  // ── Demo pública (/demo): assets y fallback SPA del build con la API simulada ──
+  if (pathname.startsWith("/demo/assets/")) {
+    const asset = readAsset(pathname.slice("/demo/assets/".length), "dist-demo");
+    if (!asset) return notFound(res);
+    res.writeHead(200, { "content-type": asset.type, "cache-control": "public, max-age=31536000, immutable" });
+    res.end(asset.buf);
+    return true;
+  }
+  if (pathname === "/demo" || pathname.startsWith("/demo/")) {
+    if (method !== "GET" && method !== "HEAD") {
+      res.writeHead(405);
+      res.end("Method not allowed");
+      return true;
+    }
+    const index = readIndex("dist-demo");
+    if (!index) {
+      res.writeHead(503, { "content-type": "text/plain; charset=utf-8" });
+      res.end("Demo no disponible — corré `npm run web:build` y reiniciá el proceso.");
+      return true;
+    }
+    res.writeHead(200, { "content-type": "text/html; charset=utf-8", ...DEMO_INDEX_HEADERS });
+    res.end(withDemoConfig(index));
     return true;
   }
 
@@ -168,7 +246,7 @@ export function serveStaticPanel(res: ServerResponse, pathname: string, method: 
       return true;
     }
     res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-    res.end(index);
+    res.end(withPanelConfig(index));
     return true;
   }
   return false;

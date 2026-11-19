@@ -6,9 +6,14 @@ node_modules/
 .env
 .env.local
 .env.*.local
+# Cadenas prohibidas locales para `npm run ci:secrets` (p. ej. contraseñas filtradas)
+.secrets-denylist
 
 # Build / salida
 dist/
+# Build de la demo pública (/demo) y su swap atómico en el deploy
+web/dist-demo/
+web/dist-demo.*/
 # Swap atómico del panel en el deploy (ci-cd.yml): web/dist.nuevo / web/dist.viejo
 web/dist.*/
 build/
@@ -38,3 +43,7 @@ docs/ux-review/**/*.png
 
 # Worktrees temporales de agentes en paralelo (Agent tool, isolation: "worktree")
 .claude/worktrees/
+
+# Resultados de cada corrida de evals (`npm run eval`). La línea base que se versiona es
+# eval/baseline.json (fuera de esta carpeta).
+eval/results/

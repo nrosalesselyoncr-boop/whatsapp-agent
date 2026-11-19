@@ -1,0 +1,108 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Reportes e Inicio completo (I5). Tokens de global.css (claro y oscuro salen de ahí);
+   una columna en el celular y sin scroll horizontal de la página: las tablas anchas se
+   desplazan dentro de su tarjeta y los gráficos se dibujan al ancho de su contenedor.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.rp-toolbar { margin-bottom: var(--space-md); }
+.rp-presets { border: none; padding: 0; margin: 0; min-width: 0; }
+.rp-presets .field-label { margin-bottom: 4px; }
+.rp-presets-options { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; background: var(--surface-sunken); border-radius: 9px; }
+.rp-preset { position: relative; display: inline-flex; align-items: center; min-height: var(--tap-h); padding: 0 12px; border-radius: 7px; color: var(--text-secondary); font-size: var(--step--1); font-weight: 500; cursor: pointer; white-space: nowrap; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
+.rp-preset input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.rp-preset:hover { color: var(--text); }
+.rp-preset.active { background: var(--ink); color: var(--on-ink); font-weight: 600; box-shadow: none; }
+.rp-preset:has(input:focus-visible) { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+.rp-body { transition: opacity .15s ease; }
+.rp-refreshing { opacity: .65; }
+.rp-kpi-hint { font-size: var(--step--1); font-weight: 400; color: var(--text-tertiary); }
+.card.rp-section { display: flex; flex-direction: column; gap: var(--space-sm); min-width: 0; }
+.rp-grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: var(--space-md); align-items: start; }
+.rp-section .sales-table { margin: 0; }
+.rp-section:has(.sales-table) { overflow-x: auto; }
+
+.rp-switch { display: inline-flex; gap: 2px; padding: 3px; border-radius: 9px; background: var(--surface-sunken); }
+.rp-switch-btn { min-height: var(--tap-h); padding: 0 12px; border: none; border-radius: 7px; background: transparent; color: var(--text-secondary); font: inherit; font-size: var(--step--1); font-weight: 500; cursor: pointer; }
+.rp-switch-btn:hover { color: var(--text); }
+.rp-switch-btn.active { background: var(--ink); color: var(--on-ink); font-weight: 600; box-shadow: none; }
+
+/* Gráficos (SVG propio): marcas con el acento, contexto neutro, grilla y ejes recesivos. */
+.rp-chart { display: flex; flex-direction: column; gap: var(--space-sm); min-width: 0; }
+.rp-legend { display: flex; flex-wrap: wrap; gap: var(--space-xs) 14px; font-size: var(--step--1); color: var(--text-secondary); }
+.rp-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.rp-key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.rp-chart-frame { position: relative; width: 100%; min-width: 0; }
+.rp-chart-frame svg { display: block; max-width: 100%; touch-action: pan-y; }
+.rp-chart-frame svg:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+.rp-grid { stroke: var(--chart-grid); stroke-width: 1; }
+.rp-baseline { stroke: var(--border); stroke-width: 1; }
+.rp-axis { fill: var(--text-tertiary); font-size: 12px; font-family: var(--font-body); font-variant-numeric: tabular-nums; }
+.rp-tone-main { fill: var(--chart-1); background: var(--chart-1); }
+.rp-tone-context { fill: var(--chart-compare); background: var(--chart-compare); }
+.rp-hover { fill: var(--surface-sunken); }
+.rp-day.active .rp-tone-main { fill: var(--accent-hover); }
+.rp-tooltip { position: absolute; top: 0; width: 180px; padding: 8px 10px; background: var(--surface-overlay); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-md); font-size: var(--step--1); color: var(--text-secondary); pointer-events: none; z-index: 2; }
+.rp-tooltip p { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.rp-tooltip strong { color: var(--text); }
+.rp-tooltip-title { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.rp-tooltip-key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.rp-rank-label { fill: var(--text); font-size: 13px; font-weight: 400; font-family: var(--font-body); }
+.rp-rank-value { fill: var(--text); font-size: 13px; font-weight: 500; font-family: var(--font-body); font-variant-numeric: tabular-nums; }
+.rp-rank-track { fill: var(--surface-2); }
+.rp-table summary { cursor: pointer; font-size: var(--step--1); font-weight: 500; color: var(--accent); min-height: 32px; display: flex; align-items: center; }
+.rp-table table { width: 100%; border-collapse: collapse; font-size: var(--step--1); margin-top: var(--space-xs); }
+.rp-table th, .rp-table td { padding: 6px 8px; border-bottom: 1px solid var(--border-2); text-align: left; }
+.rp-table td { text-align: right; }
+.rp-table thead th { font-size: var(--step--1); font-weight: 500; color: var(--text-3); }
+.rp-table thead th:not(:first-child) { text-align: right; }
+.rp-table tbody th { font-weight: 600; color: var(--text); }
+
+/* Medidor de ocupación en la tabla de profesionales. */
+.rp-meter { display: inline-flex; align-items: center; gap: 8px; min-width: 120px; }
+.rp-meter-track { position: relative; flex: 1; height: 6px; border-radius: var(--radius-pill); background: var(--surface-2); overflow: hidden; min-width: 60px; }
+.rp-meter-fill { position: absolute; inset: 0 auto 0 0; border-radius: var(--radius-pill); background: var(--chart-1); }
+.rp-meter-text { font-weight: 500; font-size: var(--step--1); color: var(--text); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* Reporte de clientes: cartera por estado (cada estado lleva a la lista filtrada). */
+.rp-status { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: var(--space-sm); }
+.rp-status-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); padding: 8px 12px; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--surface); text-decoration: none; color: var(--text); min-height: 44px; }
+.rp-status-row:hover { background: var(--surface-sunken); }
+.rp-status-count { font-weight: 600; font-size: var(--step-1); font-variant-numeric: tabular-nums; }
+
+/* Inicio completo (Pro). */
+.ho-kpis { margin-bottom: var(--space-md); }
+.ho-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--space-md); margin-bottom: var(--space-md); align-items: start; }
+.ho-alerts { display: flex; flex-direction: column; margin: 0 calc(-1 * var(--space-card)); }
+.ho-alert { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); padding: 12px var(--space-card); border-top: 1px solid var(--border-subtle); font-size: var(--step-0); font-weight: 500; text-decoration: none; color: var(--text); min-height: 48px; transition: background var(--dur-fast) var(--ease); }
+.ho-alert:hover { background: var(--hover); }
+.ho-alert-count { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 9px; border-radius: var(--radius-pill); background: var(--status-pending-bg); color: var(--status-pending); font-size: var(--step--1); font-weight: 600; }
+.ho-alert-count.ho-alert-risk { background: var(--status-risk-bg); color: var(--status-risk); }
+.ho-alert-count.zero { background: var(--status-neutral-bg); color: var(--status-neutral); }
+/* Indicadores del Inicio: cifra grande y apretada; reparto de las citas en chips. */
+.ho-kpi-split { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.ho-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-sm); }
+.ho-card-head .card-title { margin-bottom: 0; }
+.ho-total { font-size: 22px; font-weight: 600; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.ho-total .muted { font-size: var(--step--1); font-weight: 400; letter-spacing: 0; }
+/* Las barras de ingresos suben al cargar (quietas con reduced-motion, ver global.css). */
+.ho-revenue .rp-bar { transform-box: fill-box; transform-origin: bottom; animation: rise 1s var(--ease) both; }
+.ho-risk { display: flex; flex-direction: column; gap: 2px; padding: 4px var(--space-card) 8px; }
+.ho-risk li { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); font-size: var(--step-0); min-height: var(--tap-h); padding: 2px 0; border-bottom: 1px solid var(--border-subtle); }
+.ho-risk li:last-child { border-bottom: none; }
+.ho-risk .link { display: inline-flex; align-items: center; min-height: var(--tap-h); font-size: var(--step-0); }
+.ho-note { font-size: var(--step--1); color: var(--text-tertiary); padding: 8px var(--space-card) 0; border-top: 1px solid var(--border-subtle); }
+
+/* Superadmin › Métricas. */
+.am-toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-sm); margin-bottom: var(--space-md); }
+.am-kpis { margin-bottom: var(--space-md); }
+.am-table-card { padding: 0; overflow-x: auto; position: relative; }
+.am-badge-on { color: var(--success); font-weight: 600; }
+.am-badge-off { color: var(--text-3); }
+
+@media (max-width: 767px) {
+  .rp-presets-options { border-radius: var(--radius); }
+  .rp-preset { flex: 1 1 auto; justify-content: center; padding: 6px 10px; }
+  .rp-presets { flex: 1 1 100%; }
+  .ho-row { grid-template-columns: minmax(0, 1fr); }
+}

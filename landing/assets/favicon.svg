@@ -1,5 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34">
-  <rect width="34" height="34" rx="10" fill="#0b7d72"/>
-  <path d="M9 13.5a5.5 5.5 0 0 1 5.5-5.5h5a5.5 5.5 0 0 1 0 11h-6.2L9 22V13.5Z" fill="#eafcf6"/>
-  <path d="M13 13.6l2.4 2.4 5-5" stroke="#0b7d72" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><style>.bg{fill:#16181D}.bar{fill:#FFFFFF}@media (prefers-color-scheme:dark){.bg{fill:#ECEDEF}.bar{fill:#16181D}}</style><rect class="bg" width="32" height="32" rx="9"/><rect class="bar" x="7" y="9" width="13" height="5" rx="2.5"/><rect class="bar" x="12" y="18" width="13" height="5" rx="2.5"/><circle cx="23.5" cy="11.5" r="2.5" fill="#4FD1B3"/></svg>

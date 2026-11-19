@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es-CR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WhatsApp IA — un agente que responde y agenda por tu negocio | Selyon CRM</title>
+<meta name="description" content="El agente de WhatsApp con IA de Selyon CRM responde precios y horarios, agenda, reprograma y cancela citas, entiende notas de voz y pasa la conversación a tu equipo cuando hace falta.">
+<link rel="canonical" href="https://crm.selyon.app/whatsapp-ia">
+<meta name="theme-color" content="#0A0B0D">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/panel/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/landing/site.css">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CR">
+<meta property="og:site_name" content="Selyon CRM">
+<meta property="og:url" content="https://crm.selyon.app/whatsapp-ia">
+<meta property="og:title" content="WhatsApp IA — un agente que atiende como tu mejor recepcionista">
+<meta property="og:description" content="Responde, agenda y recuerda citas por WhatsApp, a cualquier hora. Si no sabe algo, le pasa la conversación a tu equipo.">
+<meta property="og:image" content="https://crm.selyon.app/landing/og.png">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z"/><path d="M8.8 8.2c.2-.5.5-.6.9-.6h.5c.2 0 .4 0 .5.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.1.1-.2.3 0 .5.4.8 1.6 2 2.6 2.4.2.1.4.1.5-.1l.6-.7c.2-.2.4-.2.6-.1l1.6.8c.2.1.4.2.4.4 0 .5-.2 1.2-.7 1.5-.6.4-1.4.6-2.6.2-2-.7-3.9-2.6-4.6-4.4-.5-1.3-.3-2.5-.2-2.9Z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M3.5 9.5h17M8 2.5v4M16 2.5v4"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8.5a6 6 0 1 0-12 0c0 6.5-2.5 8-2.5 8h17S18 15 18 8.5Z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.5 3.2 8.2 7.5 9.5 4.3-1.3 7.5-5 7.5-9.5V6L12 3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3.5 13.5h5l1.5 2.5h4l1.5-2.5h5"/><path d="M5.8 5h12.4l2.3 8.5v5a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5v-5L5.8 5Z"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Selyon CRM, inicio">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="brand-mark-bg" width="32" height="32" rx="9"/><rect class="brand-mark-bar" x="7" y="9" width="13" height="5" rx="2.5"/><rect class="brand-mark-bar" x="12" y="18" width="13" height="5" rx="2.5"/><circle class="brand-mark-dot" cx="23.5" cy="11.5" r="2.5"/></svg>
+      <span class="brand-name">Selyon <span class="brand-tag">CRM</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Principal">
+      <a href="/whatsapp-ia" aria-current="page">WhatsApp IA</a>
+      <a href="/gestion">Gestión</a>
+      <a href="/planes">Planes</a>
+      <a class="site-nav-login" href="/panel">Entrar al panel</a>
+    </nav>
+    <div class="header-actions">
+      <a class="header-login" href="/panel">Entrar</a>
+      <a class="btn btn-white" href="/demo">Probá la demo</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Abrir menú" data-nav-toggle>
+        <svg class="i i-open" aria-hidden="true"><use href="#i-menu"/></svg>
+        <svg class="i i-close" aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-hero">
+    <div class="fx" aria-hidden="true"><div class="orb orb-side"></div><div class="gridfx gridfx-side"></div></div>
+    <div class="container">
+      <p class="kicker">Producto · WhatsApp IA</p>
+      <h1>Un agente que atiende como tu <span class="shine">mejor recepcionista.</span></h1>
+      <p class="lead">Conoce tus servicios, tus precios y el horario de cada profesional. Responde con lo que vos cargaste y, cuando no sabe algo, no lo inventa: le pasa la conversación a tu equipo.</p>
+      <div class="ctas">
+        <a class="btn btn-white btn-lg" href="/demo/whatsapp/conversations/da000000-0000-4000-8100-000000000002">Probá la demo</a>
+        <a class="btn btn-line btn-lg" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20hablar%20de%20Selyon%20CRM%20para%20mi%20negocio" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-wa"/></svg>Escribinos por WhatsApp</a>
+      </div>
+      <p class="cta-note">Sin registrarte: entrás a la bandeja con conversaciones de ejemplo.</p>
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container split">
+      <ul class="feature-list">
+        <li><span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-calendar"/></svg></span><div><h3>Agenda, reprograma y cancela</h3><p>Ofrece horarios reales como botones; el cliente toca y listo. La cita aparece en tu agenda al instante.</p></div></li>
+        <li><span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg></span><div><h3>Entiende notas de voz y fotos</h3><p>Audios de hasta 2 minutos y fotos, como escriben tus clientes de verdad.</p></div></li>
+        <li><span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-globe"/></svg></span><div><h3>Habla como tu negocio</h3><p>De tú, de usted o de vos. Y si te escriben en inglés, responde en inglés.</p></div></li>
+        <li><span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg></span><div><h3>Te avisa cuando hace falta una persona</h3><p>Si el cliente lo pide o el agente no sabe, la conversación pasa a tu bandeja y te llega una notificación.</p></div></li>
+        <li><span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><div><h3>Recordatorios con confirmación</h3><p>Un día antes, con botones para confirmar o cancelar. Por correo para quien no usa WhatsApp.</p></div></li>
+      </ul>
+
+      <div class="split-visual" aria-hidden="true">
+        <div class="split-glow"></div>
+        <div class="window inbox">
+          <div class="titlebar"><span class="dots"><i></i><i></i><i></i></span><span class="url">WhatsApp IA · Bandeja</span></div>
+          <div class="filters"><span class="is-on">Todas <b>24</b></span><span>Agente <b>21</b></span><span class="is-warn">Necesitan respuesta <b>1</b></span></div>
+          <div>
+            <div class="inbox-row"><span class="avatar avatar-1">LQ</span><div class="inbox-main"><p class="inbox-top"><b>Laura Quesada</b><span class="num">7:43 p. m.</span></p><p class="inbox-preview">Listo. Su cita quedó para mañana a las 11:00…</p></div><span class="chip chip-agent">Agente</span></div>
+            <div class="inbox-row inbox-row-warn"><span class="avatar avatar-2">GR</span><div class="inbox-main"><p class="inbox-top"><b>Gabriela Ruiz</b><span class="num">7:31 p. m.</span></p><p class="inbox-preview">Quiero hablar con alguien sobre ortodoncia</p></div><span class="chip chip-warn">Pidió una persona</span></div>
+            <div class="inbox-row"><span class="avatar avatar-3">MA</span><div class="inbox-main"><p class="inbox-top"><b>Marco Araya</b><span class="num">7:18 p. m.</span></p><p class="inbox-preview">Nota de voz · 0:38</p></div><span class="chip chip-agent">Agente</span></div>
+            <div class="inbox-row"><span class="avatar avatar-4">FA</span><div class="inbox-main"><p class="inbox-top"><b>Fernanda Alfaro</b><span class="num">6:57 p. m.</span></p><p class="inbox-preview">Do you have availability on Friday?</p></div><span class="chip chip-agent">Agente · EN</span></div>
+            <div class="inbox-row"><span class="avatar avatar-5">AC</span><div class="inbox-main"><p class="inbox-top"><b>Andrés Castro</b><span class="num">6:40 p. m.</span></p><p class="inbox-preview">Confirmó su cita de mañana</p></div><span class="chip chip-ok">Confirmada</span></div>
+          </div>
+        </div>
+        <div class="toast push-toast">
+          <svg class="brand-mark" viewBox="0 0 32 32"><rect class="brand-mark-bg" width="32" height="32" rx="9"/><rect class="brand-mark-bar" x="7" y="9" width="13" height="5" rx="2.5"/><rect class="brand-mark-bar" x="12" y="18" width="13" height="5" rx="2.5"/><circle class="brand-mark-dot" cx="23.5" cy="11.5" r="2.5"/></svg>
+          <div><b>Gabriela Ruiz pidió hablar con una persona</b><small>Selyon CRM · ahora</small></div>
+        </div>
+        <div class="reminder">
+          <p class="reminder-label">Recordatorio por WhatsApp</p>
+          <p>Hola, Andrés. Le recordamos su cita de mañana miércoles a las 10:00 con el Dr. Mora.</p>
+          <div class="reminder-actions"><span>Confirmar</span><span>Cancelar</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="head">
+        <p class="kicker">Con vos al mando</p>
+        <h2>IA que sabe cuándo callar.</h2>
+      </div>
+      <div class="cards">
+        <div class="card"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg><h3>No inventa</h3><p>Responde solo con la información que cargaste: servicios, precios, horarios y políticas.</p></div>
+        <div class="card"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg><h3>Pasa a una persona</h3><p>Si no sabe o el cliente lo pide, deja la conversación en tu bandeja y te avisa al celular.</p></div>
+        <div class="card"><svg class="i" aria-hidden="true"><use href="#i-inbox"/></svg><h3>Vos tomás el control</h3><p>Entrás a cualquier conversación cuando querás y el agente se hace a un lado.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-flush">
+    <div class="container faq-wrap">
+      <div class="head">
+        <p class="kicker">Preguntas frecuentes</p>
+        <h2>Sobre el agente.</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>¿Necesito cambiar mi número de WhatsApp?</summary>
+          <p>Depende. El agente funciona sobre la plataforma oficial de WhatsApp de Meta, y un número conectado ahí deja de usarse en la app de WhatsApp Business del celular. Podés usar un número nuevo o pasar el tuyo: tus clientes te siguen escribiendo al mismo número, pero tu equipo lo atiende desde el panel y el historial de la app no se traslada. Te ayudamos a elegir.</p>
+        </details>
+        <details>
+          <summary>¿Y si el agente se equivoca o no sabe algo?</summary>
+          <p>Está configurado para no inventar: responde con la información que cargaste y, si no sabe, pasa la conversación a una persona de tu equipo y te avisa. Como toda IA puede equivocarse, así que lo importante conviene confirmarlo.</p>
+        </details>
+        <details>
+          <summary>¿Tengo que usar el agente?</summary>
+          <p>No. El plan Pro también se contrata sin agente: agenda, clientes, cobros, comisiones y reportes, con recordatorios por correo o por WhatsApp si conectás tu número.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="cta-inner">
+      <h2>Que tu próxima cita se agende sola.</h2>
+      <p>Escribinos y te mostramos Selyon CRM con los servicios de tu negocio. Sin compromiso.</p>
+      <div class="ctas">
+        <a class="btn btn-white btn-lg" href="/demo">Probá la demo</a>
+        <a class="btn btn-line btn-lg" href="/gestion">Ver la gestión<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="/" aria-label="Selyon CRM, inicio">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="brand-mark-bg" width="32" height="32" rx="9"/><rect class="brand-mark-bar" x="7" y="9" width="13" height="5" rx="2.5"/><rect class="brand-mark-bar" x="12" y="18" width="13" height="5" rx="2.5"/><circle class="brand-mark-dot" cx="23.5" cy="11.5" r="2.5"/></svg>
+        <span class="brand-name">Selyon <span class="brand-tag">CRM</span></span>
+      </a>
+      <p>Software de gestión para negocios con cita, con WhatsApp IA. Hecho en Costa Rica.</p>
+    </div>
+    <nav class="footer-col" aria-label="Producto">
+      <p class="footer-title">Producto</p>
+      <a href="/whatsapp-ia">WhatsApp IA</a>
+      <a href="/gestion">Gestión</a>
+      <a href="/planes">Planes</a>
+      <a href="/demo">Demo</a>
+    </nav>
+    <nav class="footer-col" aria-label="Legal">
+      <p class="footer-title">Legal</p>
+      <a href="/privacidad">Política de privacidad</a>
+      <a href="/terminos">Términos del servicio</a>
+      <a href="/contrato">Contrato para negocios</a>
+    </nav>
+    <nav class="footer-col" aria-label="Contacto">
+      <p class="footer-title">Contacto</p>
+      <a href="https://wa.me/50683658231?text=Hola%2C%20quiero%20hablar%20de%20Selyon%20CRM%20para%20mi%20negocio" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="/panel">Entrar al panel</a>
+    </nav>
+  </div>
+  <div class="container footer-bottom">
+    <p>© 2026 Selyon. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var header = document.querySelector("[data-header]");
+  var toggle = document.querySelector("[data-nav-toggle]");
+  if (!header) return;
+
+  // Menú del celular: abre/cierra con el botón, con Escape y al elegir un enlace.
+  function setNav(open) {
+    header.classList.toggle("nav-open", open);
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+  }
+  if (toggle) {
+    toggle.addEventListener("click", function () { setNav(!header.classList.contains("nav-open")); });
+    header.querySelectorAll(".site-nav a").forEach(function (a) { a.addEventListener("click", function () { setNav(false); }); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && header.classList.contains("nav-open")) { setNav(false); toggle.focus(); } });
+  }
+
+  // Línea del encabezado al bajar.
+  var onScroll = function () { header.classList.toggle("is-scrolled", window.scrollY > 8); };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+})();
+</script>
+</body>
+</html>

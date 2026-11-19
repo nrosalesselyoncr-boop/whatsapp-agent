@@ -12,8 +12,78 @@
     {
       "idx": 1,
       "version": "7",
-      "when": 1792479400230,
-      "tag": "0001_platform_queue",
+      "when": 1792484517728,
+      "tag": "0001_domain_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792484549622,
+      "tag": "0002_domain_constraints",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792498069208,
+      "tag": "0003_identity",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792603967292,
+      "tag": "0004_billing_status",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792651155960,
+      "tag": "0005_sales_commissions",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792696768351,
+      "tag": "0006_clients_crm",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792733210122,
+      "tag": "0007_reports_usage",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792969347698,
+      "tag": "0008_growth",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792971289696,
+      "tag": "0009_billing_signup",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793293662752,
+      "tag": "0010_billing_pause_onboarding",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793408505227,
+      "tag": "0011_legal_acceptances",
       "breakpoints": true
     }
   ]

@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="es-CR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gestión — agenda, clientes, cobros, comisiones y reportes | Selyon CRM</title>
+<meta name="description" content="La gestión completa de Selyon CRM: agenda por profesional y sucursal, ficha de clientes, cobros y señas, comisiones, reportes y plantillas para dental, estética y uñas.">
+<link rel="canonical" href="https://crm.selyon.app/gestion">
+<meta name="theme-color" content="#0A0B0D">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/panel/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/landing/site.css">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CR">
+<meta property="og:site_name" content="Selyon CRM">
+<meta property="og:url" content="https://crm.selyon.app/gestion">
+<meta property="og:title" content="Gestión — todo tu negocio, no solo el chat">
+<meta property="og:description" content="Agenda, clientes, plata y equipo en el mismo lugar. Con o sin el agente de WhatsApp.">
+<meta property="og:image" content="https://crm.selyon.app/landing/og.png">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z"/><path d="M8.8 8.2c.2-.5.5-.6.9-.6h.5c.2 0 .4 0 .5.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.1.1-.2.3 0 .5.4.8 1.6 2 2.6 2.4.2.1.4.1.5-.1l.6-.7c.2-.2.4-.2.6-.1l1.6.8c.2.1.4.2.4.4 0 .5-.2 1.2-.7 1.5-.6.4-1.4.6-2.6.2-2-.7-3.9-2.6-4.6-4.4-.5-1.3-.3-2.5-.2-2.9Z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M3.5 9.5h17M8 2.5v4M16 2.5v4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9.5" cy="8" r="3.5"/><path d="M3.5 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1M16 4.6a3.5 3.5 0 0 1 0 6.8M20.5 20v-1a4 4 0 0 0-2.5-3.7"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M16 15h2"/></symbol>
+  <symbol id="i-percent" viewBox="0 0 24 24"><path d="M18.5 5.5l-13 13"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3.5 20.5h17M7 17v-5M12 17V6.5M17 17V10"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M3.5 10v4a1 1 0 0 0 1 1H7l6.5 4.5v-15L7 9H4.5a1 1 0 0 0-1 1Z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9L12 3.5Z"/><path d="M19 16.5v4M17 18.5h4"/></symbol>
+  <symbol id="i-tooth" viewBox="0 0 24 24"><path d="M7.5 3.5c-2.4 0-4 1.9-4 4.4 0 2.9 1.4 4.4 1.9 6.9.5 2.6 1.1 5.7 2.6 5.7s1.6-3 2.5-5c.5-1.1 2.5-1.1 3 0 .9 2 1 5 2.5 5s2.1-3.1 2.6-5.7c.5-2.5 1.9-4 1.9-6.9 0-2.5-1.6-4.4-4-4.4-1.8 0-2.7 1-4.5 1s-2.7-1-4.5-1Z"/></symbol>
+  <symbol id="i-polish" viewBox="0 0 24 24"><path d="M9.5 2.5h5v5h-5z"/><path d="M8 7.5h8A1.5 1.5 0 0 1 17.5 9v10.5A1.5 1.5 0 0 1 16 21H8a1.5 1.5 0 0 1-1.5-1.5V9A1.5 1.5 0 0 1 8 7.5Z"/><path d="M6.5 12.5h11"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Selyon CRM, inicio">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="brand-mark-bg" width="32" height="32" rx="9"/><rect class="brand-mark-bar" x="7" y="9" width="13" height="5" rx="2.5"/><rect class="brand-mark-bar" x="12" y="18" width="13" height="5" rx="2.5"/><circle class="brand-mark-dot" cx="23.5" cy="11.5" r="2.5"/></svg>
+      <span class="brand-name">Selyon <span class="brand-tag">CRM</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Principal">
+      <a href="/whatsapp-ia">WhatsApp IA</a>
+      <a href="/gestion" aria-current="page">Gestión</a>
+      <a href="/planes">Planes</a>
+      <a class="site-nav-login" href="/panel">Entrar al panel</a>
+    </nav>
+    <div class="header-actions">
+      <a class="header-login" href="/panel">Entrar</a>
+      <a class="btn btn-white" href="/demo">Probá la demo</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Abrir menú" data-nav-toggle>
+        <svg class="i i-open" aria-hidden="true"><use href="#i-menu"/></svg>
+        <svg class="i i-close" aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-hero">
+    <div class="fx" aria-hidden="true"><div class="orb orb-side orb-side-blue"></div><div class="gridfx gridfx-side"></div></div>
+    <div class="container">
+      <p class="kicker">Producto · Gestión</p>
+      <h1>Todo tu negocio, <span class="shine">no solo el chat.</span></h1>
+      <p class="lead">Agenda, clientes, plata y equipo en el mismo lugar. Con o sin el agente de WhatsApp.</p>
+      <div class="ctas">
+        <a class="btn btn-white btn-lg" href="/demo/agenda">Probá la demo</a>
+        <a class="btn btn-line btn-lg" href="https://wa.me/50683658231?text=Hola%2C%20quiero%20hablar%20de%20Selyon%20CRM%20para%20mi%20negocio" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-wa"/></svg>Escribinos por WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container">
+      <div class="bento">
+        <article class="card bento-agenda">
+          <div class="bento-text">
+            <span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+            <h3>Agenda por profesional</h3>
+            <p>Mes, semana o día. Horario de cada profesional y sucursal, tiempo entre citas y varios servicios en una misma cita. Sin choques de horario.</p>
+          </div>
+          <div class="month num" aria-hidden="true">
+            <span class="month-head">L</span><span class="month-head">K</span><span class="month-head">M</span><span class="month-head">J</span><span class="month-head">V</span><span class="month-head">S</span><span class="month-head">D</span>
+            <span class="month-day"><b>9</b><i class="d1"></i><i class="d2"></i></span><span class="month-day"><b>10</b><i class="d1"></i><i class="d3"></i><i class="d2"></i></span><span class="month-day"><b>11</b><i class="d2"></i></span><span class="month-day"><b>12</b><i class="d1"></i><i class="d1"></i><i class="d3"></i></span><span class="month-day"><b>13</b><i class="d3"></i><i class="d2"></i></span><span class="month-day"><b>14</b><i class="d1"></i><i class="d3"></i><i class="d3"></i></span><span class="month-day month-off"><b>15</b></span><span class="month-day"><b>16</b><i class="d2"></i><i class="d1"></i></span><span class="month-day month-today"><b>17</b><i class="d1"></i><i class="d2"></i><i class="d3"></i></span><span class="month-day"><b>18</b><i class="d3"></i></span><span class="month-day"><b>19</b><i class="d1"></i><i class="d2"></i></span><span class="month-day"><b>20</b><i class="d2"></i><i class="d3"></i><i class="d1"></i></span><span class="month-day"><b>21</b><i class="d1"></i></span><span class="month-day month-off"><b>22</b></span>
+          </div>
+        </article>
+
+        <article class="card bento-clients">
+          <div>
+            <span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg></span>
+            <h3>Clientes que vuelven</h3>
+            <p>Ficha con historial, visitas y gasto. Estados que se calculan solos para saber a quién llamar.</p>
+          </div>
+          <ul class="mini-list" aria-hidden="true">
+            <li><span class="avatar avatar-4 avatar-sm">FA</span><span class="mini-name">Fernanda Alfaro<small class="num">9 visitas · ₡312&nbsp;000</small></span><span class="chip chip-vip">VIP</span></li>
+            <li><span class="avatar avatar-1 avatar-sm">LQ</span><span class="mini-name">Laura Quesada<small class="num">6 visitas · ₡184&nbsp;500</small></span><span class="chip chip-ok">Activa</span></li>
+            <li><span class="avatar avatar-2 avatar-sm">GR</span><span class="mini-name">Gabriela Ruiz<small>Hace 52 días</small></span><span class="chip chip-risk">En riesgo</span></li>
+            <li><span class="avatar avatar-3 avatar-sm">SR</span><span class="mini-name">Sofía Rojas<small>Primera cita el martes</small></span><span class="chip chip-new">Nueva</span></li>
+          </ul>
+        </article>
+
+        <article class="card bento-third">
+          <div>
+            <span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-wallet"/></svg></span>
+            <h3>Cobros y señas</h3>
+            <p>Registrá pagos por método, lo pendiente y el resumen del día.</p>
+          </div>
+          <div class="day-summary num" aria-hidden="true">
+            <p><span>SINPE Móvil</span><span>₡120&nbsp;000</span></p><span class="summary-bar w-100"></span>
+            <p><span>Tarjeta</span><span>₡86&nbsp;500</span></p><span class="summary-bar w-72"></span>
+            <p><span>Efectivo</span><span>₡45&nbsp;000</span></p><span class="summary-bar w-38"></span>
+            <p class="summary-total"><span>Cobrado hoy</span><span>₡251&nbsp;500</span></p>
+          </div>
+        </article>
+
+        <article class="card bento-third">
+          <div>
+            <span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-percent"/></svg></span>
+            <h3>Comisiones sin calculadora</h3>
+            <p>Reglas por profesional, servicio o categoría, sobre lo cobrado. Cada quien ve las suyas.</p>
+          </div>
+          <ul class="mini-list num" aria-hidden="true">
+            <li><span class="avatar avatar-1 avatar-sm">DV</span><span class="mini-name">Dra. Vargas</span><span class="money">₡96&nbsp;000</span></li>
+            <li><span class="avatar avatar-2 avatar-sm">DM</span><span class="mini-name">Dr. Mora</span><span class="money">₡78&nbsp;750</span></li>
+            <li><span class="avatar avatar-3 avatar-sm">AB</span><span class="mini-name">Ana Brenes</span><span class="money">₡22&nbsp;500</span></li>
+          </ul>
+        </article>
+
+        <article class="card bento-third">
+          <div>
+            <span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-chart"/></svg></span>
+            <h3>Reportes que se entienden</h3>
+            <p>Ingresos, servicios, profesionales, ocupación y de dónde llegan tus citas. Por sucursal y con descarga en CSV.</p>
+          </div>
+          <div class="bars" aria-hidden="true"><i class="h-40"></i><i class="h-60"></i><i class="h-50"></i><i class="h-70"></i><i class="h-30"></i><i class="h-80"></i><i class="h-60"></i><i class="h-90"></i><i class="h-50"></i><i class="h-70"></i><i class="h-80"></i><i class="h-60"></i><i class="h-90"></i><i class="h-100 is-on"></i></div>
+        </article>
+
+        <article class="card bento-small">
+          <span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg></span>
+          <h3>Varias sucursales</h3>
+          <p>Cada sucursal con su horario y su equipo; el agente pregunta a cuál quiere ir el cliente.</p>
+        </article>
+        <article class="card bento-small">
+          <span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg></span>
+          <h3>Un usuario por persona</h3>
+          <p>Dueña, recepción y profesionales, cada quien con su acceso. Cada profesional ve «Mi agenda».</p>
+        </article>
+        <article class="card bento-small">
+          <span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></span>
+          <h3>Se instala como app</h3>
+          <p>En el celular, la tablet o la compu, con notificaciones. Sin descargar nada de una tienda.</p>
+        </article>
+        <article class="card bento-small">
+          <span class="icon-chip"><svg class="i" aria-hidden="true"><use href="#i-megaphone"/></svg></span>
+          <h3>Campañas y reseñas</h3>
+          <p>Promociones solo a quien aceptó recibirlas, reseñas de Google y seguimiento de cotizaciones.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-flush" id="rubros">
+    <div class="container">
+      <div class="head">
+        <p class="kicker">Por rubro</p>
+        <h2>Arranca con la plantilla de tu negocio.</h2>
+        <p class="lead">Mismo sistema, distinto vocabulario: servicios, duraciones, campos de la ficha y la forma de hablar del agente vienen precargados según tu rubro.</p>
+      </div>
+
+      <div data-tabs>
+        <div class="tab-list" role="tablist" aria-label="Rubros">
+          <button class="tab" role="tab" id="tab-dental" aria-controls="panel-dental" aria-selected="true" type="button"><svg class="i" aria-hidden="true"><use href="#i-tooth"/></svg>Dental</button>
+          <button class="tab" role="tab" id="tab-estetica" aria-controls="panel-estetica" aria-selected="false" tabindex="-1" type="button"><svg class="i" aria-hidden="true"><use href="#i-sparkle"/></svg>Estética</button>
+          <button class="tab" role="tab" id="tab-unas" aria-controls="panel-unas" aria-selected="false" tabindex="-1" type="button"><svg class="i" aria-hidden="true"><use href="#i-polish"/></svg>Uñas</button>
+        </div>
+
+        <div class="tab-panel" role="tabpanel" id="panel-dental" aria-labelledby="tab-dental" tabindex="0">
+          <div class="rubro">
+            <div class="rubro-copy">
+              <h3>Pacientes que llegan a su cita.</h3>
+              <p>Valoraciones, limpiezas y tratamientos con su duración real y tiempo de limpieza entre pacientes. El recordatorio con botón para confirmar le baja a las ausencias.</p>
+              <ul class="checks">
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Habla de «pacientes» y de «usted», si así lo preferís</li>
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Campos como alergias o responsable de un menor</li>
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Agenda por odontólogo, higienista y sucursal</li>
+              </ul>
+            </div>
+            <div class="client-card" aria-hidden="true">
+              <div class="client-top"><span class="avatar avatar-1">VJ</span><div><p class="client-name">Valeria Jiménez</p><p class="client-meta">Paciente desde marzo · 6 citas</p></div><span class="chip chip-ok">Activa</span></div>
+              <dl class="client-fields">
+                <div><dt>Alergias</dt><dd>Penicilina</dd></div>
+                <div><dt>Responsable</dt><dd>—</dd></div>
+                <div><dt>Próxima cita</dt><dd>Mar 17 · 8:30 · Control de ortodoncia</dd></div>
+                <div><dt>Notas</dt><dd>Prefiere citas temprano.</dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" role="tabpanel" id="panel-estetica" aria-labelledby="tab-estetica" tabindex="0">
+          <div class="rubro">
+            <div class="rubro-copy">
+              <h3>Tratamientos bien explicados, señas bien registradas.</h3>
+              <p>Limpiezas faciales, depilación y tratamientos con su preparación. Lo que necesita valoración previa no se agenda en línea: el agente lo explica y lo pasa a tu equipo.</p>
+              <ul class="checks">
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Campos como tipo de piel o tratamientos previos</li>
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Señas y pagos por SINPE Móvil, efectivo o tarjeta</li>
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Pide reseñas de Google después de la cita</li>
+              </ul>
+            </div>
+            <div class="client-card" aria-hidden="true">
+              <div class="client-top"><span class="avatar avatar-3">FA</span><div><p class="client-name">Fernanda Alfaro</p><p class="client-meta">Clienta desde enero · 9 citas</p></div><span class="chip chip-vip">VIP</span></div>
+              <dl class="client-fields">
+                <div><dt>Tipo de piel</dt><dd>Mixta, sensible</dd></div>
+                <div><dt>Próxima cita</dt><dd>Jue 19 · 4:00 p. m. · Limpieza facial profunda</dd></div>
+                <div><dt>Seña</dt><dd class="num">₡10&nbsp;000 · SINPE Móvil</dd></div>
+                <div><dt>Gasto total</dt><dd class="num">₡312&nbsp;000</dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" role="tabpanel" id="panel-unas" aria-labelledby="tab-unas" tabindex="0">
+          <div class="rubro">
+            <div class="rubro-copy">
+              <h3>Mani y pedi en una sola cita, cada estilista con su precio.</h3>
+              <p>Varios servicios en la misma cita, precio y duración por estilista, y comisiones calculadas sobre lo cobrado. El agente ofrece el complemento justo sin que nadie tenga que acordarse.</p>
+              <ul class="checks">
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Campos como forma o largo preferido</li>
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Comisión por estilista, servicio o categoría</li>
+                <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Te avisa quién hace rato no vuelve</li>
+              </ul>
+            </div>
+            <div class="client-card" aria-hidden="true">
+              <div class="client-top"><span class="avatar avatar-2">GR</span><div><p class="client-name">Gabriela Ruiz</p><p class="client-meta">Clienta desde 2025 · 14 citas</p></div><span class="chip chip-risk">En riesgo</span></div>
+              <dl class="client-fields">
+                <div><dt>Forma preferida</dt><dd>Almendra, largo medio</dd></div>
+                <div><dt>Estilista</dt><dd>Ana Brenes</dd></div>
+                <div><dt>Última visita</dt><dd>Hace 52 días · Acrílicas + pedicura</dd></div>
+                <div><dt>Etiquetas</dt><dd><span class="tag">Prefiere sábados</span><span class="tag">Acepta promos</span></dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="cta-inner">
+      <h2>Ordená tu negocio esta semana.</h2>
+      <p>Escribinos y te mostramos Selyon CRM con los servicios de tu negocio. Sin compromiso.</p>
+      <div class="ctas">
+        <a class="btn btn-white btn-lg" href="/demo/agenda">Probá la demo</a>
+        <a class="btn btn-line btn-lg" href="/planes">Ver planes<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="/" aria-label="Selyon CRM, inicio">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="brand-mark-bg" width="32" height="32" rx="9"/><rect class="brand-mark-bar" x="7" y="9" width="13" height="5" rx="2.5"/><rect class="brand-mark-bar" x="12" y="18" width="13" height="5" rx="2.5"/><circle class="brand-mark-dot" cx="23.5" cy="11.5" r="2.5"/></svg>
+        <span class="brand-name">Selyon <span class="brand-tag">CRM</span></span>
+      </a>
+      <p>Software de gestión para negocios con cita, con WhatsApp IA. Hecho en Costa Rica.</p>
+    </div>
+    <nav class="footer-col" aria-label="Producto">
+      <p class="footer-title">Producto</p>
+      <a href="/whatsapp-ia">WhatsApp IA</a>
+      <a href="/gestion">Gestión</a>
+      <a href="/planes">Planes</a>
+      <a href="/demo">Demo</a>
+    </nav>
+    <nav class="footer-col" aria-label="Legal">
+      <p class="footer-title">Legal</p>
+      <a href="/privacidad">Política de privacidad</a>
+      <a href="/terminos">Términos del servicio</a>
+      <a href="/contrato">Contrato para negocios</a>
+    </nav>
+    <nav class="footer-col" aria-label="Contacto">
+      <p class="footer-title">Contacto</p>
+      <a href="https://wa.me/50683658231?text=Hola%2C%20quiero%20hablar%20de%20Selyon%20CRM%20para%20mi%20negocio" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="/panel">Entrar al panel</a>
+    </nav>
+  </div>
+  <div class="container footer-bottom">
+    <p>© 2026 Selyon. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var header = document.querySelector("[data-header]");
+  var toggle = document.querySelector("[data-nav-toggle]");
+  if (!header) return;
+
+  // Menú del celular: abre/cierra con el botón, con Escape y al elegir un enlace.
+  function setNav(open) {
+    header.classList.toggle("nav-open", open);
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+  }
+  if (toggle) {
+    toggle.addEventListener("click", function () { setNav(!header.classList.contains("nav-open")); });
+    header.querySelectorAll(".site-nav a").forEach(function (a) { a.addEventListener("click", function () { setNav(false); }); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && header.classList.contains("nav-open")) { setNav(false); toggle.focus(); } });
+  }
+
+  // Línea del encabezado al bajar.
+  var onScroll = function () { header.classList.toggle("is-scrolled", window.scrollY > 8); };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  // Pestañas de rubros (patrón ARIA tabs: flechas, Inicio y Fin). Sin JS se ven los tres
+  // paneles seguidos; con JS, solo el elegido.
+  document.querySelectorAll("[data-tabs]").forEach(function (root) {
+    var tabs = Array.prototype.slice.call(root.querySelectorAll("[role=tab]"));
+    function select(tab, focus) {
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+      if (focus) tab.focus();
+    }
+    select(tabs[0], false);
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener("click", function () { select(tab, false); });
+      tab.addEventListener("keydown", function (e) {
+        var next = null;
+        if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
+        else if (e.key === "ArrowLeft") next = tabs[(i - 1 + tabs.length) % tabs.length];
+        else if (e.key === "Home") next = tabs[0];
+        else if (e.key === "End") next = tabs[tabs.length - 1];
+        if (next) { e.preventDefault(); select(next, true); }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
