@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { boolean, check, index, integer, jsonb, pgTable, smallint, text, time, uniqueIndex, uuid } from "drizzle-orm/pg-core";
-import { oneOf, timestamps, uuidPk } from "../../platform/db/columns";
+import { instant, oneOf, timestamps, uuidPk } from "../../platform/db/columns";
 import { tenantPolicy } from "../../platform/db/rls";
 import {
   DEFAULT_REMINDER_CHANNELS,
@@ -27,6 +27,13 @@ export type Plan = (typeof PLANS)[number];
 /** `paused`: sin servicio (p. ej. falta de pago), con los datos intactos. `closed`: dado de baja. */
 export const BUSINESS_STATUSES = ["active", "paused", "closed"] as const;
 export type BusinessStatus = (typeof BUSINESS_STATUSES)[number];
+
+/**
+ * Estado del cobro manual (PROCESO-COBRO-MANUAL.md) que lleva el superadmin: prueba, al
+ * día, atrasado o cancelado. Es informativo: lo que corta el servicio es `status = paused`.
+ */
+export const BILLING_STATUSES = ["trial", "active", "past_due", "cancelled"] as const;
+export type BillingStatus = (typeof BILLING_STATUSES)[number];
 
 export const CUSTOM_FIELD_ENTITIES = ["client", "appointment"] as const;
 export type CustomFieldEntity = (typeof CUSTOM_FIELD_ENTITIES)[number];
@@ -59,6 +66,7 @@ export const businesses = pgTable(
     plan: text("plan").notNull().default("basic"),
     extraModules: jsonb("extra_modules").$type<ExtraModules>().notNull().default({}),
     status: text("status").notNull().default("active"),
+    billingStatus: text("billing_status").notNull().default("trial"),
     // ISO 4217 (montos en céntimos de esta moneda) e ISO 3166-1 alfa-2.
     currency: text("currency").notNull().default("CRC"),
     country: text("country").notNull().default("CR"),
@@ -78,13 +86,38 @@ export const businesses = pgTable(
     legalName: text("legal_name"),
     taxId: text("tax_id"),
     billingEmail: text("billing_email"),
+    // Suscripción en Stripe (I6.6): cliente y suscripción que mantiene el webhook. null =
+    // cobro manual (o todavía sin suscribirse). Los escribe modules/billing.
+    stripeCustomerId: text("stripe_customer_id"),
+    stripeSubscriptionId: text("stripe_subscription_id"),
+    // Fin de la prueba gratis del alta self-service (I6.7). null = sin prueba con fecha
+    // (alta del superadmin, cobro manual): el barrido de pruebas vencidas no la toca.
+    trialEndsAt: instant("trial_ends_at"),
+    // Desde cuándo el negocio no está al día por una vía automática: Stripe no pudo cobrar,
+    // la suscripción se canceló o la prueba venció sin suscribirse. Vencida la gracia
+    // (BILLING_GRACE_DAYS), el barrido pausa el negocio. null = al día, o un estado cargado
+    // a mano por el superadmin (cobro manual: ese no se pausa solo).
+    unpaidSince: instant("unpaid_since"),
+    // El negocio está pausado POR EL COBRO (lo pausó el barrido, no el superadmin): la dueña
+    // puede entrar a pagar y, al pagar, se reactiva solo.
+    billingPausedAt: instant("billing_paused_at"),
+    // Checklist de primeros pasos del Inicio: cuándo se ocultó (null = se muestra mientras
+    // no esté completa).
+    onboardingDismissedAt: instant("onboarding_dismissed_at"),
     ...timestamps(),
   },
   (t) => [
     uniqueIndex("businesses_slug_uq").on(t.slug),
+    uniqueIndex("businesses_stripe_customer_uq").on(t.stripeCustomerId),
+    uniqueIndex("businesses_stripe_subscription_uq").on(t.stripeSubscriptionId),
+    // Barrido de pruebas vencidas: solo las que tienen fecha.
+    index("businesses_trial_ends_idx").on(t.trialEndsAt).where(sql`${t.trialEndsAt} IS NOT NULL`),
+    // Barrido de cobros vencidos con la gracia cumplida: solo los que tienen fecha.
+    index("businesses_unpaid_since_idx").on(t.unpaidSince).where(sql`${t.unpaidSince} IS NOT NULL`),
     check("businesses_slug_check", sql`${t.slug} ~ '^[a-z0-9]+(-[a-z0-9]+)*$'`),
     check("businesses_plan_check", oneOf(t.plan, PLANS)),
     check("businesses_status_check", oneOf(t.status, BUSINESS_STATUSES)),
+    check("businesses_billing_status_check", oneOf(t.billingStatus, BILLING_STATUSES)),
     check("businesses_currency_check", sql`${t.currency} ~ '^[A-Z]{3}$'`),
     check("businesses_country_check", sql`${t.country} ~ '^[A-Z]{2}$'`),
     check(

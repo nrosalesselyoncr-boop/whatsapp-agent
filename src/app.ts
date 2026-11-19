@@ -1,3 +1,7 @@
+import { resolveSuperadmin } from "./admin/session";
+import { createStripeWebhookHandler, STRIPE_WEBHOOK_PATH, type PlanService, type StripeConfig, type StripeGateway } from "./modules/billing";
+import { createSessionResolver } from "./modules/team";
+import { createWhatsAppWebhookHandler, WHATSAPP_WEBHOOK_PATH, type WhatsAppDeps } from "./modules/whatsapp";
 import type { Executor } from "./platform/db/scope";
 import { serveHealth } from "./platform/http/health";
 import { sendJson } from "./platform/http/http";
@@ -6,7 +10,9 @@ import { createRouter, PANEL_API_PREFIX, type RouterOptions } from "./platform/h
 import { serveStaticPanel } from "./platform/http/staticPanel";
 import type { HttpHandler } from "./platform/net/http";
 import { withSecurityHeaders } from "./platform/net/securityHeaders";
+import { createPlans } from "./plans";
 import { panelRoutes } from "./routes";
+import { createUsageTracker, type UsageTracker } from "./usage";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Composición del handler HTTP: qué sirve cada tipo de proceso. Separado de server.ts
@@ -22,15 +28,38 @@ export type ProcessRole = "web" | "worker" | "all";
 
 /**
  * Lo inyectable del router de la API: sesión del equipo, del superadmin y módulos del
- * plan. Sin configurar, las rutas con sesión responden 401 y las de un módulo 403 (la
- * identidad real llega en I0.6 y los planes en I2).
+ * plan. Lo que no se pase usa la implementación real (`defaultPanelApiAccess`); un test
+ * puede reemplazar una pieza (p. ej. un `moduleGate` que niega) sin tocar las demás.
  */
 export type PanelApiAccess = Pick<RouterOptions, "resolveSession" | "resolveSuperadmin" | "moduleGate">;
+
+/**
+ * Acceso real: la sesión del equipo validada contra la base (src/modules/team/session.ts),
+ * la del superadmin por cookie firmada (src/admin/session.ts) y los módulos del plan
+ * (src/modules/billing, compuesto en src/plans.ts).
+ */
+export function defaultPanelApiAccess(
+  db: Executor,
+  plans: PlanService = createPlans(db),
+  usage: UsageTracker = createUsageTracker(),
+): Required<PanelApiAccess> {
+  // Cada request con sesión marca a la persona como activa hoy (`daily_usage`, src/usage.ts).
+  return { resolveSession: createSessionResolver(db, { onSession: usage.sessionSeen }), resolveSuperadmin, moduleGate: plans.moduleGate };
+}
 
 export interface AppOptions {
   db: Executor;
   role: ProcessRole;
   panelApi?: PanelApiAccess;
+  /** Dependencias del módulo WhatsApp (los tests inyectan dobles de Graph). Default: las reales. */
+  whatsapp?: WhatsAppDeps;
+  /**
+   * Planes (módulos, cupos, marca, `me.plan`). Default: el servicio real de billing con el
+   * uso del agente de WhatsApp (src/plans.ts).
+   */
+  plans?: PlanService;
+  /** Cliente de Stripe (rutas de /billing y webhook; los tests pasan un doble). Default: el SDK real. */
+  stripeGateway?: (config: StripeConfig) => StripeGateway;
 }
 
 function requestUrl(rawUrl: string | undefined): URL {
@@ -39,12 +68,23 @@ function requestUrl(rawUrl: string | undefined): URL {
 }
 
 /**
- * Handler completo (`ROLE=web` y `ROLE=all`): /health, la API del panel (router
- * declarativo, rutas en src/routes.ts), la landing en `/` y el panel estático en `/panel`.
+ * Handler completo (`ROLE=web` y `ROLE=all`): /health, los webhooks de WhatsApp y Stripe, la API del
+ * panel (router declarativo, rutas en src/routes.ts), la landing en `/` y el panel
+ * estático en `/panel`.
  */
-export function createAppHandler({ db, role, panelApi = {} }: AppOptions): HttpHandler {
+export function createAppHandler({ db, role, panelApi = {}, whatsapp, plans = createPlans(db), stripeGateway }: AppOptions): HttpHandler {
+  // Métricas de producto (`daily_usage`): un solo rastreador para las rutas y la sesión.
+  const usage = createUsageTracker();
   // Se arma una vez por proceso: una declaración de rutas incoherente rompe el arranque.
-  const panelApiHandler = createRouter({ routes: panelRoutes({ db }), ...panelApi });
+  const panelApiHandler = createRouter({
+    routes: panelRoutes({ db, plans, whatsapp, usage, stripeGateway }),
+    ...defaultPanelApiAccess(db, plans, usage),
+    ...panelApi,
+  });
+  // Webhook de WhatsApp: lo llama Meta (firma propia; sin sesión ni CSRF del panel).
+  const whatsappWebhook = createWhatsAppWebhookHandler({ db });
+  // Webhook de Stripe (I6.6): lo llama Stripe, con su firma; sin Stripe configurado, 503.
+  const stripeWebhook = createStripeWebhookHandler({ db, gateway: stripeGateway });
 
   return withSecurityHeaders(async (req, res) => {
     const url = requestUrl(req.url);
@@ -52,6 +92,18 @@ export function createAppHandler({ db, role, panelApi = {} }: AppOptions): HttpH
 
     if (pathname === "/health") {
       await serveHealth(res, url, db, { role });
+      return;
+    }
+
+    // Webhook de WhatsApp (Meta): verificación GET y mensajes POST firmados.
+    if (pathname === WHATSAPP_WEBHOOK_PATH) {
+      await whatsappWebhook(req, res);
+      return;
+    }
+
+    // Webhook de Stripe: suscripciones (plan y estado del cobro).
+    if (pathname === STRIPE_WEBHOOK_PATH) {
+      await stripeWebhook(req, res);
       return;
     }
 

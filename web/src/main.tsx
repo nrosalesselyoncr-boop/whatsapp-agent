@@ -1,53 +1,71 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import App from "./App";
-import { ApiError, esCuentaPausada, esNoAutenticado } from "./api";
-import { initTema } from "./lib/tema";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import App from "./app/App";
+import AppErrorBoundary from "./app/AppErrorBoundary";
+import { ME_QUERY_KEY } from "./app/session";
+import { ADMIN_ME_QUERY_KEY } from "./modules/admin/adminApi";
+import { onBusinessPaused, onUnauthorized, setTransport } from "./lib/api";
+import { initErrorTracking } from "./lib/errorTracking";
+import { APP_BASE, IS_DEMO, IS_MOCK_API } from "./lib/mockMode";
+import { registerServiceWorker } from "./lib/push";
+import { initTheme } from "./lib/theme";
+import { ToastProvider } from "./ui/Toast";
 import "./global.css";
 
-// Aplicar el tema antes del primer render para evitar flash (claro → oscuro).
-initTema();
+// Reporte de errores (Sentry) antes de todo: solo si el server mandó el DSN en el index.
+initErrorTracking();
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Cliente de TanStack Query. Centraliza fetching/caché/polling del panel.
-//
-// Manejo global de sesión expirada: si CUALQUIER query o mutación recibe un 401,
-// marcamos la sesión como nula (queryKey ["me"]) → <App> muestra el login. Así no
-// repetimos el chequeo de 401 en cada pantalla (lo hacía el `api()` del inbox.html).
-// ─────────────────────────────────────────────────────────────────────────────
-function alFallar(error: unknown) {
-  // Negocio pausado mientras el panel estaba abierto: cualquier llamada responde 403
-  // "cuenta_pausada" → se revalida ["me"], que también da 403 y <App> muestra el aviso.
-  if (esCuentaPausada(error)) {
-    if (error.path !== "/me") void queryClient.invalidateQueries({ queryKey: ["me"] });
-    return;
-  }
-  if (!esNoAutenticado(error)) return;
-  // Un 401 cae a la compuerta correcta: las rutas /admin/* a ["adminMe"], el resto a ["me"].
-  const path = error instanceof ApiError ? error.path : undefined;
-  queryClient.setQueryData(path?.startsWith("/admin") ? ["adminMe"] : ["me"], null);
+// Modo mock (VITE_MOCK_API=1): la API responde con lib/mockApi.ts, sin red. En el build
+// normal `IS_MOCK_API` es `false` en compilación y el mock no viaja en el bundle.
+if (IS_MOCK_API) {
+  setTransport(async (req) => (await import("./lib/mockApi")).mockTransport(req));
+}
+
+// El tema se aplica antes del primer render para que no parpadee.
+initTheme();
+
+// Service worker del panel (PWA + push, src/sw.ts): solo en el build, que es donde existe
+// /panel/sw.js (en desarrollo Vite no lo sirve). Si falla, el panel sigue igual.
+// La demo (/demo) no registra el service worker: no es instalable ni manda notificaciones.
+if (import.meta.env.PROD && !IS_DEMO) {
+  window.addEventListener("load", () => void registerServiceWorker());
 }
 
 const queryClient = new QueryClient({
-  queryCache: new QueryCache({ onError: alFallar }),
-  mutationCache: new MutationCache({ onError: alFallar }),
   defaultOptions: {
     queries: {
-      retry: false, // un 401/404 no se reintenta; el polling (refetchInterval) ya revalida
+      retry: false, // un 401/403/404 no se arregla reintentando
       refetchOnWindowFocus: false,
     },
   },
 });
 
+// Sesión vencida en cualquier llamada (401 `unauthorized`): se limpia la sesión que
+// corresponde y las guardas de ruta mandan al login correcto (panel o superadmin).
+onUnauthorized((path) => {
+  queryClient.setQueryData(path.startsWith("/admin") ? ADMIN_ME_QUERY_KEY : ME_QUERY_KEY, null);
+});
+
+// Negocio pausado en medio de la sesión (403 `business_paused`): se vuelve a pedir la
+// sesión, que responde lo mismo, y `RequireAuth` muestra "Cuenta pausada".
+onBusinessPaused(() => {
+  void queryClient.refetchQueries({ queryKey: ME_QUERY_KEY });
+});
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      {/* basename="/panel": el panel se sirve bajo /panel (mismo base que Vite). */}
-      <BrowserRouter basename="/panel">
-        <App />
-      </BrowserRouter>
-    </QueryClientProvider>
+    {/* Un error de render en cualquier parte muestra "Algo salió mal" y se reporta. */}
+    <AppErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        {/* basename "/panel" (o "/demo" en la demo pública): el mismo base que Vite. */}
+        <BrowserRouter basename={APP_BASE}>
+          <ToastProvider>
+            <App />
+          </ToastProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </AppErrorBoundary>
   </StrictMode>,
 );

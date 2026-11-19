@@ -33,7 +33,8 @@ import { validateInput, type InputSource } from "./validation";
 //   1. Ruta y método ............ 404 / 405 (con `Allow`)
 //   2. CSRF de mismo origen ..... 403 `forbidden_origin` (POST/PUT/PATCH/DELETE)
 //   3. Tope del cuerpo .......... 413 `payload_too_large`
-//   4. Sesión ................... 401 `unauthorized`
+//   4. Sesión ................... 401 `unauthorized` (negocio pausado: 403 `business_paused`,
+//                                 salvo las rutas con `allowWhenPaused`)
 //   5. Rol ...................... 403 `forbidden_role`
 //   6. Módulo del plan .......... 403 `module_not_in_plan`
 //   7. Sucursal (X-Location-Id) . 400 `location_required` / `location_invalid`,
@@ -46,8 +47,9 @@ import { validateInput, type InputSource } from "./validation";
 // cookie (login), el handler hace `ctx.res.setHeader("set-cookie", …)` y devuelve sus
 // datos; si escribe la respuesta él mismo (descarga, stream), el router no la toca.
 //
-// Sesión, superadmin y planes son INYECTABLES (la identidad real llega en I0.6 y los
-// planes en I2). Defaults seguros: sin resolver configurado toda ruta `user` o
+// Sesión, superadmin y planes son INYECTABLES (la identidad real vive en
+// src/modules/team y src/admin, los planes en src/modules/billing, y los arma src/app.ts). Defaults
+// seguros: sin resolver configurado toda ruta `user` o
 // `superadmin` responde 401, y sin `moduleGate` toda ruta con `module` responde 403.
 //
 // Cómo registra rutas un módulo: exporta una función que devuelve su lista
@@ -147,14 +149,14 @@ export function route<
   QS extends z.ZodType | undefined = undefined,
   BS extends z.ZodType | undefined = undefined,
 >(spec: RouteSpec<M, P, A, L, PS, QS, BS>, handler: (ctx: ContextFor<P, A, L, PS, QS, BS>) => unknown): Route {
-  const { method, path, auth, roles, module, location, params, query, body, maxBodyBytes } = spec;
+  const { method, path, auth, roles, module, location, allowWhenPaused, params, query, body, maxBodyBytes } = spec;
   const where = `${String(method)} ${String(path)}`;
 
   if (!METHODS.includes(method)) throw new Error(`route ${where}: método no soportado`);
   if (!AUTH_MODES.includes(auth)) throw new Error(`route ${where}: auth inválido "${String(auth)}"`);
   const segments = compilePath(path);
-  if (auth !== "user" && (roles !== undefined || module !== undefined || location !== undefined)) {
-    throw new Error(`route ${where}: roles, module y location solo aplican a auth "user"`);
+  if (auth !== "user" && (roles !== undefined || module !== undefined || location !== undefined || allowWhenPaused !== undefined)) {
+    throw new Error(`route ${where}: roles, module, location y allowWhenPaused solo aplican a auth "user"`);
   }
   if (roles !== undefined && roles.length === 0) {
     throw new Error(`route ${where}: roles vacío dejaría la ruta sin acceso (omitilo para permitir todos los roles)`);
@@ -177,6 +179,7 @@ export function route<
     roles: roles === undefined ? undefined : Object.freeze([...roles]),
     module,
     location,
+    allowWhenPaused: allowWhenPaused === true ? true : undefined,
     params,
     query,
     body,
@@ -423,7 +426,7 @@ export function createRouter(options: RouterOptions): HttpHandler {
     let session: Session | SuperadminSession | null = null;
     let locationId: string | null = null;
     if (r.auth === "user") {
-      const userSession = resolveSession ? await resolveSession(req) : null;
+      const userSession = resolveSession ? await resolveSession(req, r.allowWhenPaused ? { allowPaused: true } : undefined) : null;
       if (!userSession) throw unauthorized();
       session = userSession;
       logFields.businessId = userSession.businessId;

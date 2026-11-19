@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  date,
   index,
   integer,
   pgPolicy,
@@ -13,8 +14,8 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import { instant, oneOf, timestamps, uuidPk } from "../../platform/db/columns";
-import { appRuntimeRole, tenantPolicy } from "../../platform/db/rls";
+import { createdAt, instant, oneOf, timestamps, uuidPk } from "../../platform/db/columns";
+import { appRuntimeRole, systemOnlyPolicy, tenantPolicy } from "../../platform/db/rls";
 import { businesses, locations } from "../business/schema";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -60,11 +61,23 @@ export const users = pgTable(
     // "salt:hash" scrypt (src/platform/auth/password.ts). null = invitado que todavía no
     // eligió su clave.
     passwordHash: text("password_hash"),
-    // Secreto TOTP del 2FA opcional, cifrado con src/platform/crypto/secrets.ts.
+    // Secreto TOTP del 2FA opcional, cifrado con src/platform/crypto/secrets.ts. Puede
+    // existir sin estar activo (se generó en /auth/totp/setup y falta confirmarlo con un
+    // código): el 2FA rige solo con `totp_enabled_at`.
     totpSecret: text("totp_secret"),
+    // Cuándo se activó el 2FA (null = no se pide código al entrar).
+    totpEnabledAt: instant("totp_enabled_at"),
     // Revocación de sesiones: el token lleva el epoch con el que se firmó; cambiar clave,
     // rol o estado lo incrementa y todo token viejo deja de valer en la próxima request.
     sessionEpoch: integer("session_epoch").notNull().default(0),
+    // El panel exige elegir una clave nueva antes de seguir (p. ej. tras una clave
+    // temporal puesta por soporte). Cambiarla o restablecerla lo apaga.
+    mustChangePassword: boolean("must_change_password").notNull().default(false),
+    // Alta self-service (I6.7): la cuenta todavía no confirmó su correo y no puede entrar.
+    // Solo la prende el registro público; las cuentas que crea el superadmin o una
+    // invitación ya prueban el correo con el link que reciben. La apaga el link de
+    // verificación (o uno de recuperación de clave o de invitación: también llegan al correo).
+    emailVerificationPending: boolean("email_verification_pending").notNull().default(false),
     active: boolean("active").notNull().default(true),
     ...timestamps(),
   },
@@ -89,6 +102,10 @@ export const memberships = pgTable(
       .references(() => users.id, { onDelete: "cascade" }),
     role: text("role").notNull(),
     active: boolean("active").notNull().default(true),
+    // Último día local (zona del negocio) en que la persona usó el panel de este negocio.
+    // Lo marca la sesión (`markMemberActive`) una vez por día: así "usuarios activos" de
+    // `daily_usage` cuenta a cada persona una sola vez por día aunque haya varias réplicas.
+    lastActiveOn: date("last_active_on"),
     ...timestamps(),
   },
   (t) => [
@@ -208,6 +225,88 @@ export const timeOff = pgTable(
   ],
 ).enableRLS();
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Tokens de un solo uso que viajan por correo: recuperación de clave (vence en 1 h),
+// invitación al equipo de un negocio (vence en 7 días) y verificación del correo del alta
+// self-service (vence en 48 h). En la base queda solo el sha256
+// del token (un dump no permite usar ningún link vigente); el token en claro existe solo
+// en el correo. `used_at` lo marca un UPDATE atómico (`… WHERE used_at IS NULL`): dos
+// clics simultáneos en el mismo link no lo consumen dos veces.
+//
+// Solo de sistema: se leen ANTES de que exista una sesión (el link llega sin cookie) y
+// ningún negocio tiene por qué ver los tokens de nadie.
+// ─────────────────────────────────────────────────────────────────────────────
+export const AUTH_TOKEN_KINDS = ["password_reset", "invitation", "email_verification"] as const;
+export type AuthTokenKind = (typeof AUTH_TOKEN_KINDS)[number];
+
+export const authTokens = pgTable(
+  "auth_tokens",
+  {
+    id: uuidPk(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    // Negocio de la invitación (null en la recuperación de clave: la cuenta es de la plataforma).
+    businessId: uuid("business_id").references(() => businesses.id, { onDelete: "cascade" }),
+    kind: text("kind").notNull(),
+    // sha256 (hex) del token que va en el link.
+    tokenHash: text("token_hash").notNull(),
+    expiresAt: instant("expires_at").notNull(),
+    usedAt: instant("used_at"),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    uniqueIndex("auth_tokens_token_hash_uq").on(t.tokenHash),
+    // "Invalidar los links anteriores de esta persona" al emitir uno nuevo.
+    index("auth_tokens_user_kind_idx").on(t.userId, t.kind),
+    check("auth_tokens_kind_check", oneOf(t.kind, AUTH_TOKEN_KINDS)),
+    check("auth_tokens_invitation_business_check", sql`${t.kind} <> 'invitation' OR ${t.businessId} IS NOT NULL`),
+    systemOnlyPolicy(),
+  ],
+).enableRLS();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Aceptación de los documentos legales (Carril P, "privacidad y términos"): qué versión de
+// los términos y del aviso de privacidad (src/platform/legal.ts) aceptó cada persona en
+// cada negocio, y cuándo. Una fila por aceptación (append-only: la vigente es la última),
+// así queda la prueba de qué texto aceptó cada quien aunque el texto cambie después.
+//
+//   • `signup`       — la dueña al dar de alta el negocio (acepta también en su nombre).
+//   • `invitation`   — quien entra al equipo al aceptar la invitación.
+//   • `reacceptance` — el aviso del panel cuando sube la versión.
+//
+// `role` es el rol que tenía al aceptar (el de dueño es el que obliga al negocio). Sin IP
+// ni navegador a propósito: el rastro es la fila + su entrada en `audit_log`.
+// ─────────────────────────────────────────────────────────────────────────────
+export const LEGAL_ACCEPTANCE_CONTEXTS = ["signup", "invitation", "reacceptance"] as const;
+export type LegalAcceptanceContext = (typeof LEGAL_ACCEPTANCE_CONTEXTS)[number];
+
+export const legalAcceptances = pgTable(
+  "legal_acceptances",
+  {
+    id: uuidPk(),
+    businessId: businessId(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    role: text("role").notNull(),
+    context: text("context").notNull(),
+    termsVersion: text("terms_version").notNull(),
+    privacyVersion: text("privacy_version").notNull(),
+    acceptedAt: instant("accepted_at").notNull().defaultNow(),
+  },
+  (t) => [
+    // "¿Qué aceptó por última vez esta persona en este negocio?"
+    index("legal_acceptances_business_user_idx").on(t.businessId, t.userId, t.acceptedAt),
+    index("legal_acceptances_user_idx").on(t.userId),
+    check("legal_acceptances_role_check", oneOf(t.role, MEMBERSHIP_ROLES)),
+    check("legal_acceptances_context_check", oneOf(t.context, LEGAL_ACCEPTANCE_CONTEXTS)),
+    check("legal_acceptances_terms_version_check", sql`${t.termsVersion} ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'`),
+    check("legal_acceptances_privacy_version_check", sql`${t.privacyVersion} ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'`),
+    tenantPolicy(),
+  ],
+).enableRLS();
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Membership = typeof memberships.$inferSelect;
@@ -220,3 +319,7 @@ export type StaffHour = typeof staffHours.$inferSelect;
 export type NewStaffHour = typeof staffHours.$inferInsert;
 export type TimeOff = typeof timeOff.$inferSelect;
 export type NewTimeOff = typeof timeOff.$inferInsert;
+export type AuthToken = typeof authTokens.$inferSelect;
+export type NewAuthToken = typeof authTokens.$inferInsert;
+export type LegalAcceptance = typeof legalAcceptances.$inferSelect;
+export type NewLegalAcceptance = typeof legalAcceptances.$inferInsert;

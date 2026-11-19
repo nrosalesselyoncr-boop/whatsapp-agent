@@ -1,0 +1,53 @@
+import { api } from "../../lib/api";
+import type {
+  AcceptInvitationInput,
+  Invitation,
+  LoginInput,
+  LoginResult,
+  Me,
+  MeLegal,
+  SignupConfig,
+  SignupInput,
+  TotpSetup,
+} from "../../lib/contract";
+
+// Endpoints de identidad del panel (contrato de I0.6). La sesión (`/auth/me`, logout y
+// cambio de negocio) está en app/session.tsx.
+
+export const login = (input: LoginInput) => api.post<LoginResult>("/auth/login", input);
+
+export const forgotPassword = (email: string) => api.post<void>("/auth/password/forgot", { email });
+
+export const resetPassword = (token: string, password: string) =>
+  api.post<void>("/auth/password/reset", { token, password });
+
+export const changePassword = (currentPassword: string, newPassword: string) =>
+  api.post<void>("/auth/password/change", { currentPassword, newPassword });
+
+export const getInvitation = (token: string) => api.get<Invitation>(`/auth/invitations/${encodeURIComponent(token)}`);
+
+export const acceptInvitation = (input: AcceptInvitationInput) => api.post<Me>("/auth/invitations/accept", input);
+
+/** Acepta la versión vigente de los términos y del aviso de privacidad (la que se mostró). */
+export const acceptLegal = (version: string) => api.post<MeLegal>("/auth/legal/accept", { version });
+
+export const setupTotp = () => api.post<TotpSetup>("/auth/totp/setup");
+
+// Activar y desactivar responden 204 (el backend re-emite la cookie de la sesión).
+export const enableTotp = (code: string) => api.post<void>("/auth/totp/enable", { code });
+
+export const disableTotp = (password: string, code: string) => api.post<void>("/auth/totp/disable", { password, code });
+
+// Alta self-service (I6.7): config pública, registro y verificación del correo.
+export const SIGNUP_CONFIG_QUERY_KEY = ["signup-config"] as const;
+
+export const getSignupConfig = () => api.get<SignupConfig>("/auth/signup/config");
+
+export const signUp = (input: SignupInput) => api.post<{ status: "verification_sent" }>("/auth/signup", input);
+
+export const verifyEmail = (token: string) => api.post<void>("/auth/verify-email", { token });
+
+export const resendVerification = (email: string) => api.post<void>("/auth/verify-email/resend", { email });
+
+/** Mínimo de la clave que el panel valida antes de mandar (el backend es la autoridad). */
+export const MIN_PASSWORD_LENGTH = 8;

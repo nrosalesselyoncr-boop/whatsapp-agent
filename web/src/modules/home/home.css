@@ -1,0 +1,90 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Inicio básico: tarjetas del día. Tokens de global.css; una columna en el celular.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.home-card { display: flex; flex-direction: column; gap: var(--space-sm); }
+.home-card .card-title { margin-bottom: 0; }
+.home-card-head { display: flex; align-items: center; gap: var(--space-xs); }
+.home-count { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: var(--radius-sm); background: var(--surface-sunken); color: var(--text-secondary); font-size: var(--step--1); font-weight: 500; }
+.home-status-list { display: flex; flex-direction: column; gap: 6px; }
+.home-status-list li { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); font-weight: 500; font-variant-numeric: tabular-nums; }
+.home-list { display: flex; flex-direction: column; gap: 4px; }
+.home-row { display: flex; align-items: center; gap: var(--space-xs); }
+.home-item { flex: 1; min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--space-sm); row-gap: 2px; padding: 8px 10px; border-radius: var(--radius-md); text-decoration: none; color: var(--text); font-size: var(--step-0); min-height: 44px; transition: background var(--dur-fast) var(--ease); }
+.home-item:hover { background: var(--surface-sunken); }
+.home-item-time { font-size: var(--step--1); font-weight: 700; font-variant-numeric: tabular-nums; grid-row: span 2; align-self: start; min-width: 64px; }
+.home-item-main { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.home-item-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.home-item-simple { grid-template-columns: minmax(0, 1fr); }
+
+/* Primeros pasos (I6): checklist arriba del Inicio para los negocios nuevos. */
+.onboarding { display: flex; flex-direction: column; gap: var(--space-sm); margin-bottom: var(--space-md); }
+.onboarding-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-sm); }
+.onboarding-head .card-title { margin-bottom: 2px; }
+.onboarding-progress { height: 6px; border-radius: var(--radius-pill); background: var(--surface-sunken); overflow: hidden; }
+.onboarding-progress span { display: block; height: 100%; border-radius: inherit; background: var(--accent); transition: width var(--dur-slow) var(--ease); }
+.onboarding-steps { display: flex; flex-direction: column; gap: var(--space-xs); list-style: none; padding: 0; margin: 0; }
+.onboarding-step { display: flex; align-items: center; gap: var(--space-sm); min-width: 0; min-height: 44px; }
+.onboarding-check { flex: none; display: inline-grid; place-items: center; width: 22px; height: 22px; border: 1.5px solid var(--border-strong); border-radius: 50%; color: var(--accent-fg); }
+.onboarding-step.done .onboarding-check { border-color: var(--accent); background: var(--accent); }
+.onboarding-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.onboarding-title { font-weight: 500; color: var(--text); overflow-wrap: anywhere; }
+.onboarding-step.done .onboarding-title { color: var(--text-secondary); text-decoration: line-through; }
+.onboarding-step .onboarding-cta { flex: none; min-height: 36px; padding: 6px 12px; }
+@media (prefers-reduced-motion: reduce) { .onboarding-progress span { transition: none; } }
+
+/* ── Dos columnas en escritorio ──
+   Columna principal (ingresos, próximas citas, citas de hoy) y lateral (agente, alertas,
+   sin confirmar, no asistieron, agendadas por el agente). En el celular, una columna. */
+.home-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
+.home-col { display: grid; gap: 14px; min-width: 0; }
+.home-layout .card { padding: 18px 20px; }
+.home-card .card-title { font-size: var(--step-1); }
+.home-big { font-size: var(--step-4); line-height: 30px; font-weight: 700; color: var(--text); }
+.home-big-accent { color: var(--accent); }
+/* Conversaciones que esperan a una persona: el número va resaltado (te esperan). */
+.home-big-warn { color: var(--on-highlight); background: var(--highlight); border-radius: var(--radius-sm); padding: 0 8px; justify-self: start; width: max-content; }
+.home-count { border-radius: var(--radius-pill); }
+.home-item:hover { background: var(--hover); }
+.home-status-list li { padding: 7px 0; border-top: 1px solid var(--border); }
+.home-status-list li:first-child { border-top: none; padding-top: 0; }
+.wa-home-stats li { padding: 9px 0; border-top: 1px solid var(--border); }
+.home-item-status { grid-column: 2; justify-self: start; margin-top: 2px; }
+
+@media (min-width: 1100px) {
+  .home-layout { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); }
+  /* Próximas citas en una fila: hora · cliente y servicio · profesional · estado. */
+  .home-item-wide { grid-template-columns: 78px minmax(0, 1.4fr) minmax(0, 1fr) auto; align-items: center; column-gap: 12px; border-radius: 0; border-top: 1px solid var(--border); padding: 10px 0; }
+  .home-list > li:first-child .home-item-wide { border-top: none; }
+  .home-item-wide:hover { background: transparent; }
+  .home-item-wide:hover .home-item-main { color: var(--accent); }
+  .home-item-wide .home-item-time { grid-row: auto; align-self: center; min-width: 0; white-space: nowrap; color: var(--text); font-size: var(--step--1); font-weight: 700; }
+  .home-item-wide .home-item-status { grid-column: auto; justify-self: end; margin-top: 0; }
+}
+
+/* La fecha del subtítulo solo en el celular: en escritorio ya está resaltada arriba. */
+@media (min-width: 768px) { .home-subtitle-date { display: none; } }
+
+/* Una columna (celular, tablet): primero lo que espera a una persona, después las citas que
+   vienen y las de hoy, y el resto. Las columnas se disuelven para poder ordenar las piezas. */
+@media (max-width: 1099px) {
+  .home-col { display: contents; }
+  .home-layout > .home-col > * { order: 3; }
+  .home-layout > .home-col > .home-waiting { order: 0; }
+  .home-layout > .home-col > .home-upcoming { order: 1; }
+  .home-layout > .home-col > .home-today { order: 2; }
+}
+
+/* Escritorio: la columna lateral son listas sobre el papel, con un filete arriba, no cajas;
+   la única caja es "Conversaciones esperando" (lo que espera a alguien). */
+@media (min-width: 1100px) {
+  .home-col + .home-col > .card:not(.home-waiting) { background: transparent; border: none; border-top: 1px solid var(--border-strong); border-radius: 0; padding: var(--space-md) 2px 0; }
+}
+
+/* Recorrido de la demo pública (DemoTour): los pasos van numerados (sí son una secuencia). */
+.demo-tour .demo-tour-num { color: var(--text); font-size: var(--step--1); font-weight: 700; border-color: var(--border-control); }
+@media (max-width: 639px) {
+  .demo-tour .onboarding-step { flex-wrap: wrap; row-gap: var(--space-xs); }
+  .demo-tour .onboarding-text { flex: 1 1 calc(100% - 40px); }
+  .demo-tour .onboarding-step .onboarding-cta { margin-left: 34px; }
+}

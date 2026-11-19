@@ -1,17 +1,25 @@
 import { randomUUID } from "node:crypto";
 import { pathToFileURL } from "node:url";
-import { eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
+import { applyIndustryTemplate } from "../src/modules/business";
 import { businesses, locationHours, locations } from "../src/modules/business/schema";
-import { serviceCategories, serviceLocations, services, staffServices } from "../src/modules/catalog/schema";
+import { applyCatalogTemplate } from "../src/modules/catalog";
+import { serviceLocations, services, staffServices } from "../src/modules/catalog/schema";
 import { clients } from "../src/modules/clients/schema";
-import { paymentMethods, payments } from "../src/modules/sales/schema";
+import { recalculateAppointmentCommissions } from "../src/modules/commissions";
+import { commissionRules } from "../src/modules/commissions/schema";
+import { seedDefaultPaymentMethods } from "../src/modules/sales";
+import { payments } from "../src/modules/sales/schema";
 import { appointments, appointmentServices, type AppointmentChannel, type AppointmentStatus } from "../src/modules/scheduling/schema";
-import { memberships, staff, staffHours, users } from "../src/modules/team/schema";
-import { generateTemporaryPassword, hashPassword } from "../src/platform/auth/password";
+import { membershipLocations, memberships, staff, staffHours, users } from "../src/modules/team/schema";
+import { hashPassword } from "../src/platform/auth/password";
 import { withSystem, withTenant, type Executor } from "../src/platform/db/scope";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Seed de DESARROLLO: un negocio demo genérico de estética para ver el producto con datos.
+// Seed de DESARROLLO: un negocio demo de estética para ver el producto con datos. Nace
+// de la plantilla de rubro `aesthetics` (src/modules/business/templates/aesthetics.json:
+// terminología, campos personalizados y catálogo de ejemplo), igual que un alta real; el
+// seed le suma precios de demo, sucursales, equipo, clientes y citas.
 //   Uso:  npm run seed:dev
 //
 // Base: DATABASE_URL_MIGRATIONS o DATABASE_URL si están (nunca con NODE_ENV=production);
@@ -20,13 +28,21 @@ import { withSystem, withTenant, type Executor } from "../src/platform/db/scope"
 // base es en memoria y el seed solo sirve como prueba de humo.
 //
 // Idempotente: si el negocio demo ya existe, se borra (cascada) y se vuelve a crear.
-// Crea un usuario dueño con una clave al azar que se imprime UNA vez por consola (solo
-// desarrollo; la identidad completa es I0.6). Teléfonos con prefijo +506 0… (no existen
-// en Costa Rica) y correos @example.com: nada de esto le llega a una persona real.
+// Crea tres usuarios con una clave CONOCIDA de desarrollo (se imprime por consola) para
+// entrar al panel con POST /api/panel/auth/login: la dueña (todas las sucursales), una
+// recepcionista que solo entra a Escazú (para ver el permiso por sucursal) y Ana, una
+// especialista vinculada a su carril de la agenda ("Mi agenda": solo sus citas). Esa clave es
+// pública (está en el repo): el seed se niega a correr con NODE_ENV=production.
+// Teléfonos con prefijo +506 0… (no existen en Costa Rica) y correos @example.com /
+// .test: nada de esto le llega a una persona real.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const DEMO_SLUG = "demo-estetica";
 export const DEMO_OWNER_EMAIL = "owner@demo-estetica.test";
+export const DEMO_FRONT_DESK_EMAIL = "recepcion@demo-estetica.test";
+export const DEMO_STAFF_EMAIL = "ana@demo-estetica.test";
+/** Clave de desarrollo de los usuarios demo. Solo desarrollo: es pública. */
+export const DEMO_PASSWORD = "demo1234";
 
 // Costa Rica no tiene horario de verano: el offset es fijo todo el año.
 const TIMEZONE = "America/Costa_Rica";
@@ -41,7 +57,10 @@ export interface SeedResult {
   businessId: string;
   replaced: boolean;
   ownerEmail: string;
-  ownerPassword: string;
+  frontDeskEmail: string;
+  staffEmail: string;
+  /** Clave de los usuarios demo (`DEMO_PASSWORD`). */
+  password: string;
   counts: Record<"locations" | "staff" | "services" | "clients" | "appointments" | "payments", number>;
 }
 
@@ -49,16 +68,20 @@ export interface SeedResult {
 export async function seedDev(db: Executor, options: { now?: Date } = {}): Promise<SeedResult> {
   const now = options.now ?? new Date();
 
-  // Lo global (negocio previo y usuario dueño) es de sistema; el resto, con el alcance del negocio.
-  const { replaced, ownerId, ownerPassword } = await withSystem(db, async (tx) => {
+  // Lo global (negocio previo y usuarios demo) es de sistema; el resto, con el alcance del negocio.
+  const passwordHash = await hashPassword(DEMO_PASSWORD);
+  const { replaced, ownerId, frontDeskId, staffUserId } = await withSystem(db, async (tx) => {
     const previous = await tx.delete(businesses).where(eq(businesses.slug, DEMO_SLUG)).returning({ id: businesses.id });
-    await tx.delete(users).where(eq(users.email, DEMO_OWNER_EMAIL));
-    const password = generateTemporaryPassword();
-    const [owner] = await tx
+    await tx.delete(users).where(inArray(users.email, [DEMO_OWNER_EMAIL, DEMO_FRONT_DESK_EMAIL, DEMO_STAFF_EMAIL]));
+    const [owner, frontDesk, staffUser] = await tx
       .insert(users)
-      .values({ email: DEMO_OWNER_EMAIL, name: "Dueña Demo", passwordHash: await hashPassword(password) })
+      .values([
+        { email: DEMO_OWNER_EMAIL, name: "Dueña Demo", passwordHash },
+        { email: DEMO_FRONT_DESK_EMAIL, name: "Recepción Escazú", passwordHash },
+        { email: DEMO_STAFF_EMAIL, name: "Ana Rojas", passwordHash },
+      ])
       .returning({ id: users.id });
-    return { replaced: previous.length > 0, ownerId: owner.id, ownerPassword: password };
+    return { replaced: previous.length > 0, ownerId: owner.id, frontDeskId: frontDesk.id, staffUserId: staffUser.id };
   });
 
   const businessId = randomUUID();
@@ -69,12 +92,17 @@ export async function seedDev(db: Executor, options: { now?: Date } = {}): Promi
       name: "Estética Demo",
       industry: "aesthetics",
       plan: "pro",
+      // Pro por cantidad contratada: dos sucursales y lugar para sumar equipo en la demo.
+      extraModules: { limits: { locations: 3, staff: 10, users: 10 } },
       currency: "CRC",
       country: "CR",
       timezone: TIMEZONE,
-      terminology: { staffMember: "especialista", staff: "especialistas" },
       reminderChannels: ["whatsapp", "email"],
+      // La demo ya viene configurada: sin el checklist de primeros pasos en el Inicio.
+      onboardingDismissedAt: new Date(),
     });
+    // Plantilla de estética: terminología ("especialista"), campos y catálogo de ejemplo.
+    await applyIndustryTemplate(tx, { businessId, industry: "aesthetics" }, { seedCatalog: applyCatalogTemplate });
     await tx.insert(memberships).values({ businessId, userId: ownerId, role: "owner" });
 
     // ── Sucursales y su horario (0 = domingo … 6 = sábado) ──
@@ -85,6 +113,12 @@ export async function seedDev(db: Executor, options: { now?: Date } = {}): Promi
         { businessId, name: "Heredia", address: "Centro Comercial Demo, 2.º piso", phone: "+50600000200", timezone: TIMEZONE, position: 1 },
       ])
       .returning({ id: locations.id });
+    // Recepción: solo Escazú (sin filas en membership_locations sería "todas").
+    const [frontDeskMembership] = await tx
+      .insert(memberships)
+      .values({ businessId, userId: frontDeskId, role: "front_desk" })
+      .returning({ id: memberships.id });
+    await tx.insert(membershipLocations).values({ businessId, membershipId: frontDeskMembership.id, locationId: escazu.id });
     const block = (locationId: string, weekday: number, opensAt: string, closesAt: string) => ({
       businessId,
       locationId,
@@ -101,10 +135,15 @@ export async function seedDev(db: Executor, options: { now?: Date } = {}): Promi
     ]);
 
     // ── Equipo y su horario por sucursal ──
+    // Ana entra con su usuario (rol staff, todas las sucursales donde trabaja).
+    const [anaMembership] = await tx
+      .insert(memberships)
+      .values({ businessId, userId: staffUserId, role: "staff" })
+      .returning({ id: memberships.id });
     const [ana, carla, diego] = await tx
       .insert(staff)
       .values([
-        { businessId, name: "Ana Rojas", color: "#e86a92", position: 0 },
+        { businessId, name: "Ana Rojas", color: "#e86a92", position: 0, membershipId: anaMembership.id },
         { businessId, name: "Carla Méndez", color: "#6a8ee8", position: 1 },
         { businessId, name: "Diego Vargas", color: "#5cb88a", position: 2 },
       ])
@@ -128,34 +167,38 @@ export async function seedDev(db: Executor, options: { now?: Date } = {}): Promi
       ...[2, 3, 4, 5, 6].map((d) => shift(diego.id, heredia.id, d, "10:00", "18:00")),
     ]);
 
-    // ── Catálogo ──
-    const [faciales, corporales, unas] = await tx
-      .insert(serviceCategories)
-      .values([
-        { businessId, name: "Faciales", position: 0 },
-        { businessId, name: "Corporales", position: 1 },
-        { businessId, name: "Uñas", position: 2 },
-      ])
-      .returning({ id: serviceCategories.id });
-    const serviceRows = await tx
-      .insert(services)
-      .values([
-        { businessId, categoryId: faciales.id, name: "Limpieza facial profunda", durationMin: 60, bufferMin: 10, priceCents: crc(25_000), position: 0 },
-        { businessId, categoryId: faciales.id, name: "Hidratación facial", durationMin: 45, bufferMin: 5, priceCents: crc(18_000), position: 1 },
-        { businessId, categoryId: corporales.id, name: "Masaje relajante", durationMin: 60, bufferMin: 10, priceCents: crc(22_000), position: 0 },
-        { businessId, categoryId: corporales.id, name: "Drenaje linfático", durationMin: 50, bufferMin: 10, priceCents: crc(24_000), position: 1 },
-        { businessId, categoryId: unas.id, name: "Manicura", durationMin: 40, priceCents: crc(8_000), position: 0 },
-        { businessId, categoryId: unas.id, name: "Pedicura spa", durationMin: 50, priceCents: crc(12_000), variablePrice: true, position: 1 },
-      ])
-      .returning();
+    // ── Catálogo: el de la plantilla, con precios de demo (la plantilla los trae en null) ──
+    const demoPrices: Record<string, number> = {
+      "Limpieza facial profunda": 25_000,
+      "Hidratación facial": 18_000,
+      "Peeling químico": 30_000,
+      "Masaje relajante": 22_000,
+      "Drenaje linfático": 24_000,
+      "Depilación de cejas": 5_000,
+      "Depilación de piernas completas": 15_000,
+      Manicura: 8_000,
+      "Pedicura spa": 12_000,
+    };
+    for (const [name, colones] of Object.entries(demoPrices)) {
+      await tx
+        .update(services)
+        .set({ priceCents: crc(colones) })
+        .where(and(eq(services.businessId, businessId), eq(services.name, name)));
+    }
+    const serviceRows = await tx.select().from(services).where(eq(services.businessId, businessId));
     const svc = Object.fromEntries(serviceRows.map((s) => [s.name, s]));
-    const limpieza = svc["Limpieza facial profunda"];
-    const hidratacion = svc["Hidratación facial"];
-    const masaje = svc["Masaje relajante"];
-    const drenaje = svc["Drenaje linfático"];
-    const manicura = svc["Manicura"];
-    const pedicura = svc["Pedicura spa"];
-    // Uñas solo en Escazú (el resto, sin filas = en todas las sucursales).
+    const pick = (name: string) => {
+      const s = svc[name];
+      if (!s) throw new Error(`seed:dev: la plantilla de estética ya no trae "${name}"`);
+      return s;
+    };
+    const limpieza = pick("Limpieza facial profunda");
+    const hidratacion = pick("Hidratación facial");
+    const masaje = pick("Masaje relajante");
+    const drenaje = pick("Drenaje linfático");
+    const manicura = pick("Manicura");
+    const pedicura = pick("Pedicura spa");
+    // Manicura y pedicura solo en Escazú (el resto, sin filas = en todas las sucursales).
     await tx.insert(serviceLocations).values([
       { businessId, serviceId: manicura.id, locationId: escazu.id },
       { businessId, serviceId: pedicura.id, locationId: escazu.id },
@@ -171,10 +214,8 @@ export async function seedDev(db: Executor, options: { now?: Date } = {}): Promi
       { businessId, staffId: diego.id, serviceId: drenaje.id, durationMin: 45 },
     ]);
 
-    const methodRows = await tx
-      .insert(paymentMethods)
-      .values(["Efectivo", "SINPE Móvil", "Tarjeta", "Transferencia"].map((name, position) => ({ businessId, name, position })))
-      .returning({ id: paymentMethods.id, name: paymentMethods.name });
+    // Métodos de pago default, igual que el alta real (src/provisioning.ts).
+    const methodRows = await seedDefaultPaymentMethods(tx, { businessId });
     const method = Object.fromEntries(methodRows.map((m) => [m.name, m.id]));
 
     // ── Clientes ──
@@ -243,6 +284,12 @@ export async function seedDev(db: Executor, options: { now?: Date } = {}): Promi
       { day: 5, time: "11:00", staffId: diego.id, locationId: heredia.id, clientId: clientRows[0].id, lines: [masaje], channel: "phone", outcome: "pending" },
     ];
 
+    // Comisiones de demo (Pro): 10 % general y 15 % para Ana en la limpieza facial.
+    await tx.insert(commissionRules).values([
+      { businessId, kind: "percent", value: 1000 },
+      { businessId, staffId: ana.id, serviceId: limpieza.id, kind: "percent", value: 1500 },
+    ]);
+
     let appointmentCount = 0;
     let paymentCount = 0;
     for (const p of bookings) {
@@ -308,6 +355,8 @@ export async function seedDev(db: Executor, options: { now?: Date } = {}): Promi
             totalSpentCents: c.totalSpentCents + totalCents,
           })
           .where(eq(clients.id, p.clientId));
+        // Comisión sobre lo cobrado (en la app la calcula el gancho de completar / cobrar).
+        await recalculateAppointmentCommissions(tx, businessId, appt.id, { now });
       }
     }
 
@@ -321,7 +370,15 @@ export async function seedDev(db: Executor, options: { now?: Date } = {}): Promi
     };
   });
 
-  return { businessId, replaced, ownerEmail: DEMO_OWNER_EMAIL, ownerPassword, counts };
+  return {
+    businessId,
+    replaced,
+    ownerEmail: DEMO_OWNER_EMAIL,
+    frontDeskEmail: DEMO_FRONT_DESK_EMAIL,
+    staffEmail: DEMO_STAFF_EMAIL,
+    password: DEMO_PASSWORD,
+    counts,
+  };
 }
 
 async function closeDb(db: unknown): Promise<void> {
@@ -347,7 +404,10 @@ async function main(): Promise<void> {
       `   ${r.counts.locations} sucursales · ${r.counts.staff} profesionales · ${r.counts.services} servicios · ` +
         `${r.counts.clients} clientes · ${r.counts.appointments} citas de esta semana · ${r.counts.payments} pagos`,
     );
-    console.log(`   Dueña (solo desarrollo): ${r.ownerEmail} / ${r.ownerPassword}`);
+    console.log("   Usuarios de desarrollo (POST /api/panel/auth/login):");
+    console.log(`     Dueña:                     ${r.ownerEmail} / ${r.password}`);
+    console.log(`     Recepción (solo Escazú):   ${r.frontDeskEmail} / ${r.password}`);
+    console.log(`     Especialista (Mi agenda):  ${r.staffEmail} / ${r.password}`);
     if (!url && !process.env.PGLITE_DIR) {
       console.log("   Ojo: sin PGLITE_DIR la base es en memoria y se pierde al terminar (sirve como prueba de humo).");
     }
