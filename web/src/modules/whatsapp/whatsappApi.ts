@@ -183,6 +183,23 @@ export interface GrowthSettings extends GrowthSettingsBody {
   templates: { followUp: boolean; quoteRecovery: boolean };
 }
 
+/**
+ * Lo que Meta le cobra al negocio por su WhatsApp este mes (estimado). Lo paga el negocio
+ * directo a Meta: Selyon no lo factura. `level`: 0 normal, 1 cerca del fin del tramo
+ * gratis, 2 Meta ya cobra las respuestas.
+ */
+export interface MetaUsage {
+  month: string;
+  serviceMessages: number;
+  freeServiceMessages: number;
+  chargedServiceMessages: number;
+  utilityTemplates: number;
+  marketingTemplates: number;
+  estimatedUsd: number;
+  rates: { serviceUsd: number; utilityUsd: number; marketingUsd: number };
+  level: 0 | 1 | 2;
+}
+
 export const LIST_REFRESH_MS = 15_000;
 export const CHAT_REFRESH_MS = 5_000;
 const SUMMARY_REFRESH_MS = 60_000;
@@ -197,6 +214,7 @@ export const whatsappKeys = {
   settings: ["whatsapp", "settings"] as const,
   growth: ["whatsapp", "growth"] as const,
   channels: ["whatsapp", "channels"] as const,
+  metaUsage: ["whatsapp", "meta-usage"] as const,
 };
 
 const conversationPath = (id: string) => `/whatsapp/conversations/${encodeURIComponent(id)}`;
@@ -221,6 +239,7 @@ export const whatsappApi = {
   connect: (code: string) => api.post<unknown>("/whatsapp/channels/connect", { code }),
   testChannel: (id: string) => api.post<ChannelTestResult>(`/whatsapp/channels/${encodeURIComponent(id)}/test`),
   updateChannel: (id: string, patch: ChannelPatch) => api.patch<Channel>(`/whatsapp/channels/${encodeURIComponent(id)}`, patch),
+  metaUsage: () => api.get<MetaUsage>("/whatsapp/meta-usage"),
   growth: () => api.get<GrowthSettings>("/whatsapp/growth"),
   saveGrowth: (patch: Partial<GrowthSettingsBody>) => api.patch<GrowthSettings>("/whatsapp/growth", patch),
 };
@@ -276,6 +295,10 @@ export function useAgentSettings() {
 
 export function useChannels() {
   return useQuery({ queryKey: whatsappKeys.channels, queryFn: whatsappApi.channels });
+}
+
+export function useMetaUsage() {
+  return useQuery({ queryKey: whatsappKeys.metaUsage, queryFn: whatsappApi.metaUsage });
 }
 
 /**

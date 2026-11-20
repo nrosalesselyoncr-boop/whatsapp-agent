@@ -6,6 +6,7 @@ import ErrorState from "../../ui/ErrorState";
 import { FormError, SelectField, TextField } from "../../ui/Field";
 import { useToast } from "../../ui/Toast";
 import ChannelsSection from "./ChannelsSection";
+import MetaUsageCard from "./MetaUsageCard";
 import { FaqEditor, KnowledgeEditor } from "./KnowledgeEditor";
 import { useAgentSettings, useSaveAgentSettings, type AgentSettings, type Register } from "./whatsappApi";
 import { AGENT_MANAGERS } from "./WhatsappLayout";
@@ -119,6 +120,7 @@ function AgentSettingsContent() {
     <div className="wa-settings">
       <SettingsForm key={JSON.stringify(query.data)} saved={query.data} />
       <ChannelsSection />
+      <MetaUsageCard />
     </div>
   );
 }

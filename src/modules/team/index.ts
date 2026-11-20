@@ -3,8 +3,8 @@
 export { inviteMember, ACCEPT_INVITATION_PATH } from "./invitations";
 export type { InviteInput, InvitationInfo } from "./invitations";
 export type { Me } from "./me";
-export { activeMemberSessionEpochs, countActiveMembers, isLocationAssigned } from "./members";
-export type { Member, MemberStatus } from "./members";
+export { activeMemberSessionEpochs, countActiveMembers, isLocationAssigned, listActiveOwners } from "./members";
+export type { ActiveOwner, Member, MemberStatus } from "./members";
 export { RESET_PASSWORD_PATH } from "./recovery";
 // Alta self-service (I6.7): la cuenta dueña sin verificar y la verificación del correo.
 export { guardCredentialAttempt, NewPasswordSchema, normalizeEmail, recordCredentialFailure } from "./identity";

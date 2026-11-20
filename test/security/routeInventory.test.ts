@@ -143,6 +143,7 @@ const ACCESS_SNAPSHOT: Record<string, Access> = {
   "GET /whatsapp/conversations": { auth: "user", roles: ["owner", "admin", "front_desk"], module: "whatsapp", location: "optional" },
   "GET /whatsapp/conversations/:id": { auth: "user", roles: ["owner", "admin", "front_desk"], module: "whatsapp", location: "optional" },
   "GET /whatsapp/growth": { auth: "user", module: "whatsapp" },
+  "GET /whatsapp/meta-usage": { auth: "user", roles: ["owner", "admin"], module: "whatsapp" },
   "GET /whatsapp/metrics": { auth: "user", roles: ["owner", "admin", "front_desk"], module: "whatsapp", location: "optional" },
   "GET /whatsapp/settings": { auth: "user", module: "whatsapp" },
   "GET /whatsapp/summary": { auth: "user", roles: ["owner", "admin", "front_desk"], module: "whatsapp", location: "optional" },

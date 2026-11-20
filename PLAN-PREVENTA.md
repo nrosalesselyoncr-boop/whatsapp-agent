@@ -227,15 +227,27 @@ resultado para poder repetirla antes de cada deploy importante.
   - **OpenAI**: dashboard de usage filtrado por API key. Estimación con precios vigentes
     de `gpt-4o-mini` ($0.15/M entrada, $0.60/M salida) + Whisper ($0.006/min): un negocio
     con ~500 conversaciones/mes ≈ **US$2–5/mes**. Verificar contra el usage real.
-  - **Meta**: mensajes de servicio (cliente inicia, <24 h) = gratis; el costo es por
-    plantilla Utility (recordatorios fuera de 24 h) y futura Marketing. Verificar tarifa
-    vigente para CR en la tabla de precios de Meta (~US$0.01–0.03 por utility) ×
-    volumen de recordatorios.
+  - **Meta: lo paga cada negocio, no Selyon** (decisión del usuario, 2026-11-17). Cada
+    negocio carga su propio método de pago en su cuenta de Meta y Meta le cobra directo;
+    no entra en el precio del plan ni en el margen de Selyon. Selyon le avisa al dueño
+    antes de que empiece a pagar las respuestas (correo + push al 80 % y al agotar el
+    tramo gratis, y la tarjeta «Consumo de WhatsApp (Meta)» en WhatsApp IA ›
+    Configuración; `src/modules/whatsapp/metaCost.ts`). Se le explica al venderle y queda
+    en el contrato. Tarifas vigentes desde 2026-10-01 para Costa Rica («Resto de
+    Latinoamérica», calculadora oficial de Meta, consultada el 2026-11-16), por mensaje:
+    respuestas de servicio (bot o bandeja, dentro de las 24 h) **US$0,0113 a partir de la
+    1.001 del mes por número** (las primeras 1.000 gratis; antes del 2026-10-01 eran
+    gratis sin tope); plantillas de utilidad (recordatorios) **US$0,0113 siempre**, también
+    dentro de la ventana; marketing (campañas, rescate) **US$0,074**. Ejemplo de un salón
+    con ~500 conversaciones de ~6 respuestas y ~200 recordatorios: ~US$25/mes sin
+    campañas (supuesto, no medido). Ventana gratis de 7 días si la clienta llega por un
+    anuncio de clic a WhatsApp.
   - **Infra**: droplet (compartido), Supabase Pro (US$25 cuando se necesite), dominio.
     Prorratear entre clientes.
   - *Listo cuando:* hay una hoja (en el repo o Sheets) con costo variable + fijo
     prorrateado por cliente. Con precio ₡25–50k y costo estimado <US$10/cliente/mes el
-    margen es holgado (>80%) — la hoja lo confirma o lo corrige.
+    margen es holgado (>80%) — la hoja lo confirma o lo corrige. (Meta no entra en esta
+    cuenta: lo paga el negocio.)
 
 ### 2.2 Legal y facturación (Costa Rica) — arrancar YA porque hay esperas de terceros
 
